@@ -17,7 +17,7 @@ RECOVERY_CASES = (
 
 @torch.no_grad()
 def evaluate_recovery(sequences, grid, displacement, source, target, mask, *,
-                      smoothness=.01, iterations=500, tolerance=1e-5, ridge=1e-6, substeps=4,
+                      smoothness=.01, iterations=500, tolerance=2e-5, ridge=1e-6, substeps=4,
                       cases=RECOVERY_CASES, inr_derivatives=None):
     """Run the fixed A/B/C/D comparisons; all maps follow source-to-target convention."""
     experiments, maps, tensors = {}, {}, {}

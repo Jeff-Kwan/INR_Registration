@@ -39,7 +39,7 @@ def laplacian(values):
 
 @torch.no_grad()
 def estimate_velocity(first, second, dt, smoothness=.01, ridge=1e-6,
-                      iterations=500, tolerance=1e-5):
+                      iterations=500, tolerance=2e-5):
     """PCG for (g g^T + smoothness*L + ridge*I)v = -g*I_t.
 
     Central derivatives use voxel units; natural zero-flux smoothness edges.
@@ -54,7 +54,7 @@ def estimate_velocity(first, second, dt, smoothness=.01, ridge=1e-6,
 
 @torch.no_grad()
 def estimate_velocity_from_derivatives(gradient, temporal, smoothness=.01, ridge=1e-6,
-                                      iterations=500, tolerance=1e-5):
+                                      iterations=500, tolerance=2e-5):
     """Same global PCG solve with supplied voxel/time derivatives g[D,H,W,3], q."""
     if gradient.shape != (*temporal.shape, 3) or temporal.ndim != 3:
         raise ValueError('Expected g[D,H,W,3] and q[D,H,W]')

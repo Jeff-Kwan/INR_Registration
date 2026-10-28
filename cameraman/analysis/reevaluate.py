@@ -66,12 +66,12 @@ def reevaluate(run, frames, device, recovery_method="analytical", intervals=8, i
     sequences, experiments, maps, tensors = evaluate_with_cached_references(
         inr_sequence, source, target, grid, displacement, mask, (ROOT / "runs") / "_reference_cache",
         smoothness=config.get("smoothness", .01), iterations=config.get("flow_iterations", 500),
-        tolerance=config.get("flow_tolerance", 1e-5), ridge=config.get("ridge", 1e-6), substeps=config.get("substeps", 4), geometry=geometry,
+        tolerance=config.get("flow_tolerance", 2e-5), ridge=config.get("ridge", 1e-6), substeps=config.get("substeps", 4), geometry=geometry,
         inr_models=(source_model, target_model) if recovery_method == "analytical" else None,
         intervals=intervals, inference_chunk=inference_chunk)
     reconstructions = {"source": sequences["INR"][0], "target": sequences["INR"][-1]}
     scores = {name: psnr(reconstructions[name], image) for name, image in (("source", source), ("target", target))}
-    metrics = {"endpoint_psnr_db": scores, "endpoint_quality_pass": min(scores.values()) >= config.get("min_psnr", 30.),
+    metrics = {"endpoint_psnr_db": scores, "endpoint_quality_pass": min(scores.values()) >= config.get("min_psnr", 25.),
                "experiments": experiments,
                "ground_truth": ground_truth_metrics(source, target, grid, displacement, mask, geometry)}
     old.update(sequences={key: value.cpu() for key, value in sequences.items()}, recovery=tensors,

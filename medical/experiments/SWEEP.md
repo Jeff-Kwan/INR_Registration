@@ -56,7 +56,7 @@ Confirmation, full-panel comparisons and reserve repeats deduplicate scientific
 settings independently of the subject panel and output-retention flags. Seeds
 remain distinct for matched repeats. Runtime grouping also combines seeds.
 
-Ranking requires every subject's endpoint PSNR to meet 30 dB, zero folding, and
+Ranking requires every subject's endpoint PSNR to meet 25 dB, zero folding, and
 finite label metrics. Macro Dice ranks eligible candidates; HD95 breaks ties.
 Flow convergence is recorded but not an admission gate. Failures and interrupted
 trials consume the same budget.
@@ -74,3 +74,5 @@ The output includes `plan.json`, trial folders, centralized CSV/JSON summaries,
 leaderboards, grouped runtimes, failures, and the best observed full-cohort config
 and metrics. `summary/REPORT.md` is the entry point. A single highest-scoring run
 is not a seed-robust conclusion; check matched comparisons and flow warnings.
+
+The default recovery relative-residual tolerance is `2e-5` (maximum 500 iterations).

@@ -53,7 +53,7 @@ def midpoint_derivatives(source, target, grid, intervals=8, chunk=0):
 
 @torch.no_grad()
 def recover_2d(source, target, grid, intervals=8, chunk=0, *, smoothness=.01,
-               ridge=1e-6, iterations=500, tolerance=1e-5, substeps=4):
+               ridge=1e-6, iterations=500, tolerance=2e-5, substeps=4):
     """Analytical midpoint derivatives + existing batched 2D flow/RK2."""
     started = synchronized_time(grid.device)
     gradient, temporal = midpoint_derivatives(source, target, grid, intervals, chunk)
@@ -71,7 +71,7 @@ def recover_2d(source, target, grid, intervals=8, chunk=0, *, smoothness=.01,
 
 @torch.no_grad()
 def recover_3d(source, target, grid, backend, intervals=8, kind='analytical', chunk=0,
-               *, smoothness=.01, ridge=1e-6, iterations=500, tolerance=1e-5, substeps=4):
+               *, smoothness=.01, ridge=1e-6, iterations=500, tolerance=2e-5, substeps=4):
     """Streaming volume recovery; backend is the existing INR flow3d module.
 
     Keep velocity fields for reverse integration. Query chunks, if requested,

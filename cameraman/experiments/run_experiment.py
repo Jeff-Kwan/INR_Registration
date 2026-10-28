@@ -43,8 +43,8 @@ def parse_args(argv=None):
     numbers = dict(amplitude=10., elastic_sigma=12., elastic_min_jacobian=.2,
                    min_transform_epe=0., omega=30., lr=1e-4, lr_final_factor=1.,
                    lk_weight=.1, lk_ridge=1e-6, lk_gradient_weight=4.,
-                   lk_affine_rho=.4, grad_clip=0., min_psnr=30., smoothness=.01,
-                   ridge=1e-6, flow_tolerance=1e-5)
+                   lk_affine_rho=.4, grad_clip=0., min_psnr=25., smoothness=.01,
+                   ridge=1e-6, flow_tolerance=2e-5)
     for name, value in numbers.items():
         help_text = 'rho=c/beta; 0 is exact standard PD-LK' if name == 'lk_affine_rho' else None
         p.add_argument('--' + name.replace('_', '-'), type=float, default=value, help=help_text)

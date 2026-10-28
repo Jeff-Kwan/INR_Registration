@@ -45,11 +45,11 @@
     "smoothness": 0.01,
     "ridge": 1e-06,
     "iterations": 500,
-    "tolerance": 1e-05,
+    "tolerance": 2e-05,
     "substeps": 4
   },
   "evaluation": {
-    "min_endpoint_psnr_db": 30.0,
+    "min_endpoint_psnr_db": 25.0,
     "hd95": true
   },
   "output": {

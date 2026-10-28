@@ -44,8 +44,9 @@ research code. Machine-specific service guidance belongs outside this repository
 - Prefer theory and controlled methodology progress over a single benchmark
   improvement. Do not make superiority claims from one seed or gate-failing runs.
 - Use fresh output directories and keep all run/result trees ignored.
-- Do not create commits, tags, remotes or pushes unless the user later requests
-  publication. The repository remains uncommitted until publication is requested.
+- The user manages GitHub backups, commits and pushes manually. Never commit
+  or push on your own. Leave changes in the working tree for user review; do not
+  stage files, create tags or change remotes unless explicitly requested.
 
 ## Validation and handover
 

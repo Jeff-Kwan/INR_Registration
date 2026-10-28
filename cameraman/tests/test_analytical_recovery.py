@@ -39,6 +39,8 @@ class AnalyticalRecoveryTests(unittest.TestCase):
         with patch.object(sys, 'argv', ['run_experiment.py']):
             args = parse_args()
         self.assertEqual((args.recovery_method, args.intervals), ('analytical', 8))
+        self.assertEqual(args.min_psnr, 25.)
+        self.assertEqual(args.flow_tolerance, 2e-5)
         self.assertEqual(args.image, Path(__file__).resolve().parents[1] / 'data/cameraman.jpg')
         self.assertEqual(args.output, Path(__file__).resolve().parents[2] / 'cameraman/runs/pdlk_relaxed')
         with tempfile.TemporaryDirectory() as folder:

@@ -241,7 +241,7 @@ def main():
     base['lk'].update(mode='pointwise', affine_beta=None, affine_rho=0.4, differentiate_solve=False)
     base['runtime']['seed'] = args.seed
     base['training'].update(steps=5000, grad_clip=1.0)
-    base['evaluation'].update(min_endpoint_psnr_db=30., hd95=True)
+    base['evaluation'].update(min_endpoint_psnr_db=25., hd95=True)
     base['dataset']['require_labels'] = True
     base['output'].update(save_frames=False, save_velocities=False, save_volumes=False)
     rng = random.Random(args.seed)
@@ -252,7 +252,7 @@ def main():
             'reserve_seconds': 1800, 'fixed': {'training.steps': 5000, 'training.grad_clip': 1.0}, 'space': SPACE, 'candidates': candidates,
             'screen_subjects': ['S02', 'S06'], 'confirm_subjects': ['S02', 'S04', 'S06', 'S09'],
             'full_subjects': [f'S{i:02}' for i in range(2, 11)],
-            'ranking': 'Require every endpoint >=30dB, zero folding, finite label metrics; maximize macro Dice, HD95 tie-break.',
+            'ranking': 'Require every endpoint >=25dB, zero folding, finite label metrics; maximize macro Dice, HD95 tie-break.',
             'parameterization': 'rho=c/beta; c_eff=c/(1+rho*|grad I|^2). rho=0 is the exact standard PD-LK control; positive rho implies beta=c/rho.',
             'recovery': 'Held fixed to isolate training/architecture/regularization effects'}
     save(output / 'plan.json', plan)

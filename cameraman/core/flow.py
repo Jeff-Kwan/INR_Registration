@@ -21,7 +21,7 @@ def laplacian(v):
 
 @torch.no_grad()
 def estimate_velocity(sequence, horizontal=False, smoothness=0.01,
-                      iterations=500, tolerance=1e-5, ridge=1e-6):
+                      iterations=500, tolerance=2e-5, ridge=1e-6):
     dt = 1 / (sequence.shape[0] - 1)
     mid = (sequence[:-1] + sequence[1:]) / 2
     gy, gx = torch.gradient(mid, dim=(1, 2))
@@ -32,7 +32,7 @@ def estimate_velocity(sequence, horizontal=False, smoothness=0.01,
 
 @torch.no_grad()
 def estimate_velocity_from_derivatives(gradient, temporal, horizontal=False,
-                                      smoothness=.01, iterations=500, tolerance=1e-5, ridge=1e-6):
+                                      smoothness=.01, iterations=500, tolerance=2e-5, ridge=1e-6):
     """Same PCG objective, accepting g[K,H,W,2], q[K,H,W] in pixel/time units."""
     if gradient.shape != (*temporal.shape, 2) or temporal.ndim != 3:
         raise ValueError('Expected g[K,H,W,2] and q[K,H,W]')

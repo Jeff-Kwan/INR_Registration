@@ -68,6 +68,8 @@ class SweepTests(unittest.TestCase):
         stages = {stage for stage, _, _ in launched}
         self.assertEqual(stages, {'screen', 'confirm', 'full', 'reserve_repeat'})
         for stage, config, _ in launched:
+            self.assertEqual(config['evaluation']['min_endpoint_psnr_db'], 25.)
+            self.assertEqual(config['recovery']['tolerance'], 2e-5)
             self.assertFalse(config['output']['save_volumes'])
             self.assertFalse(config['output']['save_frames'])
             self.assertFalse(config['output']['save_velocities'])

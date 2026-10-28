@@ -13,7 +13,9 @@ The sweep finished in 3.91 hours, attempted 39 candidates, completed 23, and
 recorded 16 failures or interrupted admissions. The nine-subject full cohort is
 S02–S10. Screening and confirmation had no persistent volume or model-checkpoint
 outputs. All completed ranked candidates passed the endpoint and folding gates.
-Flow convergence was not an admission gate; many full-cohort subjects had at
+These historical runs used the original 30 dB reconstruction gate and `1e-5`
+flow tolerance; current defaults are 25 dB and `2e-5`. Saved flags and scores
+remain unchanged. Flow convergence was not an admission gate; many full-cohort subjects had at
 least one interval that missed the configured linear-solver tolerance.
 
 | Stage | Seed | rho | Subjects | Mean Dice | Mean HD95 (mm) | Flow-warning subjects | Interpretation |

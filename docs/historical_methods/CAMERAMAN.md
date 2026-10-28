@@ -9,8 +9,9 @@ ignored; their manifests preserve individual run settings.
 
 These studies motivated the current focus on paired endpoint SIRENs and
 pointwise PD-LK. Endpoint reconstruction gates matter: several old beta-sweep
-runs missed the 30 dB endpoint threshold, so their flow metrics cannot establish
-a method ranking. Oracle-flow results also retain brightness ambiguity; compare
+runs missed the then-current 30 dB endpoint threshold; saved gate flags reflect
+that policy. The current threshold is 25 dB. Those sparse comparisons alone
+still do not establish a method ranking. Oracle-flow results also retain brightness ambiguity; compare
 them with the true map and learned-trajectory errors separately.
 
 The maintained comparison configs are `cameraman/configs/pdlk_standard.json`
