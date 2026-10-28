@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paired-inr-pdlk"
+version = "0.1.0.dev0"
+description = "Paired implicit neural image trajectories with pointwise differential LK registration"
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.2",
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "Pillow>=10",
+  "matplotlib>=3.7",
+  "tqdm>=4.66",
+  "nibabel>=5.2",
+  "monai>=1.3",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cameraman*", "medical*"]
+namespaces = false
+exclude = ["cameraman.runs*", "medical.results*"]
+
+[tool.setuptools.package-data]
+cameraman = ["data/*.jpg", "configs/*.json"]
+medical = ["configs/*.json"]

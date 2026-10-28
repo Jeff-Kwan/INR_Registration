@@ -1,0 +1,46 @@
+# Dataset inputs and archives stay on the local machine. The bundled Cameraman
+# example is the only image data intentionally tracked.
+/Data/
+**/[Dd]ataset/
+*.nii
+*.nii.gz
+*.nrrd
+*.mha
+*.mhd
+*.img
+*.hdr
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+*.npy
+*.npz
+
+# All generated experiment artifacts are local, including old nested outputs.
+**/[Rr]uns/
+**/[Rr]esults/
+**/Numerical_Results/
+**/checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.lock
+
+# Python and machine-local state.
+__pycache__/
+*.py[cod]
+.env
+.venv/
+.venv-*/
+.hf_home/
+.vscode/settings.json
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+/build/
+/dist/
+.DS_Store

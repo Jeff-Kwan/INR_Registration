@@ -1,0 +1,62 @@
+{
+  "dataset": {
+    "root": "../Data/LPBA40/LPBA40_delineation",
+    "fixed": "delineation_l_norm/fixed.nii.gz",
+    "moving_dir": "delineation_l_norm/test",
+    "label_dir": "label",
+    "fixed_label": "label/S01.delineation.structure.label.nii.gz",
+    "subjects": [],
+    "require_labels": true
+  },
+  "runtime": {
+    "device": "auto",
+    "seed": 42,
+    "inference_chunk": 262144,
+    "compile_derivatives": true
+  },
+  "model": {
+    "width": 256,
+    "layers": 4,
+    "omega": 30.0
+  },
+  "training": {
+    "steps": 5000,
+    "batch_size": 32768,
+    "lr": 0.0002,
+    "lr_final_factor": 0.25,
+    "log_every": 20,
+    "save_every": 500,
+    "grad_clip": 1.0
+  },
+  "lk": {
+    "weight": 0.1,
+    "gradient_weight": 4.0,
+    "ridge": 1e-06,
+    "mode": "pointwise",
+    "points": 4096,
+    "differentiate_solve": false,
+    "weight_schedule": "constant",
+    "affine_beta": null,
+    "affine_rho": 0.4
+  },
+  "recovery": {
+    "method": "analytical",
+    "intervals": 16,
+    "smoothness": 0.01,
+    "ridge": 1e-06,
+    "iterations": 500,
+    "tolerance": 1e-05,
+    "substeps": 4
+  },
+  "evaluation": {
+    "min_endpoint_psnr_db": 30.0,
+    "hd95": true
+  },
+  "output": {
+    "root": "results/pdlk_lpba40",
+    "save_frames": false,
+    "save_velocities": false,
+    "save_volumes": true,
+    "save_checkpoints": true
+  }
+}
