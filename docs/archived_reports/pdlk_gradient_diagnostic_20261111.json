@@ -1,0 +1,192 @@
+{
+  "protocol": {
+    "probes": 254,
+    "optimizer_steps": 5000,
+    "success": true,
+    "elapsed_seconds": 40.786883940920234,
+    "sampling": "steps 1,2,5,10 and every20; same training minibatches/time, no extra RNG",
+    "component_gradient_convention": "local optimal velocity held fixed; ridge direct gradient zero; baseline total backward untouched",
+    "adam_convention": "current numerator contributions with actual updated second-moment denominator held fixed; not independent optimizer runs"
+  },
+  "phases": {
+    "1-100": {
+      "loss_reconstruction": 0.012558143585920334,
+      "loss_brightness": 9.307029358751606e-06,
+      "loss_differential": 3.9648959500482306e-05,
+      "loss_ridge": 8.255326065409463e-06,
+      "grad_reconstruction": 0.19958773255348206,
+      "grad_brightness": 0.0052459267899394035,
+      "grad_differential": 0.003846233943477273,
+      "grad_pdlk": 0.006565593183040619,
+      "cos_reconstruction_pdlk": 0.05338915064930916,
+      "cos_brightness_differential": 0.01939423196017742,
+      "adam_current_reconstruction": 0.0067933727987110615,
+      "adam_current_pdlk": 0.00035920453956350684,
+      "adam_history_norm": 0.011988620273768902,
+      "actual_update_norm": 0.025172630324959755,
+      "probes": 9,
+      "pdlk_exceeds_reconstruction_fraction": 0.0,
+      "differential_exceeds_brightness_fraction": 0.2222222222222222,
+      "reconstruction_ascent_fraction": 0.0,
+      "pdlk_ascent_fraction": 0.1111111111111111
+    },
+    "101-1000": {
+      "loss_reconstruction": 0.0023226591292768717,
+      "loss_brightness": 5.7689579989528283e-05,
+      "loss_differential": 0.00021883007138967514,
+      "loss_ridge": 1.4471076610789169e-05,
+      "grad_reconstruction": 0.05963444337248802,
+      "grad_brightness": 0.017141222953796387,
+      "grad_differential": 0.029897762462496758,
+      "grad_pdlk": 0.03295932337641716,
+      "cos_reconstruction_pdlk": -0.0017002694075927138,
+      "cos_brightness_differential": -0.04079273343086243,
+      "adam_current_reconstruction": 0.0057833073660731316,
+      "adam_current_pdlk": 0.003605801844969392,
+      "adam_history_norm": 0.012842285446822643,
+      "actual_update_norm": 0.014284877106547356,
+      "probes": 45,
+      "pdlk_exceeds_reconstruction_fraction": 0.044444444444444446,
+      "differential_exceeds_brightness_fraction": 1.0,
+      "reconstruction_ascent_fraction": 0.0,
+      "pdlk_ascent_fraction": 0.0
+    },
+    "1001-2000": {
+      "loss_reconstruction": 0.001840587065089494,
+      "loss_brightness": 6.690216468996368e-05,
+      "loss_differential": 0.0002234950734418817,
+      "loss_ridge": 1.4459795693255728e-05,
+      "grad_reconstruction": 0.04799805022776127,
+      "grad_brightness": 0.019140844233334064,
+      "grad_differential": 0.03496858291327953,
+      "grad_pdlk": 0.04036230407655239,
+      "cos_reconstruction_pdlk": -0.003188489587046206,
+      "cos_brightness_differential": -0.059285685420036316,
+      "adam_current_reconstruction": 0.0047567307483404875,
+      "adam_current_pdlk": 0.004510736558586359,
+      "adam_history_norm": 0.01209156634286046,
+      "actual_update_norm": 0.01352639403194189,
+      "probes": 50,
+      "pdlk_exceeds_reconstruction_fraction": 0.2,
+      "differential_exceeds_brightness_fraction": 1.0,
+      "reconstruction_ascent_fraction": 0.0,
+      "pdlk_ascent_fraction": 0.0
+    },
+    "2001-5000": {
+      "loss_reconstruction": 0.0013830048847012222,
+      "loss_brightness": 5.062729906057939e-05,
+      "loss_differential": 0.00019056628661928698,
+      "loss_ridge": 1.1443200946814613e-05,
+      "grad_reconstruction": 0.040356287732720375,
+      "grad_brightness": 0.015613446477800608,
+      "grad_differential": 0.03354226425290108,
+      "grad_pdlk": 0.035830602049827576,
+      "cos_reconstruction_pdlk": -0.007424402749165893,
+      "cos_brightness_differential": -0.08824433013796806,
+      "adam_current_reconstruction": 0.0028760309796780348,
+      "adam_current_pdlk": 0.0028613426256924868,
+      "adam_history_norm": 0.008363436907529831,
+      "actual_update_norm": 0.009342494886368513,
+      "probes": 150,
+      "pdlk_exceeds_reconstruction_fraction": 0.3333333333333333,
+      "differential_exceeds_brightness_fraction": 1.0,
+      "reconstruction_ascent_fraction": 0.0,
+      "pdlk_ascent_fraction": 0.0
+    }
+  },
+  "maximum_gradient_sum_relative_error": 0.0009760836255736649,
+  "late_dominance_switches": 76,
+  "late_probe_transitions": 149,
+  "late_cosine_quantiles": {
+    "cos_reconstruction_pdlk": [
+      -0.04245440289378166,
+      -0.007424402749165893,
+      0.02784405834972858
+    ],
+    "cos_brightness_differential": [
+      -0.14472690522670745,
+      -0.08824433013796806,
+      -0.04527187272906304
+    ]
+  },
+  "late_ratios": {
+    "grad_brightness": [
+      0.294331729785884,
+      0.3801389947506478,
+      0.5440995906440185
+    ],
+    "grad_differential": [
+      0.6028896375563896,
+      0.8164864357564378,
+      1.1997478741609586
+    ],
+    "grad_pdlk": [
+      0.6479673629516719,
+      0.8780521192652295,
+      1.2742040005538804
+    ]
+  },
+  "late_per_endpoint_median": {
+    "grad_reconstruction_source": 0.029714597918008342,
+    "grad_brightness_source": 0.009443104117034525,
+    "grad_differential_source": 0.020149735993293894,
+    "grad_reconstruction_target": 0.02699034051791667,
+    "grad_brightness_target": 0.007866360662290552,
+    "grad_differential_target": 0.016982934824191692
+  },
+  "late_layer_median": {
+    "grad_reconstruction_source_net_0": 0.005659912558381298,
+    "grad_brightness_source_net_0": 0.0013380732363764505,
+    "grad_differential_source_net_0": 0.002915917458630559,
+    "grad_reconstruction_source_net_1": 0.023293434997953805,
+    "grad_brightness_source_net_1": 0.007384817848224643,
+    "grad_differential_source_net_1": 0.016061448167917783,
+    "grad_reconstruction_source_net_2": 0.012182671279133217,
+    "grad_brightness_source_net_2": 0.00484021671878508,
+    "grad_differential_source_net_2": 0.010001006962155418,
+    "grad_reconstruction_source_net_3": 0.0082208243355924,
+    "grad_brightness_source_net_3": 0.0028445814177044926,
+    "grad_differential_source_net_3": 0.005613316613522723,
+    "grad_reconstruction_source_net_4": 0.008083477241544044,
+    "grad_brightness_source_net_4": 0.0019184724974743513,
+    "grad_differential_source_net_4": 0.0035049152960663415,
+    "grad_reconstruction_target_net_0": 0.00481719491532101,
+    "grad_brightness_target_net_0": 0.0011583347157003857,
+    "grad_differential_target_net_0": 0.002362774125111467,
+    "grad_reconstruction_target_net_1": 0.02084442523331707,
+    "grad_brightness_target_net_1": 0.006019616604170032,
+    "grad_differential_target_net_1": 0.013282501185878315,
+    "grad_reconstruction_target_net_2": 0.011318985421826189,
+    "grad_brightness_target_net_2": 0.003929615351371486,
+    "grad_differential_target_net_2": 0.008480812161715121,
+    "grad_reconstruction_target_net_3": 0.00808503467030807,
+    "grad_brightness_target_net_3": 0.002416228322274107,
+    "grad_differential_target_net_3": 0.004737877041611221,
+    "grad_reconstruction_target_net_4": 0.007736554504269751,
+    "grad_brightness_target_net_4": 0.0019377130735837448,
+    "grad_differential_target_net_4": 0.0024345649290464302
+  },
+  "clip_active_probes": 3,
+  "all_probe_values_finite": true,
+  "gradient_sum_error_quantiles": [
+    2.774261884042062e-05,
+    9.88938911177684e-05,
+    0.0009760836255736649
+  ],
+  "endpoints": {
+    "endpoint_source": {
+      "mse": 0.0006033993582263024,
+      "psnr_db": 32.19395156075058,
+      "psnr_infinite": false,
+      "global_ncc": 0.9968222817083318
+    },
+    "endpoint_target": {
+      "mse": 0.0005719162539806833,
+      "psnr_db": 32.42667560537067,
+      "psnr_infinite": false,
+      "global_ncc": 0.9965911201303731
+    },
+    "endpoint_quality_pass": true,
+    "threshold_db": 25.0
+  }
+}

@@ -1,0 +1,393 @@
+{
+  "root": "results/ncc_moments/20261110T130823_052551Z",
+  "protocol": {
+    "pair": "LPBA40 S02 to S01",
+    "seed": 42,
+    "steps": 5000,
+    "maximum_fits": 2,
+    "objective": "sum endpoint (1-Pearson NCC) + lambda_moment/2 sum_endpoint[mu^2+(var+eps)-log(var+eps)-1] + .1*strict PD-LK",
+    "conditions": {
+      "ncc_control": 0.0,
+      "ncc_moments": 0.1
+    },
+    "epsilon": 1e-08,
+    "target_images": "Original normalized [0,1] arrays; no z-scoring, intensity fitting or modification",
+    "psnr_gate": "Explicitly skipped per user request for both NCC conditions; raw PSNR/MSE diagnostic only, pass=null",
+    "moments": "Population moments of each endpoint output over the same uniform voxel minibatch, including background",
+    "baseline": "Existing MSE+PD-LK S02, not retrained",
+    "training": "Original architecture, shared initialization, Adam schedule, clip, 32768 voxels and 4096 strict PD-LK points unchanged",
+    "recovery": "Unchanged 16-interval PCG plus midpoint RK2, with original-image/label evaluation; no intensity recalibration",
+    "tuning": "None. Both coefficients frozen before annotation access; do not select by Dice",
+    "maximum_fit_seconds": 240,
+    "maximum_recovery_seconds": 240,
+    "total_wall_budget_seconds": 900
+  },
+  "execution_seconds": 123.78664731804747,
+  "conditions": {
+    "ncc_control": {
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.1091287266563926,
+          "psnr_db": 9.620609122332485,
+          "psnr_infinite": false,
+          "global_ncc": 0.9977671620875311,
+          "mean": -0.01619377122875826,
+          "variance": 0.0011998898542885667
+        },
+        "endpoint_target": {
+          "mse": 0.0918771519628432,
+          "psnr_db": 10.367924756667367,
+          "psnr_infinite": false,
+          "global_ncc": 0.9977370429003808,
+          "mean": -0.018903577289328552,
+          "variance": 0.0010787681687655858
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 0.0,
+        "jacobian_min": 0.8696926832199097,
+        "inverse_composition_mean_mm": 0.08662941306829453,
+        "sampling_outside_fraction": 0.06830769777297974,
+        "labels": {
+          "dice": 0.6448343130094665,
+          "hd95_mm": 6.888639194624765,
+          "hd95_finite_labels_mean_mm": 6.888639194624765,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 20.061439509969205,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 0.001030285726301372
+      },
+      "flow_converged_intervals": 0,
+      "flow_intervals": 16,
+      "training_seconds": 39.68303166597616,
+      "settled_ms_per_step": 7.635474001290277,
+      "final_training": {
+        "step": 5000.0,
+        "total": 0.0041689942590892315,
+        "source_mse": 0.10940415412187576,
+        "target_mse": 0.0922456830739975,
+        "pdlk": 0.0005996942054480314,
+        "weighted_pdlk": 5.9969421272398904e-05,
+        "endpoint_ncc_loss": 0.004109025001525879,
+        "source_ncc": 0.9979912042617798,
+        "target_ncc": 0.9978997707366943,
+        "moment_loss": 5.78403377532959,
+        "weighted_moments": 0.0,
+        "moment_weight": 0.0,
+        "source_mean": -0.01611936464905739,
+        "target_mean": -0.018728507682681084,
+        "source_variance": 0.0011983667500317097,
+        "target_variance": 0.001071808161213994,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007361096050590277
+      },
+      "trajectory": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": -0.016004297882318497,
+            "variance": 0.0012083279434591532,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": -0.016209453344345093,
+            "variance": 0.0012976413127034903,
+            "rms_departure_from_endpoint_image_blend": 0.0036928753834217787
+          },
+          {
+            "time": 0.25,
+            "mean": -0.016159653663635254,
+            "variance": 0.0013039434561505914,
+            "rms_departure_from_endpoint_image_blend": 0.006006034091114998
+          },
+          {
+            "time": 0.375,
+            "mean": -0.01614498719573021,
+            "variance": 0.001279953750781715,
+            "rms_departure_from_endpoint_image_blend": 0.007299906574189663
+          },
+          {
+            "time": 0.5,
+            "mean": -0.01640736684203148,
+            "variance": 0.0012506966013461351,
+            "rms_departure_from_endpoint_image_blend": 0.007619702722877264
+          },
+          {
+            "time": 0.625,
+            "mean": -0.01701376959681511,
+            "variance": 0.0012268538121134043,
+            "rms_departure_from_endpoint_image_blend": 0.006973566487431526
+          },
+          {
+            "time": 0.75,
+            "mean": -0.017815332859754562,
+            "variance": 0.001210483955219388,
+            "rms_departure_from_endpoint_image_blend": 0.005520958453416824
+          },
+          {
+            "time": 0.875,
+            "mean": -0.018505316227674484,
+            "variance": 0.0011826293775811791,
+            "rms_departure_from_endpoint_image_blend": 0.0033560157753527164
+          },
+          {
+            "time": 1.0,
+            "mean": -0.018737804144620895,
+            "variance": 0.0010880340123549104,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      }
+    },
+    "ncc_moments": {
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.5011968134955239,
+          "psnr_db": 2.999916988225598,
+          "psnr_infinite": false,
+          "global_ncc": 0.9962284456160428,
+          "mean": 0.022996223100256733,
+          "variance": 0.9988688902092174
+        },
+        "endpoint_target": {
+          "mse": 0.5116812555721357,
+          "psnr_db": 2.910004922533927,
+          "psnr_infinite": false,
+          "global_ncc": 0.9959987635876113,
+          "mean": -0.021947221911720285,
+          "variance": 0.9692190007691033
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 1.7903645833333333e-05,
+        "jacobian_min": -10.2882080078125,
+        "inverse_composition_mean_mm": 0.15322332084178925,
+        "sampling_outside_fraction": 0.07967956364154816,
+        "labels": {
+          "dice": 0.6677057849509376,
+          "hd95_mm": 6.792657899005072,
+          "hd95_finite_labels_mean_mm": 6.792657899005072,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 14.936114010983147,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9650145986815915e-05
+      },
+      "flow_converged_intervals": 16,
+      "flow_intervals": 16,
+      "training_seconds": 38.20538817893248,
+      "settled_ms_per_step": 7.639791950350628,
+      "final_training": {
+        "step": 5000.0,
+        "total": 0.01002223789691925,
+        "source_mse": 0.502377450466156,
+        "target_mse": 0.506085991859436,
+        "pdlk": 0.02513137087225914,
+        "weighted_pdlk": 0.0025131371803581715,
+        "endpoint_ncc_loss": 0.0074228644371032715,
+        "source_ncc": 0.9965052008628845,
+        "target_ncc": 0.9960718750953674,
+        "moment_loss": 0.0008623600006103516,
+        "weighted_moments": 8.62360029714182e-05,
+        "moment_weight": 0.10000000149011612,
+        "source_mean": 0.024247152730822563,
+        "target_mean": -0.02028186246752739,
+        "source_variance": 1.0013532638549805,
+        "target_variance": 0.962415874004364,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007629196549532935
+      },
+      "trajectory": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": 0.027879362925887108,
+            "variance": 1.0040860176086426,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": 0.018207941204309464,
+            "variance": 1.002289891242981,
+            "rms_departure_from_endpoint_image_blend": 0.0859338566660881
+          },
+          {
+            "time": 0.25,
+            "mean": 0.00837743654847145,
+            "variance": 0.997280478477478,
+            "rms_departure_from_endpoint_image_blend": 0.14274075627326965
+          },
+          {
+            "time": 0.375,
+            "mean": -0.00016265548765659332,
+            "variance": 0.9926360249519348,
+            "rms_departure_from_endpoint_image_blend": 0.1697157770395279
+          },
+          {
+            "time": 0.5,
+            "mean": -0.006959919817745686,
+            "variance": 0.9888352155685425,
+            "rms_departure_from_endpoint_image_blend": 0.17253316938877106
+          },
+          {
+            "time": 0.625,
+            "mean": -0.01132411602884531,
+            "variance": 0.9859612584114075,
+            "rms_departure_from_endpoint_image_blend": 0.15339799225330353
+          },
+          {
+            "time": 0.75,
+            "mean": -0.01353121642023325,
+            "variance": 0.9844158887863159,
+            "rms_departure_from_endpoint_image_blend": 0.11616864800453186
+          },
+          {
+            "time": 0.875,
+            "mean": -0.014700641855597496,
+            "variance": 0.9831425547599792,
+            "rms_departure_from_endpoint_image_blend": 0.06432078033685684
+          },
+          {
+            "time": 1.0,
+            "mean": -0.0167600829154253,
+            "variance": 0.9774656891822815,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      }
+    }
+  },
+  "prior_artifacts": {
+    "files": 1540,
+    "unchanged": true
+  },
+  "tests": {
+    "medical": 50,
+    "cameraman": 1,
+    "synthetic_optimizer_steps": 0
+  },
+  "logged_random_schedule_identical": {
+    "fields": [
+      "time",
+      "lr",
+      "weight"
+    ],
+    "rows": 250,
+    "match": true
+  },
+  "mse_reference": {
+    "endpoint_source": {
+      "mse": 0.0005991451947043228,
+      "psnr_db": 32.22467919484251,
+      "psnr_infinite": false,
+      "global_ncc": 0.9968462648332425
+    },
+    "endpoint_target": {
+      "mse": 0.0005608012156195531,
+      "psnr_db": 32.51191053642874,
+      "psnr_infinite": false,
+      "global_ncc": 0.9966633524185476
+    },
+    "endpoint_quality_pass": true,
+    "psnr_gate_skipped": null,
+    "psnr_gate_reason": null,
+    "folding_fraction": 0.0,
+    "jacobian_min": 0.06868089735507965,
+    "inverse_composition_mean_mm": 0.12677821516990662,
+    "sampling_outside_fraction": 0.07810363918542862,
+    "labels": {
+      "dice": 0.6982286114777837,
+      "hd95_mm": 6.565149873495102,
+      "hd95_finite_labels_mean_mm": 6.565149873495102,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "recovery_seconds": 19.582117318059318,
+    "flow_all_intervals_converged": false,
+    "flow_max_relative_residual": 2.019498970184941e-05
+  },
+  "differences": {
+    "dice": 0.0228714719414711,
+    "hd95_mm": -0.09598129561969237,
+    "moment_vs_mse_dice": -0.030522826526846125,
+    "moment_vs_mse_hd95_mm": 0.2275080255099704
+  },
+  "runtime": {
+    "versions": {
+      "torch": "2.14.1+cu132",
+      "numpy": "2.3.5",
+      "nibabel": "5.4.2",
+      "monai": "1.6.1",
+      "antspyx": "0.6.3",
+      "itk-elastix": "0.25.4",
+      "SimpleITK": "2.5.7"
+    },
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "cuda": "13.2",
+    "threads": 4,
+    "compile_derivatives": true
+  },
+  "preservation": {
+    "Data": {
+      "files": 2343,
+      "bytes": 3405406449,
+      "unchanged": true
+    },
+    "results/benchmark_20261110": {
+      "files": 830,
+      "bytes": 83266043,
+      "unchanged": true
+    }
+  },
+  "wheel": {
+    "entries": 44,
+    "python_modules": 33,
+    "json_configs": 6,
+    "jpegs": 1,
+    "isolated_help_passed": true
+  }
+}

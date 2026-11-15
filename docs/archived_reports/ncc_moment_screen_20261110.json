@@ -1,0 +1,1015 @@
+{
+  "root": "results/ncc_moment_screen/20261110T132700_429803Z",
+  "protocol": {
+    "pair": "LPBA40 S02 to S01",
+    "seed": 42,
+    "steps": 5000,
+    "maximum_fits": 4,
+    "objective": "sum endpoint (1-Pearson NCC) + lambda_moment/2 sum_endpoint[mu^2+(var+eps)-log(var+eps)-1] + .1*strict PD-LK",
+    "conditions": {
+      "w001": 0.01,
+      "w02": 0.2,
+      "w05": 0.5,
+      "w10": 1.0
+    },
+    "epsilon": 1e-08,
+    "target_images": "Original normalized [0,1] arrays; no z-scoring, intensity fitting or modification",
+    "psnr_gate": "Explicitly skipped for all four NCC conditions; raw PSNR/MSE diagnostic only, pass=null",
+    "moments": "Population moments of each endpoint output over the same uniform voxel minibatch, including background",
+    "baseline": "Existing MSE+PD-LK and NCC weights 0/.1 S02, not retrained",
+    "training": "Original architecture, shared initialization, Adam schedule, clip, 32768 voxels and 4096 strict PD-LK points unchanged",
+    "recovery": "Unchanged 16-interval PCG plus midpoint RK2, with original-image/label evaluation; no intensity recalibration",
+    "tuning": "Four user-specified weights frozen before annotation access; report every result and do not reselect by labels",
+    "maximum_fit_seconds": 240,
+    "maximum_recovery_seconds": 240,
+    "total_wall_budget_seconds": 900,
+    "reported_psnr": "After training, independently min-max scale each entire endpoint reconstruction to [0,1], and score against the original normalized endpoint; for reporting only, not recovery or selection",
+    "runner_note": "The copied runner retains the older two-condition docstring; its executable list and this frozen protocol specify exactly the four requested conditions."
+  },
+  "execution_seconds": 239.45612565497868,
+  "conditions": {
+    "w001": {
+      "weight": 0.01,
+      "training_status": "complete",
+      "evaluation_status": "complete",
+      "training_seconds": 39.764363478985615,
+      "settled_ms_per_step": 7.635531900450587,
+      "last_training": {
+        "step": 5000.0,
+        "total": 0.010158320888876915,
+        "source_mse": 0.39628273248672485,
+        "target_mse": 0.3747943639755249,
+        "pdlk": 0.02588745579123497,
+        "weighted_pdlk": 0.0025887456722557545,
+        "endpoint_ncc_loss": 0.0073282718658447266,
+        "source_ncc": 0.9962881207466125,
+        "target_ncc": 0.9963836669921875,
+        "moment_loss": 0.02413034439086914,
+        "weighted_moments": 0.00024130343808792531,
+        "moment_weight": 0.009999999776482582,
+        "source_mean": 0.03287649527192116,
+        "target_mean": -0.03602640703320503,
+        "source_variance": 0.8487555980682373,
+        "target_variance": 0.7641462683677673,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007641277654329315
+      },
+      "minmax_endpoint_metrics": {
+        "moving": {
+          "output_min": -0.5787454843521118,
+          "output_max": 2.623312473297119,
+          "mse": 0.0016098390181150727,
+          "psnr_db": 27.932175507009624,
+          "psnr_infinite": false,
+          "global_ncc": 0.9961344186264951
+        },
+        "fixed": {
+          "output_min": -0.5636752843856812,
+          "output_max": 2.6333212852478027,
+          "mse": 0.0013567319560495506,
+          "psnr_db": 28.67505945639566,
+          "psnr_infinite": false,
+          "global_ncc": 0.9962868692178014
+        }
+      },
+      "path_moments": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": 0.03679259121417999,
+            "variance": 0.8516063690185547,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": 0.025189224630594254,
+            "variance": 0.8472641706466675,
+            "rms_departure_from_endpoint_image_blend": 0.07834988832473755
+          },
+          {
+            "time": 0.25,
+            "mean": 0.012770850211381912,
+            "variance": 0.8387974500656128,
+            "rms_departure_from_endpoint_image_blend": 0.1305156946182251
+          },
+          {
+            "time": 0.375,
+            "mean": 0.0010795965790748596,
+            "variance": 0.8288689255714417,
+            "rms_departure_from_endpoint_image_blend": 0.15476290881633759
+          },
+          {
+            "time": 0.5,
+            "mean": -0.009492140263319016,
+            "variance": 0.8185057640075684,
+            "rms_departure_from_endpoint_image_blend": 0.1570052206516266
+          },
+          {
+            "time": 0.625,
+            "mean": -0.018217148259282112,
+            "variance": 0.8080419898033142,
+            "rms_departure_from_endpoint_image_blend": 0.13947246968746185
+          },
+          {
+            "time": 0.75,
+            "mean": -0.02479468286037445,
+            "variance": 0.7977886199951172,
+            "rms_departure_from_endpoint_image_blend": 0.10560301691293716
+          },
+          {
+            "time": 0.875,
+            "mean": -0.02954946458339691,
+            "variance": 0.7870967984199524,
+            "rms_departure_from_endpoint_image_blend": 0.05827054753899574
+          },
+          {
+            "time": 1.0,
+            "mean": -0.03377977013587952,
+            "variance": 0.7724010944366455,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      },
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.395502926122861,
+          "psnr_db": 4.028502990327752,
+          "psnr_infinite": false,
+          "global_ncc": 0.9961344186264948,
+          "mean": 0.03224844614541628,
+          "variance": 0.8472032804126026
+        },
+        "endpoint_target": {
+          "mse": 0.37658365315044867,
+          "psnr_db": 4.241385358877014,
+          "psnr_infinite": false,
+          "global_ncc": 0.9962868692178021,
+          "mean": -0.0385562051896856,
+          "variance": 0.7652129781914985
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 2.6448567708333334e-05,
+        "jacobian_min": -1.9019129276275635,
+        "inverse_composition_mean_mm": 0.14620979130268097,
+        "sampling_outside_fraction": 0.07908081263303757,
+        "labels": {
+          "dice": 0.6943686721580369,
+          "hd95_mm": 6.445606938430241,
+          "hd95_finite_labels_mean_mm": 6.445606938430241,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 15.768949935911223,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.950566002051346e-05
+      },
+      "flow_converged_intervals": 16,
+      "flow_intervals": 16
+    },
+    "w02": {
+      "weight": 0.2,
+      "training_status": "complete",
+      "evaluation_status": "complete",
+      "training_seconds": 37.85960387298837,
+      "settled_ms_per_step": 7.628410050529055,
+      "last_training": {
+        "step": 5000.0,
+        "total": 0.01984071172773838,
+        "source_mse": 0.48385050892829895,
+        "target_mse": 0.5373336672782898,
+        "pdlk": 0.07184642553329468,
+        "weighted_pdlk": 0.00718464283272624,
+        "endpoint_ncc_loss": 0.012401282787322998,
+        "source_ncc": 0.994176983833313,
+        "target_ncc": 0.993421733379364,
+        "moment_loss": 0.0012739300727844238,
+        "weighted_moments": 0.00025478602037765086,
+        "moment_weight": 0.20000000298023224,
+        "source_mean": 0.02568463608622551,
+        "target_mean": -0.038837309926748276,
+        "source_variance": 0.9730769395828247,
+        "target_variance": 0.9953731894493103,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007638505147770047
+      },
+      "minmax_endpoint_metrics": {
+        "moving": {
+          "output_min": -0.7363954782485962,
+          "output_max": 2.7691421508789062,
+          "mse": 0.0037637343147976887,
+          "psnr_db": 24.243810413791525,
+          "psnr_infinite": false,
+          "global_ncc": 0.9940429062860603
+        },
+        "fixed": {
+          "output_min": -0.7710180878639221,
+          "output_max": 2.953167200088501,
+          "mse": 0.004897651916632589,
+          "psnr_db": 23.100120840658462,
+          "psnr_infinite": false,
+          "global_ncc": 0.9936671536240019
+        }
+      },
+      "path_moments": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": 0.019642390310764313,
+            "variance": 0.9888527393341064,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": 0.023024890571832657,
+            "variance": 0.9884083867073059,
+            "rms_departure_from_endpoint_image_blend": 0.09774463623762131
+          },
+          {
+            "time": 0.25,
+            "mean": 0.019725263118743896,
+            "variance": 0.9814201593399048,
+            "rms_departure_from_endpoint_image_blend": 0.15389572083950043
+          },
+          {
+            "time": 0.375,
+            "mean": 0.011252464726567268,
+            "variance": 0.9759837985038757,
+            "rms_departure_from_endpoint_image_blend": 0.1750861257314682
+          },
+          {
+            "time": 0.5,
+            "mean": -0.00011275708675384521,
+            "variance": 0.9771786332130432,
+            "rms_departure_from_endpoint_image_blend": 0.17402225732803345
+          },
+          {
+            "time": 0.625,
+            "mean": -0.011078284122049809,
+            "variance": 0.9834001064300537,
+            "rms_departure_from_endpoint_image_blend": 0.15554076433181763
+          },
+          {
+            "time": 0.75,
+            "mean": -0.018957367166876793,
+            "variance": 0.9905154705047607,
+            "rms_departure_from_endpoint_image_blend": 0.121592216193676
+          },
+          {
+            "time": 0.875,
+            "mean": -0.021934963762760162,
+            "variance": 0.9956148266792297,
+            "rms_departure_from_endpoint_image_blend": 0.07074005156755447
+          },
+          {
+            "time": 1.0,
+            "mean": -0.021899674087762833,
+            "variance": 0.9906925559043884,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      },
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.4939852196916551,
+          "psnr_db": 3.0628604521073393,
+          "psnr_infinite": false,
+          "global_ncc": 0.9940429062860602,
+          "mean": 0.014618244072617017,
+          "variance": 0.9828743960100375
+        },
+        "endpoint_target": {
+          "mse": 0.524465543421198,
+          "psnr_db": 2.8028303901207066,
+          "psnr_infinite": false,
+          "global_ncc": 0.9936671536240018,
+          "mean": -0.027076238310880855,
+          "variance": 0.9829774306737596
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 2.6652018229166665e-05,
+        "jacobian_min": -3.754753589630127,
+        "inverse_composition_mean_mm": 0.1538361757993698,
+        "sampling_outside_fraction": 0.07736063748598099,
+        "labels": {
+          "dice": 0.6430746662829604,
+          "hd95_mm": 6.872636795043945,
+          "hd95_finite_labels_mean_mm": 6.872636795043945,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 13.337009722017683,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9819453882519156e-05
+      },
+      "flow_converged_intervals": 16,
+      "flow_intervals": 16
+    },
+    "w05": {
+      "weight": 0.5,
+      "training_status": "complete",
+      "evaluation_status": "complete",
+      "training_seconds": 38.12731321598403,
+      "settled_ms_per_step": 7.6390886009903625,
+      "last_training": {
+        "step": 5000.0,
+        "total": 0.011031873524188995,
+        "source_mse": 0.511866569519043,
+        "target_mse": 0.5264105200767517,
+        "pdlk": 0.030785277485847473,
+        "weighted_pdlk": 0.0030785277485847473,
+        "endpoint_ncc_loss": 0.007895171642303467,
+        "source_ncc": 0.9962776303291321,
+        "target_ncc": 0.9958272576332092,
+        "moment_loss": 0.0001163482666015625,
+        "weighted_moments": 5.817413330078125e-05,
+        "moment_weight": 0.5,
+        "source_mean": 0.0039380863308906555,
+        "target_mean": -0.01350866723805666,
+        "source_variance": 1.0057451725006104,
+        "target_variance": 0.9939792156219482,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007355146401096135
+      },
+      "minmax_endpoint_metrics": {
+        "moving": {
+          "output_min": -0.7918390035629272,
+          "output_max": 2.8191285133361816,
+          "mse": 0.004250598272642297,
+          "psnr_db": 23.715499386035603,
+          "psnr_infinite": false,
+          "global_ncc": 0.9960788446186907
+        },
+        "fixed": {
+          "output_min": -0.6422030925750732,
+          "output_max": 3.0522830486297607,
+          "mse": 0.0018663750572127857,
+          "psnr_db": 27.290010782151796,
+          "psnr_infinite": false,
+          "global_ncc": 0.9957805836490184
+        }
+      },
+      "path_moments": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": 0.008135301992297173,
+            "variance": 1.011633276939392,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": 0.0006668148562312126,
+            "variance": 1.0102360248565674,
+            "rms_departure_from_endpoint_image_blend": 0.09133600443601608
+          },
+          {
+            "time": 0.25,
+            "mean": -0.006392552983015776,
+            "variance": 1.0054070949554443,
+            "rms_departure_from_endpoint_image_blend": 0.14998623728752136
+          },
+          {
+            "time": 0.375,
+            "mean": -0.011810780502855778,
+            "variance": 1.0019012689590454,
+            "rms_departure_from_endpoint_image_blend": 0.17696017026901245
+          },
+          {
+            "time": 0.5,
+            "mean": -0.015025116503238678,
+            "variance": 1.001074194908142,
+            "rms_departure_from_endpoint_image_blend": 0.17756180465221405
+          },
+          {
+            "time": 0.625,
+            "mean": -0.015377054922282696,
+            "variance": 1.0031405687332153,
+            "rms_departure_from_endpoint_image_blend": 0.15715280175209045
+          },
+          {
+            "time": 0.75,
+            "mean": -0.01294386200606823,
+            "variance": 1.0069102048873901,
+            "rms_departure_from_endpoint_image_blend": 0.1190929189324379
+          },
+          {
+            "time": 0.875,
+            "mean": -0.009099988266825676,
+            "variance": 1.0103281736373901,
+            "rms_departure_from_endpoint_image_blend": 0.06589802354574203
+          },
+          {
+            "time": 1.0,
+            "mean": -0.006316895596683025,
+            "variance": 1.0083116292953491,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      },
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.5123298795224677,
+          "psnr_db": 2.9045031495457523,
+          "psnr_infinite": false,
+          "global_ncc": 0.9960788446186915,
+          "mean": 0.0029746700978281145,
+          "variance": 1.005801327645756
+        },
+        "endpoint_target": {
+          "mse": 0.5301786897683753,
+          "psnr_db": 2.7557773247240522,
+          "psnr_infinite": false,
+          "global_ncc": 0.995780583649018,
+          "mean": -0.011568601707250915,
+          "variance": 0.9997668871318368
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 3.6214192708333336e-05,
+        "jacobian_min": -7.604120254516602,
+        "inverse_composition_mean_mm": 0.1568555384874344,
+        "sampling_outside_fraction": 0.07994507253170013,
+        "labels": {
+          "dice": 0.6520998909005097,
+          "hd95_mm": 7.0223230975014825,
+          "hd95_finite_labels_mean_mm": 7.0223230975014825,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 14.88092279608827,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.977581086975988e-05
+      },
+      "flow_converged_intervals": 16,
+      "flow_intervals": 16
+    },
+    "w10": {
+      "weight": 1.0,
+      "training_status": "complete",
+      "evaluation_status": "complete",
+      "training_seconds": 38.22610271803569,
+      "settled_ms_per_step": 7.653804199071601,
+      "last_training": {
+        "step": 5000.0,
+        "total": 0.010472187772393227,
+        "source_mse": 0.5081794261932373,
+        "target_mse": 0.5280723571777344,
+        "pdlk": 0.024556608870625496,
+        "weighted_pdlk": 0.002455660840496421,
+        "endpoint_ncc_loss": 0.007994532585144043,
+        "source_ncc": 0.9961108565330505,
+        "target_ncc": 0.9958945512771606,
+        "moment_loss": 2.199411392211914e-05,
+        "weighted_moments": 2.199411392211914e-05,
+        "moment_weight": 1.0,
+        "source_mean": 0.005355428904294968,
+        "target_mean": -0.003826403059065342,
+        "source_variance": 1.0009510517120361,
+        "target_variance": 1.0004892349243164,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007359463849570602
+      },
+      "minmax_endpoint_metrics": {
+        "moving": {
+          "output_min": -0.7292243838310242,
+          "output_max": 2.828794240951538,
+          "mse": 0.0028399785336692394,
+          "psnr_db": 25.466849426093813,
+          "psnr_infinite": false,
+          "global_ncc": 0.9959309030861302
+        },
+        "fixed": {
+          "output_min": -0.7021791934967041,
+          "output_max": 3.0426278114318848,
+          "mse": 0.0031954090724329656,
+          "psnr_db": 24.954735360883433,
+          "psnr_infinite": false,
+          "global_ncc": 0.9958342258624697
+        }
+      },
+      "path_moments": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": 0.009811367839574814,
+            "variance": 1.0087528228759766,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": 0.0038873315788805485,
+            "variance": 1.0112338066101074,
+            "rms_departure_from_endpoint_image_blend": 0.08787431567907333
+          },
+          {
+            "time": 0.25,
+            "mean": -0.0017574485391378403,
+            "variance": 1.010023593902588,
+            "rms_departure_from_endpoint_image_blend": 0.1443709135055542
+          },
+          {
+            "time": 0.375,
+            "mean": -0.0061039794236421585,
+            "variance": 1.008470892906189,
+            "rms_departure_from_endpoint_image_blend": 0.17024658620357513
+          },
+          {
+            "time": 0.5,
+            "mean": -0.008101346902549267,
+            "variance": 1.0090267658233643,
+            "rms_departure_from_endpoint_image_blend": 0.17226633429527283
+          },
+          {
+            "time": 0.625,
+            "mean": -0.006862704176455736,
+            "variance": 1.0117195844650269,
+            "rms_departure_from_endpoint_image_blend": 0.15312306582927704
+          },
+          {
+            "time": 0.75,
+            "mean": -0.003029602114111185,
+            "variance": 1.0151156187057495,
+            "rms_departure_from_endpoint_image_blend": 0.11617552489042282
+          },
+          {
+            "time": 0.875,
+            "mean": 0.001436503604054451,
+            "variance": 1.0170449018478394,
+            "rms_departure_from_endpoint_image_blend": 0.06447967141866684
+          },
+          {
+            "time": 1.0,
+            "mean": 0.003832288784906268,
+            "variance": 1.0130845308303833,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      },
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.5095951233364107,
+          "psnr_db": 2.927747367131706,
+          "psnr_infinite": false,
+          "global_ncc": 0.9959309030861287,
+          "mean": 0.00457210810866305,
+          "variance": 1.002486100525004
+        },
+        "endpoint_target": {
+          "mse": 0.530384775918903,
+          "psnr_db": 2.754089503448041,
+          "psnr_infinite": false,
+          "global_ncc": 0.9958342258624702,
+          "mean": -0.0014933129197466618,
+          "variance": 1.0042985223371332
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 4.94384765625e-05,
+        "jacobian_min": -5.643596649169922,
+        "inverse_composition_mean_mm": 0.1657320111989975,
+        "sampling_outside_fraction": 0.08157999813556671,
+        "labels": {
+          "dice": 0.6545934709055083,
+          "hd95_mm": 6.883231805903571,
+          "hd95_finite_labels_mean_mm": 6.883231805903571,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 14.823073373059742,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9659586541820318e-05
+      },
+      "flow_converged_intervals": 16,
+      "flow_intervals": 16
+    }
+  },
+  "prior_artifacts": {
+    "files": 1620,
+    "unchanged": true
+  },
+  "references": {
+    "ncc_moment_0": {
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.1091287266563926,
+          "psnr_db": 9.620609122332485,
+          "psnr_infinite": false,
+          "global_ncc": 0.9977671620875311,
+          "mean": -0.01619377122875826,
+          "variance": 0.0011998898542885667
+        },
+        "endpoint_target": {
+          "mse": 0.0918771519628432,
+          "psnr_db": 10.367924756667367,
+          "psnr_infinite": false,
+          "global_ncc": 0.9977370429003808,
+          "mean": -0.018903577289328552,
+          "variance": 0.0010787681687655858
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 0.0,
+        "jacobian_min": 0.8696926832199097,
+        "inverse_composition_mean_mm": 0.08662941306829453,
+        "sampling_outside_fraction": 0.06830769777297974,
+        "labels": {
+          "dice": 0.6448343130094665,
+          "hd95_mm": 6.888639194624765,
+          "hd95_finite_labels_mean_mm": 6.888639194624765,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 20.061439509969205,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 0.001030285726301372
+      },
+      "flow_converged_intervals": 0,
+      "flow_intervals": 16,
+      "training_seconds": 39.68303166597616,
+      "settled_ms_per_step": 7.635474001290277,
+      "final_training": {
+        "step": 5000.0,
+        "total": 0.0041689942590892315,
+        "source_mse": 0.10940415412187576,
+        "target_mse": 0.0922456830739975,
+        "pdlk": 0.0005996942054480314,
+        "weighted_pdlk": 5.9969421272398904e-05,
+        "endpoint_ncc_loss": 0.004109025001525879,
+        "source_ncc": 0.9979912042617798,
+        "target_ncc": 0.9978997707366943,
+        "moment_loss": 5.78403377532959,
+        "weighted_moments": 0.0,
+        "moment_weight": 0.0,
+        "source_mean": -0.01611936464905739,
+        "target_mean": -0.018728507682681084,
+        "source_variance": 0.0011983667500317097,
+        "target_variance": 0.001071808161213994,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007361096050590277
+      },
+      "trajectory": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": -0.016004297882318497,
+            "variance": 0.0012083279434591532,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": -0.016209453344345093,
+            "variance": 0.0012976413127034903,
+            "rms_departure_from_endpoint_image_blend": 0.0036928753834217787
+          },
+          {
+            "time": 0.25,
+            "mean": -0.016159653663635254,
+            "variance": 0.0013039434561505914,
+            "rms_departure_from_endpoint_image_blend": 0.006006034091114998
+          },
+          {
+            "time": 0.375,
+            "mean": -0.01614498719573021,
+            "variance": 0.001279953750781715,
+            "rms_departure_from_endpoint_image_blend": 0.007299906574189663
+          },
+          {
+            "time": 0.5,
+            "mean": -0.01640736684203148,
+            "variance": 0.0012506966013461351,
+            "rms_departure_from_endpoint_image_blend": 0.007619702722877264
+          },
+          {
+            "time": 0.625,
+            "mean": -0.01701376959681511,
+            "variance": 0.0012268538121134043,
+            "rms_departure_from_endpoint_image_blend": 0.006973566487431526
+          },
+          {
+            "time": 0.75,
+            "mean": -0.017815332859754562,
+            "variance": 0.001210483955219388,
+            "rms_departure_from_endpoint_image_blend": 0.005520958453416824
+          },
+          {
+            "time": 0.875,
+            "mean": -0.018505316227674484,
+            "variance": 0.0011826293775811791,
+            "rms_departure_from_endpoint_image_blend": 0.0033560157753527164
+          },
+          {
+            "time": 1.0,
+            "mean": -0.018737804144620895,
+            "variance": 0.0010880340123549104,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      }
+    },
+    "ncc_moment_0_1": {
+      "metrics": {
+        "endpoint_source": {
+          "mse": 0.5011968134955239,
+          "psnr_db": 2.999916988225598,
+          "psnr_infinite": false,
+          "global_ncc": 0.9962284456160428,
+          "mean": 0.022996223100256733,
+          "variance": 0.9988688902092174
+        },
+        "endpoint_target": {
+          "mse": 0.5116812555721357,
+          "psnr_db": 2.910004922533927,
+          "psnr_infinite": false,
+          "global_ncc": 0.9959987635876113,
+          "mean": -0.021947221911720285,
+          "variance": 0.9692190007691033
+        },
+        "endpoint_quality_pass": null,
+        "psnr_gate_skipped": true,
+        "psnr_gate_reason": "NCC does not match absolute intensities",
+        "folding_fraction": 1.7903645833333333e-05,
+        "jacobian_min": -10.2882080078125,
+        "inverse_composition_mean_mm": 0.15322332084178925,
+        "sampling_outside_fraction": 0.07967956364154816,
+        "labels": {
+          "dice": 0.6677057849509376,
+          "hd95_mm": 6.792657899005072,
+          "hd95_finite_labels_mean_mm": 6.792657899005072,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "recovery_seconds": 14.936114010983147,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9650145986815915e-05
+      },
+      "flow_converged_intervals": 16,
+      "flow_intervals": 16,
+      "training_seconds": 38.20538817893248,
+      "settled_ms_per_step": 7.639791950350628,
+      "final_training": {
+        "step": 5000.0,
+        "total": 0.01002223789691925,
+        "source_mse": 0.502377450466156,
+        "target_mse": 0.506085991859436,
+        "pdlk": 0.02513137087225914,
+        "weighted_pdlk": 0.0025131371803581715,
+        "endpoint_ncc_loss": 0.0074228644371032715,
+        "source_ncc": 0.9965052008628845,
+        "target_ncc": 0.9960718750953674,
+        "moment_loss": 0.0008623600006103516,
+        "weighted_moments": 8.62360029714182e-05,
+        "moment_weight": 0.10000000149011612,
+        "source_mean": 0.024247152730822563,
+        "target_mean": -0.02028186246752739,
+        "source_variance": 1.0013532638549805,
+        "target_variance": 0.962415874004364,
+        "time": 0.13184478878974915,
+        "lr": 5.001386486560088e-05,
+        "weight": 0.1,
+        "seconds_per_step": 0.007629196549532935
+      },
+      "trajectory": {
+        "sites": 65536,
+        "sampling": "Fixed independent uniform continuous normalized coordinates; not training voxel sites",
+        "times": [
+          {
+            "time": 0.0,
+            "mean": 0.027879362925887108,
+            "variance": 1.0040860176086426,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          },
+          {
+            "time": 0.125,
+            "mean": 0.018207941204309464,
+            "variance": 1.002289891242981,
+            "rms_departure_from_endpoint_image_blend": 0.0859338566660881
+          },
+          {
+            "time": 0.25,
+            "mean": 0.00837743654847145,
+            "variance": 0.997280478477478,
+            "rms_departure_from_endpoint_image_blend": 0.14274075627326965
+          },
+          {
+            "time": 0.375,
+            "mean": -0.00016265548765659332,
+            "variance": 0.9926360249519348,
+            "rms_departure_from_endpoint_image_blend": 0.1697157770395279
+          },
+          {
+            "time": 0.5,
+            "mean": -0.006959919817745686,
+            "variance": 0.9888352155685425,
+            "rms_departure_from_endpoint_image_blend": 0.17253316938877106
+          },
+          {
+            "time": 0.625,
+            "mean": -0.01132411602884531,
+            "variance": 0.9859612584114075,
+            "rms_departure_from_endpoint_image_blend": 0.15339799225330353
+          },
+          {
+            "time": 0.75,
+            "mean": -0.01353121642023325,
+            "variance": 0.9844158887863159,
+            "rms_departure_from_endpoint_image_blend": 0.11616864800453186
+          },
+          {
+            "time": 0.875,
+            "mean": -0.014700641855597496,
+            "variance": 0.9831425547599792,
+            "rms_departure_from_endpoint_image_blend": 0.06432078033685684
+          },
+          {
+            "time": 1.0,
+            "mean": -0.0167600829154253,
+            "variance": 0.9774656891822815,
+            "rms_departure_from_endpoint_image_blend": 0.0
+          }
+        ]
+      },
+      "minmax_endpoint_metrics": {
+        "moving": {
+          "output_min": -0.6782953143119812,
+          "output_max": 2.8340773582458496,
+          "mse": 0.002185955357481878,
+          "psnr_db": 26.603587116439794,
+          "psnr_infinite": false,
+          "global_ncc": 0.9962284456160424
+        },
+        "fixed": {
+          "output_min": -0.6605539917945862,
+          "output_max": 2.9899075031280518,
+          "mse": 0.0021309374464983555,
+          "psnr_db": 26.714292987791445,
+          "psnr_infinite": false,
+          "global_ncc": 0.9959987635876107
+        }
+      }
+    },
+    "mse": {
+      "endpoint_source": {
+        "mse": 0.0005991451947043228,
+        "psnr_db": 32.22467919484251,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968462648332425
+      },
+      "endpoint_target": {
+        "mse": 0.0005608012156195531,
+        "psnr_db": 32.51191053642874,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966633524185476
+      },
+      "endpoint_quality_pass": true,
+      "psnr_gate_skipped": null,
+      "psnr_gate_reason": null,
+      "folding_fraction": 0.0,
+      "jacobian_min": 0.06868089735507965,
+      "inverse_composition_mean_mm": 0.12677821516990662,
+      "sampling_outside_fraction": 0.07810363918542862,
+      "labels": {
+        "dice": 0.6982286114777837,
+        "hd95_mm": 6.565149873495102,
+        "hd95_finite_labels_mean_mm": 6.565149873495102,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "recovery_seconds": 19.582117318059318,
+      "flow_all_intervals_converged": false,
+      "flow_max_relative_residual": 2.019498970184941e-05
+    }
+  },
+  "preservation": {
+    "Data": {
+      "files": 2343,
+      "bytes": 3405406449,
+      "unchanged": true
+    },
+    "results/benchmark_20261110": {
+      "files": 830,
+      "bytes": 83266043,
+      "unchanged": true
+    }
+  },
+  "runtime": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "cuda": "13.2",
+    "versions": {
+      "torch": "2.14.1+cu132",
+      "numpy": "2.3.5",
+      "nibabel": "5.4.2",
+      "monai": "1.6.1",
+      "antspyx": "0.6.3",
+      "itk-elastix": "0.25.4",
+      "SimpleITK": "2.5.7"
+    },
+    "cpu_threads": 4,
+    "compile_derivatives": true
+  },
+  "logged_schedule_match": {
+    "fields": [
+      "time",
+      "lr",
+      "weight"
+    ],
+    "rows": 250,
+    "all_conditions": true
+  }
+}

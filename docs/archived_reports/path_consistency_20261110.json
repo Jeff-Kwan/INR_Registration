@@ -1,0 +1,692 @@
+{
+  "root": "results/path_consistency/20261110T105356_113906Z",
+  "seed": 42,
+  "conditions": {
+    "pdlk_evaluation": {
+      "endpoint_source": {
+        "mse": 0.0005991451947043228,
+        "psnr_db": 32.22467919484251,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968462648332425
+      },
+      "endpoint_target": {
+        "mse": 0.0005608012156195531,
+        "psnr_db": 32.51191053642874,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966633524185476
+      },
+      "endpoint_quality_pass": true,
+      "labels": {
+        "dice": 0.6982286114777837,
+        "hd95_mm": 6.565149873495102,
+        "hd95_finite_labels_mean_mm": 6.565149873495102,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "training_seconds": null,
+      "recovery_seconds": 17.19706768891774,
+      "flow_max_relative_residual": 2.019498970184941e-05,
+      "heldout": {
+        "adjacent": 0.00327438791282475,
+        "nonlocal_loss": 0.0022552008740603924,
+        "original_data_mse": 0.007740115746855736,
+        "boundary": 5.475061470860965e-07,
+        "continuous_recoverability": [
+          {
+            "time": 0.03125,
+            "preconditioned": 0.0021547311916947365,
+            "raw_rms": 0.013221807777881622
+          },
+          {
+            "time": 0.09375,
+            "preconditioned": 0.0028422148898243904,
+            "raw_rms": 0.015583532862365246
+          },
+          {
+            "time": 0.15625,
+            "preconditioned": 0.004846007097512484,
+            "raw_rms": 0.023260101675987244
+          },
+          {
+            "time": 0.21875,
+            "preconditioned": 0.004600515589118004,
+            "raw_rms": 0.02104848437011242
+          },
+          {
+            "time": 0.28125,
+            "preconditioned": 0.005593706388026476,
+            "raw_rms": 0.023340074345469475
+          },
+          {
+            "time": 0.34375,
+            "preconditioned": 0.004338821396231651,
+            "raw_rms": 0.018815701827406883
+          },
+          {
+            "time": 0.40625,
+            "preconditioned": 0.005745547823607922,
+            "raw_rms": 0.022340143099427223
+          },
+          {
+            "time": 0.46875,
+            "preconditioned": 0.0036575712729245424,
+            "raw_rms": 0.01694902963936329
+          },
+          {
+            "time": 0.53125,
+            "preconditioned": 0.0021059997379779816,
+            "raw_rms": 0.013020615093410015
+          },
+          {
+            "time": 0.59375,
+            "preconditioned": 0.0018441745778545737,
+            "raw_rms": 0.011845516040921211
+          },
+          {
+            "time": 0.65625,
+            "preconditioned": 0.002987193875014782,
+            "raw_rms": 0.015026320703327656
+          },
+          {
+            "time": 0.71875,
+            "preconditioned": 0.005550941452383995,
+            "raw_rms": 0.021233251318335533
+          },
+          {
+            "time": 0.78125,
+            "preconditioned": 0.005543791223317385,
+            "raw_rms": 0.022673334926366806
+          },
+          {
+            "time": 0.84375,
+            "preconditioned": 0.006404790095984936,
+            "raw_rms": 0.024887045845389366
+          },
+          {
+            "time": 0.90625,
+            "preconditioned": 0.006532851606607437,
+            "raw_rms": 0.02557864412665367
+          },
+          {
+            "time": 0.96875,
+            "preconditioned": 0.006020189728587866,
+            "raw_rms": 0.024582846090197563
+          }
+        ],
+        "continuous_recoverability_mean": 0.004423065496666823
+      },
+      "velocity_alignment_mean": {
+        "velocity_rmse": 3.5595804899930954,
+        "velocity_relative_l2": 0.9799586571753025,
+        "velocity_cosine": 0.7249030023813248,
+        "energy_error_per_voxel": 0.012086612114217132,
+        "stationarity_preconditioned": 0.002962834812933579,
+        "stationarity_raw_rms": 0.015131894731894135,
+        "naive_velocity_relative_error": 0.012992555421078578
+      },
+      "max_inverse_defect": 1.7061511243809946e-05,
+      "flow_converged": 15,
+      "flow_intervals": 16,
+      "retained_original_training_seconds": 43.78405581694096,
+      "retained_original_active_ms": 6.958584115963942
+    },
+    "operator_control": {
+      "endpoint_source": {
+        "mse": 0.0006065290532518291,
+        "psnr_db": 32.17148391228163,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968069002120143
+      },
+      "endpoint_target": {
+        "mse": 0.000568948971053822,
+        "psnr_db": 32.44926683663888,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966181039042696
+      },
+      "endpoint_quality_pass": true,
+      "labels": {
+        "dice": 0.7007653138467244,
+        "hd95_mm": 6.522703719990594,
+        "hd95_finite_labels_mean_mm": 6.522703719990594,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "training_seconds": 93.29440434800927,
+      "recovery_seconds": 17.99413052899763,
+      "flow_max_relative_residual": 2.0081448383280076e-05,
+      "heldout": {
+        "adjacent": 0.00247193849645555,
+        "nonlocal_loss": 0.0020131070632487535,
+        "original_data_mse": 0.007740115746855736,
+        "boundary": 5.475061470860965e-07,
+        "continuous_recoverability": [
+          {
+            "time": 0.03125,
+            "preconditioned": 0.0020255520939826965,
+            "raw_rms": 0.012342827394604683
+          },
+          {
+            "time": 0.09375,
+            "preconditioned": 0.0024821751285344362,
+            "raw_rms": 0.014104435220360756
+          },
+          {
+            "time": 0.15625,
+            "preconditioned": 0.003369599347934127,
+            "raw_rms": 0.017887217923998833
+          },
+          {
+            "time": 0.21875,
+            "preconditioned": 0.003916046116501093,
+            "raw_rms": 0.019210465252399445
+          },
+          {
+            "time": 0.28125,
+            "preconditioned": 0.003861750476062298,
+            "raw_rms": 0.018348921090364456
+          },
+          {
+            "time": 0.34375,
+            "preconditioned": 0.0018867834005504847,
+            "raw_rms": 0.012180399149656296
+          },
+          {
+            "time": 0.40625,
+            "preconditioned": 0.002233254024758935,
+            "raw_rms": 0.012936914339661598
+          },
+          {
+            "time": 0.46875,
+            "preconditioned": 0.0033276064787060022,
+            "raw_rms": 0.016078125685453415
+          },
+          {
+            "time": 0.53125,
+            "preconditioned": 0.0021902970038354397,
+            "raw_rms": 0.01286902092397213
+          },
+          {
+            "time": 0.59375,
+            "preconditioned": 0.0011927649611607194,
+            "raw_rms": 0.009450125508010387
+          },
+          {
+            "time": 0.65625,
+            "preconditioned": 0.001559932017698884,
+            "raw_rms": 0.010805218480527401
+          },
+          {
+            "time": 0.71875,
+            "preconditioned": 0.0030342889949679375,
+            "raw_rms": 0.015710344538092613
+          },
+          {
+            "time": 0.78125,
+            "preconditioned": 0.0039007877930998802,
+            "raw_rms": 0.02017226070165634
+          },
+          {
+            "time": 0.84375,
+            "preconditioned": 0.003694666549563408,
+            "raw_rms": 0.01939311809837818
+          },
+          {
+            "time": 0.90625,
+            "preconditioned": 0.0037469984963536263,
+            "raw_rms": 0.01971137896180153
+          },
+          {
+            "time": 0.96875,
+            "preconditioned": 0.003002384677529335,
+            "raw_rms": 0.01693103276193142
+          }
+        ],
+        "continuous_recoverability_mean": 0.0028390554725774564
+      },
+      "velocity_alignment_mean": {
+        "velocity_rmse": 3.4139979034662247,
+        "velocity_relative_l2": 0.9076992236077785,
+        "velocity_cosine": 0.7507959380745888,
+        "energy_error_per_voxel": 0.008141318074194714,
+        "stationarity_preconditioned": 0.001892545260488987,
+        "stationarity_raw_rms": 0.012151498638559133,
+        "naive_velocity_relative_error": 0.012992555421078578
+      },
+      "max_inverse_defect": 1.7061511243809946e-05,
+      "flow_converged": 15,
+      "flow_intervals": 16,
+      "settled_active_ms": 25.618751842298877,
+      "logged_gradient_ranges": {
+        "op_gradient": {
+          "min": 0.01429795939475298,
+          "max": 0.023913439363241196
+        },
+        "op_base_gradient": {
+          "min": 0.041156020015478134,
+          "max": 0.07637596130371094
+        },
+        "op_gradient_scale": {
+          "min": 0.18980646133422852,
+          "max": 0.449714720249176
+        },
+        "op_applied_gradient": {
+          "min": 0.004115602029288151,
+          "max": 0.007637596016659365
+        }
+      },
+      "minimum_sampled_psnr": {
+        "source": 30.327757790350045,
+        "target": 30.847332572756237
+      },
+      "activation_validation": {
+        "op_validation_operator": 0.008334508165717125,
+        "op_validation_data": 0.019216036424040794
+      },
+      "warmup_max_loss_difference": 0.0
+    },
+    "nonlocal": {
+      "endpoint_source": {
+        "mse": 0.0006071888780708148,
+        "psnr_db": 32.1667619204787,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968037762588065
+      },
+      "endpoint_target": {
+        "mse": 0.0005676305662495926,
+        "psnr_db": 32.45934226329241,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966222191701354
+      },
+      "endpoint_quality_pass": true,
+      "labels": {
+        "dice": 0.7006416421915803,
+        "hd95_mm": 6.514197847672871,
+        "hd95_finite_labels_mean_mm": 6.514197847672871,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "training_seconds": 110.62646780605428,
+      "recovery_seconds": 17.331174093997106,
+      "flow_max_relative_residual": 1.9908020476577803e-05,
+      "heldout": {
+        "adjacent": 0.0025929096154868603,
+        "nonlocal_loss": 0.002021720167249441,
+        "original_data_mse": 0.0077643366530537605,
+        "boundary": 5.996415666231769e-07,
+        "continuous_recoverability": [
+          {
+            "time": 0.03125,
+            "preconditioned": 0.0014105418231338263,
+            "raw_rms": 0.010196193121373653
+          },
+          {
+            "time": 0.09375,
+            "preconditioned": 0.001806928776204586,
+            "raw_rms": 0.011579599231481552
+          },
+          {
+            "time": 0.15625,
+            "preconditioned": 0.0032680691219866276,
+            "raw_rms": 0.017126569524407387
+          },
+          {
+            "time": 0.21875,
+            "preconditioned": 0.0038997516967356205,
+            "raw_rms": 0.01936613954603672
+          },
+          {
+            "time": 0.28125,
+            "preconditioned": 0.003921213559806347,
+            "raw_rms": 0.018845761194825172
+          },
+          {
+            "time": 0.34375,
+            "preconditioned": 0.002308579860255122,
+            "raw_rms": 0.013548684306442738
+          },
+          {
+            "time": 0.40625,
+            "preconditioned": 0.0036536501720547676,
+            "raw_rms": 0.017050905153155327
+          },
+          {
+            "time": 0.46875,
+            "preconditioned": 0.00451058242470026,
+            "raw_rms": 0.019198564812541008
+          },
+          {
+            "time": 0.53125,
+            "preconditioned": 0.002589940093457699,
+            "raw_rms": 0.014251047745347023
+          },
+          {
+            "time": 0.59375,
+            "preconditioned": 0.001459283521398902,
+            "raw_rms": 0.010906761512160301
+          },
+          {
+            "time": 0.65625,
+            "preconditioned": 0.0016688075847923756,
+            "raw_rms": 0.011697718873620033
+          },
+          {
+            "time": 0.71875,
+            "preconditioned": 0.002848952542990446,
+            "raw_rms": 0.015405617654323578
+          },
+          {
+            "time": 0.78125,
+            "preconditioned": 0.003572475165128708,
+            "raw_rms": 0.018093938007950783
+          },
+          {
+            "time": 0.84375,
+            "preconditioned": 0.005480344407260418,
+            "raw_rms": 0.02473725564777851
+          },
+          {
+            "time": 0.90625,
+            "preconditioned": 0.006099434103816748,
+            "raw_rms": 0.02724258229136467
+          },
+          {
+            "time": 0.96875,
+            "preconditioned": 0.005029583349823952,
+            "raw_rms": 0.023644307628273964
+          }
+        ],
+        "continuous_recoverability_mean": 0.0033455086377216503
+      },
+      "velocity_alignment_mean": {
+        "velocity_rmse": 3.4869791865348816,
+        "velocity_relative_l2": 0.9393312595784664,
+        "velocity_cosine": 0.7424984872341156,
+        "energy_error_per_voxel": 0.008644472050946206,
+        "stationarity_preconditioned": 0.002043374624918215,
+        "stationarity_raw_rms": 0.012737454031594098,
+        "naive_velocity_relative_error": 0.013110237923683599
+      },
+      "max_inverse_defect": 1.71661376953125e-05,
+      "flow_converged": 16,
+      "flow_intervals": 16,
+      "settled_active_ms": 32.10697091522864,
+      "logged_gradient_ranges": {
+        "op_gradient": {
+          "min": 0.01107674092054367,
+          "max": 0.021527830511331558
+        },
+        "op_base_gradient": {
+          "min": 0.040708012878894806,
+          "max": 0.1416340172290802
+        },
+        "op_gradient_scale": {
+          "min": 0.2229442596435547,
+          "max": 0.9257742166519165
+        },
+        "op_applied_gradient": {
+          "min": 0.004070801072653563,
+          "max": 0.014163402354082866
+        },
+        "recoverability_gradient": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "recoverability_scale": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "recoverability_applied_gradient": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "recoverability_loss": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "recoverability_weighted": {
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "minimum_sampled_psnr": {
+        "source": 30.405758915268496,
+        "target": 30.87378675153277
+      },
+      "activation_validation": {
+        "op_validation_operator": 0.008334508165717125,
+        "op_validation_data": 0.019216036424040794,
+        "nonlocal_validation": 0.005883562844246626,
+        "recoverability_validation": 0.0023504458367824554
+      },
+      "warmup_max_loss_difference": 0.0
+    },
+    "recoverability": {
+      "endpoint_source": {
+        "mse": 0.0006205558816061538,
+        "psnr_db": 32.07219103801941,
+        "psnr_infinite": false,
+        "global_ncc": 0.9967340667618784
+      },
+      "endpoint_target": {
+        "mse": 0.0005746992174904621,
+        "psnr_db": 32.40559394200574,
+        "psnr_infinite": false,
+        "global_ncc": 0.9965853539794559
+      },
+      "endpoint_quality_pass": true,
+      "labels": {
+        "dice": 0.6999607160687447,
+        "hd95_mm": 6.565534604447229,
+        "hd95_finite_labels_mean_mm": 6.565534604447229,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "training_seconds": 116.02203013293911,
+      "recovery_seconds": 17.22965638397727,
+      "flow_max_relative_residual": 1.955555308086332e-05,
+      "heldout": {
+        "adjacent": 0.0023534782230854034,
+        "nonlocal_loss": 0.0019265327136963606,
+        "original_data_mse": 0.007709831930696964,
+        "boundary": 5.556335054279771e-07,
+        "continuous_recoverability": [
+          {
+            "time": 0.03125,
+            "preconditioned": 0.002003042958676815,
+            "raw_rms": 0.012514032423496246
+          },
+          {
+            "time": 0.09375,
+            "preconditioned": 0.002068430883809924,
+            "raw_rms": 0.012362499721348286
+          },
+          {
+            "time": 0.15625,
+            "preconditioned": 0.0031979798804968596,
+            "raw_rms": 0.01628687232732773
+          },
+          {
+            "time": 0.21875,
+            "preconditioned": 0.004497470334172249,
+            "raw_rms": 0.02059607394039631
+          },
+          {
+            "time": 0.28125,
+            "preconditioned": 0.004393067676573992,
+            "raw_rms": 0.020311592146754265
+          },
+          {
+            "time": 0.34375,
+            "preconditioned": 0.002113407477736473,
+            "raw_rms": 0.01317591406404972
+          },
+          {
+            "time": 0.40625,
+            "preconditioned": 0.0014269803650677204,
+            "raw_rms": 0.010469934903085232
+          },
+          {
+            "time": 0.46875,
+            "preconditioned": 0.0021479574497789145,
+            "raw_rms": 0.013385376892983913
+          },
+          {
+            "time": 0.53125,
+            "preconditioned": 0.0027403468266129494,
+            "raw_rms": 0.01533867884427309
+          },
+          {
+            "time": 0.59375,
+            "preconditioned": 0.0022355234250426292,
+            "raw_rms": 0.01387232169508934
+          },
+          {
+            "time": 0.65625,
+            "preconditioned": 0.0022163521498441696,
+            "raw_rms": 0.014023298397660255
+          },
+          {
+            "time": 0.71875,
+            "preconditioned": 0.003087599528953433,
+            "raw_rms": 0.016658462584018707
+          },
+          {
+            "time": 0.78125,
+            "preconditioned": 0.003947398159652948,
+            "raw_rms": 0.019603701308369637
+          },
+          {
+            "time": 0.84375,
+            "preconditioned": 0.005155826453119516,
+            "raw_rms": 0.023740073665976524
+          },
+          {
+            "time": 0.90625,
+            "preconditioned": 0.004413182847201824,
+            "raw_rms": 0.02219577506184578
+          },
+          {
+            "time": 0.96875,
+            "preconditioned": 0.003688824363052845,
+            "raw_rms": 0.019774697721004486
+          }
+        ],
+        "continuous_recoverability_mean": 0.003083336923737079
+      },
+      "velocity_alignment_mean": {
+        "velocity_rmse": 3.3926232010126114,
+        "velocity_relative_l2": 0.9003610126674175,
+        "velocity_cosine": 0.755059015005827,
+        "energy_error_per_voxel": 0.007422800059430301,
+        "stationarity_preconditioned": 0.0017175687826238573,
+        "stationarity_raw_rms": 0.01176965661579743,
+        "naive_velocity_relative_error": 0.013006138338823803
+      },
+      "max_inverse_defect": 1.708648051135242e-05,
+      "flow_converged": 16,
+      "flow_intervals": 16,
+      "settled_active_ms": 33.08931556463885,
+      "logged_gradient_ranges": {
+        "op_gradient": {
+          "min": 0.01383146084845066,
+          "max": 0.02267240360379219
+        },
+        "op_base_gradient": {
+          "min": 0.04196496680378914,
+          "max": 0.09865329414606094
+        },
+        "op_gradient_scale": {
+          "min": 0.21050064265727997,
+          "max": 0.7087858319282532
+        },
+        "op_applied_gradient": {
+          "min": 0.004196496701475538,
+          "max": 0.009865329616063012
+        },
+        "recoverability_gradient": {
+          "min": 0.15557073056697845,
+          "max": 6.284392833709717
+        },
+        "recoverability_scale": {
+          "min": 0.0007078818955048928,
+          "max": 0.03430896752209613
+        },
+        "recoverability_applied_gradient": {
+          "min": 0.004196496680378914,
+          "max": 0.009865329414606095
+        },
+        "recoverability_loss": {
+          "min": 0.00029623793670907617,
+          "max": 0.012844069860875607
+        },
+        "recoverability_weighted": {
+          "min": 0.00029623793670907617,
+          "max": 0.012844069860875607
+        }
+      },
+      "minimum_sampled_psnr": {
+        "source": 30.421822060721983,
+        "target": 30.820489180248593
+      },
+      "activation_validation": {
+        "op_validation_operator": 0.008334508165717125,
+        "op_validation_data": 0.019216036424040794,
+        "nonlocal_validation": 0.005883562844246626,
+        "recoverability_validation": 0.0023504458367824554
+      },
+      "warmup_max_loss_difference": 0.0
+    }
+  },
+  "definitions": {
+    "temporal": "adjacent sum; nonlocal K times separation-balanced mean of squared residual/separation",
+    "continuous": "256 shared continuous sites x all 16 midpoint times; mean sum R^2/D",
+    "native": "512 shared uniform voxel centres x all 16 midpoints; true graph stencil; scalar Jacobi energy norm",
+    "energy_error": "Monte Carlo per-voxel e^T A e with half-weighted directed valid edges",
+    "pdlk_geometry": "Common adjacent-control geometry, not separately fitted PD-LK auxiliary maps"
+  },
+  "control_repeat_max_loss_difference": 0.0
+}

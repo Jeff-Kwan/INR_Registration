@@ -1,0 +1,43 @@
+{
+  "fireants": {
+    "implementation": "pinned native SyNRegistration and native warp composition",
+    "recipe": "native SyN defaults with an explicit generic multiresolution schedule",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "not the quickstart affine-plus-Greedy pipeline",
+      "no dataset-specific tuning claimed",
+      "published speed reproduction is unverified; actual fused/fallback backend is recorded per run"
+    ]
+  },
+  "convexadam": {
+    "implementation": "pinned native convex_adam_pt MIND-SSC path",
+    "recipe": "public API defaults, inverse consistency and Adam enabled",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "self-configuration search and dataset-selected settings were not reproduced",
+      "no nnUNet features",
+      "published leaderboard reproduction is not claimed"
+    ]
+  },
+  "ccidir": {
+    "implementation": "pinned native ImplicitRegistrator.fit and second-order consensus",
+    "recipe": "2500 iterations and static cycle weight; 50 fits per DIR-Lab case with both directions scored",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "mask equality with authors' original masks is not established",
+      "numeric random seed IDs were not published; we record IDs 0..49",
+      "Learn2Reg cohorts are declared adaptations"
+    ]
+  },
+  "nir": {
+    "implementation": "pinned native single-field Gaussian/SIREN and train_efficient_pairwise",
+    "recipe": "released-code adaptation: MSE plus Jacobian 10, learning rate 0.0002, 3000 steps",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "not the paper's hybrid two-field recipe",
+      "paper single-field budget, learning rate and regularization differ",
+      "native inference maxlen conversion is preserved even though dataio's inverse helper differs",
+      "independent input minmax is an explicit adaptation"
+    ]
+  }
+}

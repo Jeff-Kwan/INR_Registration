@@ -1,0 +1,368 @@
+{
+  "root": "results/implicit_symmetric/20261110T123800_326081Z",
+  "protocol": {
+    "pair": "LPBA S02 to S01",
+    "checkpoint": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt",
+    "endpoint_training": "Existing MSE + strict PD-LK; no fitting",
+    "settings": [
+      "single: 400 full-resolution iterations",
+      "pyramid: 100 at factor4, 100 at factor2, 200 at factor1"
+    ],
+    "chunk": 16384,
+    "compile": false,
+    "step": 1.0,
+    "sigma": 1.0,
+    "alpha": 1.0,
+    "inverse_iterations": 30,
+    "inverse_tolerance": 0.0001,
+    "max_cases": 1,
+    "max_recoveries": 2,
+    "maximum_pair_seconds": 600,
+    "total_wall_seconds": 1200,
+    "selection": "Fixed settings; no anatomy tuning. Fresh rerun after a progress-monitor Mock retained tensors and caused OOM; no solver changes. Report both configurations",
+    "comparison": "Same endpoint checkpoint, eager analytical queries, sequential conditions; no archival NCC or old-solver speed equivalence claim"
+  },
+  "execution": {
+    "status": "complete",
+    "records": [
+      {
+        "condition": "single",
+        "status": "complete",
+        "seconds": 159.57734861189965,
+        "endpoint_quality_pass": true
+      },
+      {
+        "condition": "pyramid",
+        "status": "complete",
+        "seconds": 87.15364807203878,
+        "endpoint_quality_pass": true
+      }
+    ],
+    "elapsed_seconds": 246.73933840706013,
+    "source_and_checkpoint_unchanged": true
+  },
+  "conditions": {
+    "single": {
+      "status": {
+        "condition": "single",
+        "status": "complete",
+        "seconds": 159.57734861189965,
+        "endpoint_quality_pass": true
+      },
+      "metrics": {
+        "method": "siren_pdlk_implicit_symmetric",
+        "recovery_method": "implicit_symmetric",
+        "endpoint_source": {
+          "mse": 0.0005991451947043228,
+          "psnr_db": 32.22467919484251,
+          "psnr_infinite": false,
+          "global_ncc": 0.9968462648332425
+        },
+        "endpoint_target": {
+          "mse": 0.0005608012156195531,
+          "psnr_db": 32.51191053642874,
+          "psnr_infinite": false,
+          "global_ncc": 0.9966633524185476
+        },
+        "endpoint_quality_pass": true,
+        "recovery_seconds": 154.09632009698544,
+        "seconds": 159.57671351800673,
+        "before": {
+          "mse": 0.020899650131664817,
+          "psnr_db": 16.798609840879493,
+          "psnr_infinite": false,
+          "global_ncc": 0.8890241530415923
+        },
+        "after": {
+          "mse": 0.0014994862350023177,
+          "psnr_db": 28.240575166266787,
+          "psnr_infinite": false,
+          "global_ncc": 0.9910361533750249
+        },
+        "labels": {
+          "dice": 0.6899531840213707,
+          "hd95_mm": 6.707141782556262,
+          "hd95_finite_labels_mean_mm": 6.707141782556262,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "folding_fraction": 0.00030192057291666665,
+        "jacobian_min": -1.5996664762496948,
+        "inverse_composition_mean_mm": 0.13167689740657806,
+        "sampling_outside_fraction": 0.04372395947575569,
+        "flow_all_intervals_converged": null,
+        "flow_max_relative_residual": null,
+        "midpoint_inversions_converged": false,
+        "midpoint_inverse_max_defect_voxels": 6.876438140869141
+      },
+      "diagnostics": [
+        {
+          "kind": "symmetric_level",
+          "factor": 1,
+          "shape": [
+            160,
+            192,
+            160
+          ],
+          "iterations": 400,
+          "seconds": 153.92726080899592,
+          "endpoint_queries": 3932160000,
+          "last_preupdate_mse": 0.0003911525127477944
+        },
+        {
+          "kind": "midpoint_inversion",
+          "domain": "fixed",
+          "iterations": 30,
+          "max_defect_voxels": 6.876438140869141,
+          "converged": false
+        },
+        {
+          "kind": "midpoint_inversion",
+          "domain": "moving",
+          "iterations": 30,
+          "max_defect_voxels": 3.913165330886841,
+          "converged": false
+        }
+      ],
+      "endpoint_queries": 3932160000,
+      "stage_seconds": 153.92726080899592
+    },
+    "pyramid": {
+      "status": {
+        "condition": "pyramid",
+        "status": "complete",
+        "seconds": 87.15364807203878,
+        "endpoint_quality_pass": true
+      },
+      "metrics": {
+        "method": "siren_pdlk_implicit_symmetric",
+        "recovery_method": "implicit_symmetric",
+        "endpoint_source": {
+          "mse": 0.0005991451947043228,
+          "psnr_db": 32.22467919484251,
+          "psnr_infinite": false,
+          "global_ncc": 0.9968462648332425
+        },
+        "endpoint_target": {
+          "mse": 0.0005608012156195531,
+          "psnr_db": 32.51191053642874,
+          "psnr_infinite": false,
+          "global_ncc": 0.9966633524185476
+        },
+        "endpoint_quality_pass": true,
+        "recovery_seconds": 82.83607854903676,
+        "seconds": 87.15296315704472,
+        "before": {
+          "mse": 0.020899650131664817,
+          "psnr_db": 16.798609840879493,
+          "psnr_infinite": false,
+          "global_ncc": 0.8890241530415923
+        },
+        "after": {
+          "mse": 0.0015135801764543635,
+          "psnr_db": 28.19994568913252,
+          "psnr_infinite": false,
+          "global_ncc": 0.9909501474387412
+        },
+        "labels": {
+          "dice": 0.6860684060624668,
+          "hd95_mm": 6.74747171998024,
+          "hd95_finite_labels_mean_mm": 6.74747171998024,
+          "hd95_infinite": false,
+          "missing_labels": [],
+          "label_count": 56,
+          "metric_definition": {
+            "implementation": "MONAI",
+            "version": "1.6.1",
+            "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+            "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+            "spacing": "millimetres in NIfTI array-axis order",
+            "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+            "hd95_enabled": true
+          }
+        },
+        "folding_fraction": 0.00029439290364583333,
+        "jacobian_min": -1.5718852281570435,
+        "inverse_composition_mean_mm": 0.12304206937551498,
+        "sampling_outside_fraction": 0.040486451238393784,
+        "flow_all_intervals_converged": null,
+        "flow_max_relative_residual": null,
+        "midpoint_inversions_converged": false,
+        "midpoint_inverse_max_defect_voxels": 7.238277912139893
+      },
+      "diagnostics": [
+        {
+          "kind": "symmetric_level",
+          "factor": 4,
+          "shape": [
+            41,
+            49,
+            41
+          ],
+          "iterations": 100,
+          "seconds": 0.7227356509538367,
+          "endpoint_queries": 16473800,
+          "last_preupdate_mse": 0.00022994866594672203
+        },
+        {
+          "kind": "symmetric_level",
+          "factor": 2,
+          "shape": [
+            81,
+            97,
+            81
+          ],
+          "iterations": 100,
+          "seconds": 5.030989903025329,
+          "endpoint_queries": 127283400,
+          "last_preupdate_mse": 0.00032715563429519534
+        },
+        {
+          "kind": "symmetric_level",
+          "factor": 1,
+          "shape": [
+            160,
+            192,
+            160
+          ],
+          "iterations": 200,
+          "seconds": 77.05160636594519,
+          "endpoint_queries": 1966080000,
+          "last_preupdate_mse": 0.00040657544741407037
+        },
+        {
+          "kind": "midpoint_inversion",
+          "domain": "fixed",
+          "iterations": 30,
+          "max_defect_voxels": 7.238277912139893,
+          "converged": false
+        },
+        {
+          "kind": "midpoint_inversion",
+          "domain": "moving",
+          "iterations": 30,
+          "max_defect_voxels": 3.936600923538208,
+          "converged": false
+        }
+      ],
+      "endpoint_queries": 2109837200,
+      "stage_seconds": 82.80533191992436
+    }
+  },
+  "tests": {
+    "medical": 51,
+    "cameraman": 1,
+    "compiled_cuda_derivative_parity": true,
+    "synthetic_optimizer_steps": 0
+  },
+  "existing_flow_reference": {
+    "source": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/metrics.json",
+    "metrics": {
+      "method": "siren_pdlk",
+      "recovery_method": null,
+      "endpoint_source": {
+        "mse": 0.0005991451947043228,
+        "psnr_db": 32.22467919484251,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968462648332425
+      },
+      "endpoint_target": {
+        "mse": 0.0005608012156195531,
+        "psnr_db": 32.51191053642874,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966633524185476
+      },
+      "endpoint_quality_pass": true,
+      "recovery_seconds": 19.582117318059318,
+      "seconds": 68.96472643001471,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530415923
+      },
+      "after": {
+        "mse": 0.0018977415084201817,
+        "psnr_db": 27.217629431795164,
+        "psnr_infinite": false,
+        "global_ncc": 0.9886393483085556
+      },
+      "labels": {
+        "dice": 0.6982286114777837,
+        "hd95_mm": 6.565149873495102,
+        "hd95_finite_labels_mean_mm": 6.565149873495102,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "jacobian_min": 0.06868089735507965,
+      "inverse_composition_mean_mm": 0.12677821516990662,
+      "sampling_outside_fraction": 0.07810363918542862,
+      "flow_all_intervals_converged": false,
+      "flow_max_relative_residual": 2.019498970184941e-05,
+      "midpoint_inversions_converged": null,
+      "midpoint_inverse_max_defect_voxels": null
+    }
+  },
+  "comparison": {
+    "recovery_speedup": 1.8602560960893932,
+    "stage_speedup": 1.858905184485571,
+    "endpoint_query_fraction": 0.536559346516927,
+    "dice_delta": -0.003884777958903962,
+    "hd95_delta_mm": 0.04032993742397828,
+    "design": "One pair, one sequential run per setting; shared immutable MSE+PD-LK checkpoint. Not an old/new solver or NCC comparison."
+  },
+  "runtime": {
+    "versions": {
+      "torch": "2.14.1+cu132",
+      "numpy": "2.3.5",
+      "nibabel": "5.4.2",
+      "monai": "1.6.1",
+      "antspyx": "0.6.3",
+      "itk-elastix": "0.25.4",
+      "SimpleITK": "2.5.7"
+    },
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "torch_cuda": "13.2",
+    "threads": 4,
+    "compile": false,
+    "solver_chunk": 16384,
+    "order": [
+      "single",
+      "pyramid"
+    ],
+    "repeats_per_setting": 1
+  },
+  "preservation": {
+    "Data": {
+      "files": 2343,
+      "bytes": 3405406449,
+      "unchanged": true
+    },
+    "results/benchmark_20261110": {
+      "files": 830,
+      "bytes": 83266043,
+      "unchanged": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/MDL-UzL/L2R",
+  "revision": "88475095e35442087a24439ff34ec09f54bc7dac",
+  "files_sha256": {
+    "l2r_utils.py": "fd924ef31a10d9c47ee24f255a9415abc6e784ee788d62b94be08ba997a34a05",
+    "l2r_evaluation.py": "ed14b7b2fc2b1a52c1bccc102a3182720d6b49ddc260de1cee5c5a2bc34c6dc6",
+    "abdomenctct_val.json": "c7d2e1cefeb750ddcd1a3a3ec74b14d3b74fed442d1b9685ddeea69dbdafadc7",
+    "oasis_val.json": "427c3896abf3649346c8a4da99927120aeadf04abe69353441eb04c52f10acf6"
+  }
+}

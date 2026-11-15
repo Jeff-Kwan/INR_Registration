@@ -1,0 +1,267 @@
+{
+  "title": "Adaptive Hessian gating screen",
+  "date": "2026-11-11",
+  "checkpoint_protocol": {
+    "source": "Existing factor-8 Gaussian-pyramid checkpoints used for both original and enhanced PCG in the prior screen",
+    "checkpoint_paths": {
+      "lpba": "results/pyramid_enhanced_screen/20261111/lpba/pyramid_enhanced/endpoints.pt",
+      "oasis": "results/pyramid_enhanced_screen/20261111/oasis/pyramid_enhanced/endpoints.pt",
+      "hippocampus": "results/pyramid_enhanced_screen/20261111_variants/factor8_retry/hippocampus/endpoints.pt",
+      "abdomenct": "results/pyramid_enhanced_screen/20261111_variants/factor8_retry/abdomenct/endpoints.pt"
+    },
+    "source_sha256": {
+      "lpba": "e328974f9199ef7fd681cc47a32fb99ce52119bf0191656083a3687c0f2d9e80",
+      "oasis": "82552ec8d82b81a719ba99021bf46c4144c21854fdc0cfc331501ea3505e1def",
+      "hippocampus": "c92fe810038daaf13463b64d54c961133f0bdfd1e34a474186aefd1e33b8b9a0",
+      "abdomenct": "57a9837f262fec6babcd7992176ae1e317cd5a3c34f64e08096045ce4ef1061e"
+    },
+    "all_endpoints_passed": true,
+    "recovery": "16 midpoint intervals, same enhanced c_max=4, PCG settings and RK2; no training or checkpoint edits",
+    "threshold_rule": "For each checkpoint, tau_g is median |g| and tau_h is median sigma_min(H) over all voxels at the central interval midpoint t=8.5/16. Reported p90 values describe scale only; no tuning or multi-threshold sweep.",
+    "branches": {
+      "original": "differential_weight=0, existing result",
+      "enhanced": "constant differential_weight=4, existing result",
+      "gradient_gate": "differential_weight=4, c(x)=4 exp(-|g|^2/(2 tau_g^2))",
+      "gradient_gate_hessian_confidence": "same gate multiplied by sigma_min(H)^2/(sigma_min(H)^2+tau_h^2)"
+    },
+    "run_directories": "results/adaptive_hessian_screen/20261111"
+  },
+  "cases": {
+    "lpba": {
+      "case": "S02",
+      "thresholds": {
+        "tau_g_p50": 0.004923265427350998,
+        "tau_g_p90": 0.06544090807437897,
+        "tau_h_p50": 0.0006140689947642386,
+        "tau_h_p90": 0.0037042456679046154
+      },
+      "original_pcg": {
+        "dice": 0.7067148121339935,
+        "hd95_mm": 6.3952962798731665,
+        "folding_fraction": 0.0,
+        "recovery_seconds": 18.667189729982056,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 2.0065059288754128e-05,
+        "endpoint_source_psnr_db": 31.550704726287876,
+        "endpoint_target_psnr_db": 31.93647939985604,
+        "endpoint_quality_pass": true
+      },
+      "enhanced_constant_c4": {
+        "dice": 0.7116840199700424,
+        "hd95_mm": 6.368058123758861,
+        "folding_fraction": 0.0,
+        "recovery_seconds": 59.09499286999926,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9986226106993854e-05,
+        "endpoint_source_psnr_db": 31.550704726287876,
+        "endpoint_target_psnr_db": 31.93647939985604,
+        "endpoint_quality_pass": true
+      },
+      "gradient_gate": {
+        "dice": 0.7068968771823815,
+        "hd95_mm": 6.395425860370908,
+        "folding_fraction": 0.0,
+        "recovery_seconds": 46.937592991045676,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 2.0102623238926753e-05,
+        "endpoint_source_psnr_db": 31.550704726287876,
+        "endpoint_target_psnr_db": 31.93647939985604,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 2.1014952808618546,
+        "mean_iterations": 330.625,
+        "interval_count": 16
+      },
+      "gradient_gate_hessian_confidence": {
+        "dice": 0.706820084048169,
+        "hd95_mm": 6.401779127972467,
+        "folding_fraction": 0.0,
+        "recovery_seconds": 59.58683746994939,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 2.0192745068925433e-05,
+        "endpoint_source_psnr_db": 31.550704726287876,
+        "endpoint_target_psnr_db": 31.93647939985604,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 0.7847733274102211,
+        "mean_iterations": 361.25,
+        "interval_count": 16
+      }
+    },
+    "oasis": {
+      "case": "OASIS_0002_0000",
+      "thresholds": {
+        "tau_g_p50": 0.006593517959117889,
+        "tau_g_p90": 0.08691304177045822,
+        "tau_h_p50": 0.0007192191551439464,
+        "tau_h_p90": 0.004594394471496344
+      },
+      "original_pcg": {
+        "dice": 0.7729036390781403,
+        "hd95_mm": 3.197854634693691,
+        "folding_fraction": 1.293364025297619e-05,
+        "recovery_seconds": 28.82592091697734,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 2.0306066289776936e-05,
+        "endpoint_source_psnr_db": 31.143693044172274,
+        "endpoint_target_psnr_db": 29.943355818756984,
+        "endpoint_quality_pass": true
+      },
+      "enhanced_constant_c4": {
+        "dice": 0.7703785108668464,
+        "hd95_mm": 3.094299694469997,
+        "folding_fraction": 1.772925967261905e-05,
+        "recovery_seconds": 83.53366276202723,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9693812646437436e-05,
+        "endpoint_source_psnr_db": 31.143693044172274,
+        "endpoint_target_psnr_db": 29.943355818756984,
+        "endpoint_quality_pass": true
+      },
+      "gradient_gate": {
+        "dice": 0.7726509077208382,
+        "hd95_mm": 3.1994927746909005,
+        "folding_fraction": 1.2352353050595238e-05,
+        "recovery_seconds": 65.1177604169352,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.986479946936015e-05,
+        "endpoint_source_psnr_db": 31.143693044172274,
+        "endpoint_target_psnr_db": 29.943355818756984,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 2.054449550807476,
+        "mean_iterations": 301.25,
+        "interval_count": 16
+      },
+      "gradient_gate_hessian_confidence": {
+        "dice": 0.7726388250078474,
+        "hd95_mm": 3.1994927746909005,
+        "folding_fraction": 1.2497674851190476e-05,
+        "recovery_seconds": 84.65891349990852,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 2.0007018974865787e-05,
+        "endpoint_source_psnr_db": 31.143693044172274,
+        "endpoint_target_psnr_db": 29.943355818756984,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 0.7348092719912529,
+        "mean_iterations": 337.5,
+        "interval_count": 16
+      }
+    },
+    "hippocampus": {
+      "case": "HippocampusMR_0002_0000",
+      "thresholds": {
+        "tau_g_p50": 0.052605923265218735,
+        "tau_g_p90": 0.18266117572784424,
+        "tau_h_p50": 0.007260175421833992,
+        "tau_h_p90": 0.020213425159454346
+      },
+      "original_pcg": {
+        "dice": 0.8145312070846558,
+        "hd95_mm": 2.2071067690849304,
+        "folding_fraction": 7.62939453125e-06,
+        "recovery_seconds": 2.106744433986023,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.885999517980963e-05,
+        "endpoint_source_psnr_db": 32.35096809179034,
+        "endpoint_target_psnr_db": 35.92162730170485,
+        "endpoint_quality_pass": true
+      },
+      "enhanced_constant_c4": {
+        "dice": 0.8187125623226166,
+        "hd95_mm": 2.2071067690849304,
+        "folding_fraction": 0.000232696533203125,
+        "recovery_seconds": 5.840748531976715,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.8019680283032358e-05,
+        "endpoint_source_psnr_db": 32.35096809179034,
+        "endpoint_target_psnr_db": 35.92162730170485,
+        "endpoint_quality_pass": true
+      },
+      "gradient_gate": {
+        "dice": 0.8172113001346588,
+        "hd95_mm": 2.2071067690849304,
+        "folding_fraction": 0.00020599365234375,
+        "recovery_seconds": 3.249846927006729,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9769258869928308e-05,
+        "endpoint_source_psnr_db": 32.35096809179034,
+        "endpoint_target_psnr_db": 35.92162730170485,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 2.028552956879139,
+        "mean_iterations": 84.375,
+        "interval_count": 16
+      },
+      "gradient_gate_hessian_confidence": {
+        "dice": 0.8169654905796051,
+        "hd95_mm": 2.2071067690849304,
+        "folding_fraction": 0.0001220703125,
+        "recovery_seconds": 2.1332370510790497,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.7147940525319427e-05,
+        "endpoint_source_psnr_db": 32.35096809179034,
+        "endpoint_target_psnr_db": 35.92162730170485,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 0.9154444485902786,
+        "mean_iterations": 87.5,
+        "interval_count": 16
+      }
+    },
+    "abdomenct": {
+      "case": "AbdomenCTCT_0002_0000",
+      "thresholds": {
+        "tau_g_p50": 0.02434205263853073,
+        "tau_g_p90": 0.08092417567968369,
+        "tau_h_p50": 0.001720678759738803,
+        "tau_h_p90": 0.005380263552069664
+      },
+      "original_pcg": {
+        "dice": 0.5205426743397346,
+        "hd95_mm": 22.139954493596004,
+        "folding_fraction": 0.00022226969401041666,
+        "recovery_seconds": 22.094838788965717,
+        "flow_all_intervals_converged": false,
+        "flow_max_relative_residual": 2.0031617168569937e-05,
+        "endpoint_source_psnr_db": 26.039344548040447,
+        "endpoint_target_psnr_db": 25.319569069560952,
+        "endpoint_quality_pass": true
+      },
+      "enhanced_constant_c4": {
+        "dice": 0.508778856923947,
+        "hd95_mm": 22.772989713228664,
+        "folding_fraction": 0.00044148763020833334,
+        "recovery_seconds": 72.90387604990974,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.998076550080441e-05,
+        "endpoint_source_psnr_db": 26.039344548040447,
+        "endpoint_target_psnr_db": 25.319569069560952,
+        "endpoint_quality_pass": true
+      },
+      "gradient_gate": {
+        "dice": 0.5133781180931971,
+        "hd95_mm": 22.3550684268658,
+        "folding_fraction": 0.00023790995279947917,
+        "recovery_seconds": 56.264685178990476,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9301149222883396e-05,
+        "endpoint_source_psnr_db": 26.039344548040447,
+        "endpoint_target_psnr_db": 25.319569069560952,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 2.1908191442489624,
+        "mean_iterations": 163.125,
+        "interval_count": 16
+      },
+      "gradient_gate_hessian_confidence": {
+        "dice": 0.5140080245641562,
+        "hd95_mm": 22.35470412327693,
+        "folding_fraction": 0.00023218790690104167,
+        "recovery_seconds": 76.7758248570608,
+        "flow_all_intervals_converged": true,
+        "flow_max_relative_residual": 1.9972452719230205e-05,
+        "endpoint_source_psnr_db": 26.039344548040447,
+        "endpoint_target_psnr_db": 25.319569069560952,
+        "endpoint_quality_pass": true,
+        "mean_effective_c_across_intervals": 0.9577385261654854,
+        "mean_iterations": 183.75,
+        "interval_count": 16
+      }
+    }
+  }
+}

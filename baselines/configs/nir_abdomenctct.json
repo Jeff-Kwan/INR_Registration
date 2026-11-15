@@ -1,0 +1,20 @@
+{
+  "method": "nir",
+  "seed": 42,
+  "evaluation": "abdomenctct",
+  "preprocessing": "independent_minmax_0_1",
+  "native": {
+    "model_type": "gaussian_sine",
+    "gaussian_scale": 1,
+    "num_hidden_layers": 3,
+    "sample_mtd": "downsize_unified_random",
+    "sample_exp": 18,
+    "batch_size": 1,
+    "num_epochs": 3000,
+    "lr": 0.0002,
+    "loss_type": "image_mse+discrete_jacobian",
+    "loss_weight": 10,
+    "steps_til_summary": 100,
+    "epochs_til_ckpt": 100
+  }
+}

@@ -1,0 +1,407 @@
+{
+  "run": "results/local_pcg_velocity_probe/20261110T161014_670128Z",
+  "protocol": {
+    "pair": "LPBA S02 to S01",
+    "checkpoints": {
+      "MSE+PDLK": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt",
+      "NCC+fixed_moments_0.01+PDLK": "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt"
+    },
+    "times": [
+      0.03125,
+      0.09375,
+      0.15625,
+      0.21875,
+      0.28125,
+      0.34375,
+      0.40625,
+      0.46875,
+      0.53125,
+      0.59375,
+      0.65625,
+      0.71875,
+      0.78125,
+      0.84375,
+      0.90625,
+      0.96875
+    ],
+    "samples": 65536,
+    "seed": 20261111,
+    "subsets": {
+      "all_interior": 65536,
+      "foreground_union": 17322,
+      "strong_original_edges": 4331
+    },
+    "strong_edge_threshold": 0.1496066004037857,
+    "units": "Native velocity per unit interpolation time; LPBA voxel size 1mm, so magnitudes also mm/unit time.",
+    "fields": [
+      "Global PCG brightness flow",
+      "Local strict PD-LK velocity c=4 eta=1e-6 rho=0",
+      "Local brightness-only ridge velocity eta=1e-6"
+    ],
+    "note": "Both local solves use the exact same g,q samples as PCG; local H,m are analytical point queries. No RK2, registration scoring or optimizer steps. Nonzero-direction metrics require both speeds >.1mm/unit time.",
+    "recovery": {
+      "intervals": 16,
+      "smoothness": 0.01,
+      "ridge": 1e-06,
+      "iterations": 500,
+      "tolerance": 2e-05,
+      "substeps": 4
+    }
+  },
+  "summary": {
+    "models": {
+      "MSE+PDLK": {
+        "strict_pdlk": {
+          "all_interior": {
+            "sums": {
+              "count": 1048576,
+              "local_squared_sum": 113703063.42615034,
+              "pcg_squared_sum": 15124710.286272101,
+              "dot_sum": 11665591.09096685,
+              "difference_squared_sum": 105496591.53048873,
+              "direction_count": 1048540,
+              "opposite_direction_count": 324178,
+              "local_brightness_squared_sum": 507.3047450311471,
+              "pcg_brightness_squared_sum": 1893.7209481645618,
+              "local_differential_squared_sum": 490.44228594400147,
+              "pcg_differential_squared_sum": 3053.2355516573066
+            },
+            "vector_cosine": 0.28130479439812395,
+            "relative_vector_rmse": 2.6410442752697474,
+            "local_speed_rms": 10.413245953410993,
+            "pcg_speed_rms": 3.7979004388086746,
+            "speed_rms_ratio": 2.7418427947725292,
+            "opposite_direction_fraction": 0.3091708470826101,
+            "median_of_interval_direction_medians": 0.4054958892884764,
+            "local_brightness_rms": 0.021995533772273545,
+            "pcg_brightness_rms": 0.042496976724292215,
+            "local_differential_vector_rms": 0.021626886317368116,
+            "pcg_differential_vector_rms": 0.0539610260053869
+          },
+          "foreground_union": {
+            "sums": {
+              "count": 277152,
+              "local_squared_sum": 54168069.94891614,
+              "pcg_squared_sum": 6692246.81037751,
+              "dot_sum": 7248970.492841437,
+              "difference_squared_sum": 46362375.77361077,
+              "direction_count": 277145,
+              "opposite_direction_count": 48121,
+              "local_brightness_squared_sum": 431.9134239668163,
+              "pcg_brightness_squared_sum": 1613.4359286656295,
+              "local_differential_squared_sum": 452.5819339116617,
+              "pcg_differential_squared_sum": 2882.773178038285
+            },
+            "vector_cosine": 0.38073138304402837,
+            "relative_vector_rmse": 2.632066554351261,
+            "local_speed_rms": 13.980177076956611,
+            "pcg_speed_rms": 4.913907378084159,
+            "speed_rms_ratio": 2.845022504760198,
+            "opposite_direction_fraction": 0.17363113171805372,
+            "median_of_interval_direction_medians": 0.6565243633880555,
+            "local_brightness_rms": 0.039476563778340835,
+            "pcg_brightness_rms": 0.07629864993767332,
+            "local_differential_vector_rms": 0.04041006960264132,
+            "pcg_differential_vector_rms": 0.10198733132276867
+          },
+          "strong_original_edges": {
+            "sums": {
+              "count": 69296,
+              "local_squared_sum": 13093248.079663208,
+              "pcg_squared_sum": 1817960.1915482979,
+              "dot_sum": 1975103.947257764,
+              "difference_squared_sum": 10961000.376695978,
+              "direction_count": 69293,
+              "opposite_direction_count": 10381,
+              "local_brightness_squared_sum": 145.1197919966669,
+              "pcg_brightness_squared_sum": 301.08047362031874,
+              "local_differential_squared_sum": 154.03672247904262,
+              "pcg_differential_squared_sum": 1135.345179807179
+            },
+            "vector_cosine": 0.4048312915921369,
+            "relative_vector_rmse": 2.4554602714716913,
+            "local_speed_rms": 13.745787163261822,
+            "pcg_speed_rms": 5.12198263038661,
+            "speed_rms_ratio": 2.6836848453397204,
+            "opposite_direction_fraction": 0.14981311243559955,
+            "median_of_interval_direction_medians": 0.7032141677573367,
+            "local_brightness_rms": 0.045762447159522573,
+            "pcg_brightness_rms": 0.0659154485968174,
+            "local_differential_vector_rms": 0.04714743294084637,
+            "pcg_differential_vector_rms": 0.12799997270580685
+          }
+        },
+        "brightness_only": {
+          "all_interior": {
+            "sums": {
+              "count": 1048576,
+              "local_squared_sum": 35686054.10489772,
+              "pcg_squared_sum": 15124710.286272101,
+              "dot_sum": 5169084.025923591,
+              "difference_squared_sum": 40472596.33932264,
+              "direction_count": 1031459,
+              "opposite_direction_count": 358673,
+              "local_brightness_squared_sum": 11.39182783226156,
+              "pcg_brightness_squared_sum": 1893.7209481645618,
+              "local_differential_squared_sum": 9092.595644845727,
+              "pcg_differential_squared_sum": 3053.2355516573066
+            },
+            "vector_cosine": 0.22249527616864231,
+            "relative_vector_rmse": 1.6358256002669955,
+            "local_speed_rms": 5.833770072065301,
+            "pcg_speed_rms": 3.7979004388086746,
+            "speed_rms_ratio": 1.5360513436458691,
+            "opposite_direction_fraction": 0.3477336471929568,
+            "median_of_interval_direction_medians": 0.2859392025061826,
+            "local_brightness_rms": 0.003296072453777334,
+            "pcg_brightness_rms": 0.042496976724292215,
+            "local_differential_vector_rms": 0.09312021765415228,
+            "pcg_differential_vector_rms": 0.0539610260053869
+          },
+          "foreground_union": {
+            "sums": {
+              "count": 277152,
+              "local_squared_sum": 7312535.686245367,
+              "pcg_squared_sum": 6692246.81037751,
+              "dot_sum": 3544643.6375877345,
+              "difference_squared_sum": 6915495.221447408,
+              "direction_count": 272006,
+              "opposite_direction_count": 34718,
+              "local_brightness_squared_sum": 0.24804517366958048,
+              "pcg_brightness_squared_sum": 1613.4359286656295,
+              "local_differential_squared_sum": 8628.919248110165,
+              "pcg_differential_squared_sum": 2882.773178038285
+            },
+            "vector_cosine": 0.5067019851451254,
+            "relative_vector_rmse": 1.0165427986342572,
+            "local_speed_rms": 5.136591050923524,
+            "pcg_speed_rms": 4.913907378084159,
+            "speed_rms_ratio": 1.0453170269005325,
+            "opposite_direction_fraction": 0.12763689036271259,
+            "median_of_interval_direction_medians": 0.582148912586682,
+            "local_brightness_rms": 0.0009460332095263139,
+            "pcg_brightness_rms": 0.07629864993767332,
+            "local_differential_vector_rms": 0.17644899696025793,
+            "pcg_differential_vector_rms": 0.10198733132276867
+          },
+          "strong_original_edges": {
+            "sums": {
+              "count": 69296,
+              "local_squared_sum": 1482123.6409534938,
+              "pcg_squared_sum": 1817960.1915482979,
+              "dot_sum": 915855.6829745558,
+              "difference_squared_sum": 1468372.46655268,
+              "direction_count": 67918,
+              "opposite_direction_count": 5773,
+              "local_brightness_squared_sum": 0.06446900995863653,
+              "pcg_brightness_squared_sum": 301.08047362031874,
+              "local_differential_squared_sum": 3421.600229105558,
+              "pcg_differential_squared_sum": 1135.345179807179
+            },
+            "vector_cosine": 0.5579466093674432,
+            "relative_vector_rmse": 0.8987231561026718,
+            "local_speed_rms": 4.6247486482984606,
+            "pcg_speed_rms": 5.12198263038661,
+            "speed_rms_ratio": 0.9029215797925074,
+            "opposite_direction_fraction": 0.08499955829088018,
+            "median_of_interval_direction_medians": 0.6310824041566085,
+            "local_brightness_rms": 0.0009645426083960221,
+            "pcg_brightness_rms": 0.0659154485968174,
+            "local_differential_vector_rms": 0.22220843975735727,
+            "pcg_differential_vector_rms": 0.12799997270580685
+          }
+        },
+        "pcg_converged": 15,
+        "pcg_max_relative_residual": 2.019498970184941e-05,
+        "same_gq_max_absolute_error": 4.76837158203125e-06,
+        "neighbor_difference_rms_mean": {
+          "strict_pdlk": 14.369559189870873,
+          "brightness_only": 3.8855049661960535,
+          "pcg": 0.4372218497718592
+        }
+      },
+      "NCC+fixed_moments_0.01+PDLK": {
+        "strict_pdlk": {
+          "all_interior": {
+            "sums": {
+              "count": 1048576,
+              "local_squared_sum": 292564666.1907897,
+              "pcg_squared_sum": 19836112.184837323,
+              "dot_sum": 18438437.641958397,
+              "difference_squared_sum": 275523903.0917102,
+              "direction_count": 1048546,
+              "opposite_direction_count": 330035,
+              "local_brightness_squared_sum": 4118.03392854562,
+              "pcg_brightness_squared_sum": 4704.525869187277,
+              "local_differential_squared_sum": 4161.234989576071,
+              "pcg_differential_squared_sum": 25971.16571715065
+            },
+            "vector_cosine": 0.2420387514306819,
+            "relative_vector_rmse": 3.7269310924873036,
+            "local_speed_rms": 16.703634575568397,
+            "pcg_speed_rms": 4.349389696041552,
+            "speed_rms_ratio": 3.8404548092737336,
+            "opposite_direction_fraction": 0.31475490822529484,
+            "median_of_interval_direction_medians": 0.40549999228773387,
+            "local_brightness_rms": 0.06266788006422021,
+            "pcg_brightness_rms": 0.06698197886232307,
+            "local_differential_vector_rms": 0.06299573742793815,
+            "pcg_differential_vector_rms": 0.15737863168669716
+          },
+          "foreground_union": {
+            "sums": {
+              "count": 277152,
+              "local_squared_sum": 97967025.89958689,
+              "pcg_squared_sum": 9904692.180915635,
+              "dot_sum": 11004184.980164096,
+              "difference_squared_sum": 85863348.12017433,
+              "direction_count": 277148,
+              "opposite_direction_count": 41918,
+              "local_brightness_squared_sum": 3768.034963961629,
+              "pcg_brightness_squared_sum": 3306.2294373931427,
+              "local_differential_squared_sum": 3983.2432526551306,
+              "pcg_differential_squared_sum": 25062.17487410768
+            },
+            "vector_cosine": 0.353262411134471,
+            "relative_vector_rmse": 2.9443092140870317,
+            "local_speed_rms": 18.80100017533371,
+            "pcg_speed_rms": 5.978076703123107,
+            "speed_rms_ratio": 3.144991459462466,
+            "opposite_direction_fraction": 0.1512477088054036,
+            "median_of_interval_direction_medians": 0.7138407017249668,
+            "local_brightness_rms": 0.11659997398869672,
+            "pcg_brightness_rms": 0.10922133629624028,
+            "local_differential_vector_rms": 0.11988349790824498,
+            "pcg_differential_vector_rms": 0.30071173026593395
+          },
+          "strong_original_edges": {
+            "sums": {
+              "count": 69296,
+              "local_squared_sum": 23657549.996562317,
+              "pcg_squared_sum": 2448718.176011819,
+              "dot_sum": 2687188.7622796413,
+              "difference_squared_sum": 20731890.648014855,
+              "direction_count": 69295,
+              "opposite_direction_count": 10533,
+              "local_brightness_squared_sum": 1428.596205450784,
+              "pcg_brightness_squared_sum": 469.26650222915816,
+              "local_differential_squared_sum": 1436.9928725551522,
+              "pcg_differential_squared_sum": 10260.118185786172
+            },
+            "vector_cosine": 0.3530562377141981,
+            "relative_vector_rmse": 2.909712315932596,
+            "local_speed_rms": 18.47697197513502,
+            "pcg_speed_rms": 5.944499833719129,
+            "speed_rms_ratio": 3.1082466972793323,
+            "opposite_direction_fraction": 0.15200230896890107,
+            "median_of_interval_direction_medians": 0.7187175868623168,
+            "local_brightness_rms": 0.14358221967775256,
+            "pcg_brightness_rms": 0.08229163550394533,
+            "local_differential_vector_rms": 0.14400355839030093,
+            "pcg_differential_vector_rms": 0.384788512865518
+          }
+        },
+        "brightness_only": {
+          "all_interior": {
+            "sums": {
+              "count": 1048576,
+              "local_squared_sum": 95533227.31264111,
+              "pcg_squared_sum": 19836112.184837323,
+              "dot_sum": 8280527.937962623,
+              "difference_squared_sum": 98808283.62155318,
+              "direction_count": 1036495,
+              "opposite_direction_count": 344987,
+              "local_brightness_squared_sum": 21.561632611422358,
+              "pcg_brightness_squared_sum": 4704.525869187277,
+              "local_differential_squared_sum": 74013.56535640715,
+              "pcg_differential_squared_sum": 25971.16571715065
+            },
+            "vector_cosine": 0.19021839993835662,
+            "relative_vector_rmse": 2.2318674569455728,
+            "local_speed_rms": 9.545029347857758,
+            "pcg_speed_rms": 4.349389696041552,
+            "speed_rms_ratio": 2.1945675174944292,
+            "opposite_direction_fraction": 0.33284000405211794,
+            "median_of_interval_direction_medians": 0.3058821858496162,
+            "local_brightness_rms": 0.004534619635790958,
+            "pcg_brightness_rms": 0.06698197886232307,
+            "local_differential_vector_rms": 0.26567806899716223,
+            "pcg_differential_vector_rms": 0.15737863168669716
+          },
+          "foreground_union": {
+            "sums": {
+              "count": 277152,
+              "local_squared_sum": 10202870.41346124,
+              "pcg_squared_sum": 9904692.180915635,
+              "dot_sum": 5386341.298436093,
+              "difference_squared_sum": 9334879.997504689,
+              "direction_count": 272325,
+              "opposite_direction_count": 18464,
+              "local_brightness_squared_sum": 0.33071723992305485,
+              "pcg_brightness_squared_sum": 3306.2294373931427,
+              "local_differential_squared_sum": 71239.87777188522,
+              "pcg_differential_squared_sum": 25062.17487410768
+            },
+            "vector_cosine": 0.5358116986768057,
+            "relative_vector_rmse": 0.9708091884370795,
+            "local_speed_rms": 6.0673937085902265,
+            "pcg_speed_rms": 5.978076703123107,
+            "speed_rms_ratio": 1.0149407593616955,
+            "opposite_direction_fraction": 0.06780134031029102,
+            "median_of_interval_direction_medians": 0.6248836573404017,
+            "local_brightness_rms": 0.0010923691056467222,
+            "pcg_brightness_rms": 0.10922133629624028,
+            "local_differential_vector_rms": 0.506993713576166,
+            "pcg_differential_vector_rms": 0.30071173026593395
+          },
+          "strong_original_edges": {
+            "sums": {
+              "count": 69296,
+              "local_squared_sum": 2219993.6409676285,
+              "pcg_squared_sum": 2448718.176011819,
+              "dot_sum": 1213659.4370284996,
+              "difference_squared_sum": 2241392.9429224483,
+              "direction_count": 68021,
+              "opposite_direction_count": 4210,
+              "local_brightness_squared_sum": 0.14474638347854013,
+              "pcg_brightness_squared_sum": 469.26650222915816,
+              "local_differential_squared_sum": 28692.39993006412,
+              "pcg_differential_squared_sum": 10260.118185786172
+            },
+            "vector_cosine": 0.5205369577297674,
+            "relative_vector_rmse": 0.9567304525015806,
+            "local_speed_rms": 5.660069735961685,
+            "pcg_speed_rms": 5.944499833719129,
+            "speed_rms_ratio": 0.9521523920071352,
+            "opposite_direction_fraction": 0.06189265079901795,
+            "median_of_interval_direction_medians": 0.6222241904794207,
+            "local_brightness_rms": 0.0014452726278086276,
+            "pcg_brightness_rms": 0.08229163550394533,
+            "local_differential_vector_rms": 0.6434715567437778,
+            "pcg_differential_vector_rms": 0.384788512865518
+          }
+        },
+        "pcg_converged": 16,
+        "pcg_max_relative_residual": 1.950566002051346e-05,
+        "same_gq_max_absolute_error": 2.8133392333984375e-05,
+        "neighbor_difference_rms_mean": {
+          "strict_pdlk": 21.38317804002437,
+          "brightness_only": 4.853468396465599,
+          "pcg": 0.7945297428345406
+        }
+      }
+    },
+    "elapsed_seconds": 35.062228142051026,
+    "protected_hashes": {
+      "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt": "bfc5936f5f872f5a1b6ecf31ea180027e3807ca4a38fd35b225baa48051c45f1",
+      "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt": "ec49b6ee58032771429cbb3bf69ab0e3833e1a1d812e2666e5a81cffe17b9ab3",
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz": "2450ca264e76287b3702193907260fb61fefce5bc32f07a51267df8e7155dc46",
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz": "c8247b181e2d5509f254938017e6ddf1288a924ac23e992c11bb4bab07f75505"
+    },
+    "protected_unchanged": true
+  },
+  "interval_evidence": {
+    "MSE": "results/local_pcg_velocity_probe/20261110T161014_670128Z/MSE_intervals.json",
+    "NCC": "results/local_pcg_velocity_probe/20261110T161014_670128Z/NCC_intervals.json"
+  }
+}

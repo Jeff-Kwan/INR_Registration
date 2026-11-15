@@ -1,0 +1,130 @@
+{
+  "checkpoint": "/workspace/INR_Registration/results/benchmark_20261110/siren/lpba/siren_pdlk/S02/endpoints.pt",
+  "checkpoint_sha256": "89aca9a7ae488206f584dc5e3f8c0b34374f28d3603005ddc76d5bbc88e35364",
+  "source_sha256": "8bf4929ff8235b1731f9375fd090cf335c5c2faad838cebd2cc423897ae849eb",
+  "shape": [
+    160,
+    192,
+    160
+  ],
+  "time": 0.53125,
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "settings": {
+    "smoothness": 0.01,
+    "ridge": 1e-06,
+    "iterations": 500,
+    "tolerance": 2e-05,
+    "differential_weight": 4.0
+  },
+  "derivative_seconds": {
+    "cold": 3.944903091993183,
+    "warm": 1.2056967199314386
+  },
+  "rows": [
+    {
+      "kind": "legacy",
+      "repeat": 0,
+      "seconds": 2.7359775849618018,
+      "peak_allocated_mib": 970.37353515625,
+      "diagnostic": {
+        "iterations": 350,
+        "relative_linear_residual": 1.769290611264296e-05,
+        "converged": true,
+        "brightness_residual_rms": 0.03999418765306473,
+        "differential_weight": 4.0,
+        "differential_residual_rms": 0.020828647539019585
+      }
+    },
+    {
+      "kind": "cached",
+      "repeat": 0,
+      "seconds": 1.602685336023569,
+      "peak_allocated_mib": 1195.72509765625,
+      "diagnostic": {
+        "iterations": 350,
+        "relative_linear_residual": 1.7842256056610495e-05,
+        "converged": true,
+        "brightness_residual_rms": 0.03999418765306473,
+        "differential_weight": 4.0,
+        "differential_residual_rms": 0.020828647539019585
+      },
+      "agreement": {
+        "relative_l2": 4.2015367398562375e-06,
+        "max_absolute": 0.0012445449829101562,
+        "cosine": 0.9999999403953552
+      }
+    },
+    {
+      "kind": "cached",
+      "repeat": 1,
+      "seconds": 1.6050812189932913,
+      "peak_allocated_mib": 1139.47509765625,
+      "diagnostic": {
+        "iterations": 350,
+        "relative_linear_residual": 1.7842256056610495e-05,
+        "converged": true,
+        "brightness_residual_rms": 0.03999418765306473,
+        "differential_weight": 4.0,
+        "differential_residual_rms": 0.020828647539019585
+      }
+    },
+    {
+      "kind": "legacy",
+      "repeat": 1,
+      "seconds": 2.735108814900741,
+      "peak_allocated_mib": 1026.62353515625,
+      "diagnostic": {
+        "iterations": 350,
+        "relative_linear_residual": 1.769290611264296e-05,
+        "converged": true,
+        "brightness_residual_rms": 0.03999418765306473,
+        "differential_weight": 4.0,
+        "differential_residual_rms": 0.020828647539019585
+      },
+      "agreement": {
+        "relative_l2": 4.2015367398562375e-06,
+        "max_absolute": 0.0012445449829101562,
+        "cosine": 0.9999999403953552
+      }
+    },
+    {
+      "kind": "legacy",
+      "repeat": 2,
+      "seconds": 2.7367958480026573,
+      "peak_allocated_mib": 970.37353515625,
+      "diagnostic": {
+        "iterations": 350,
+        "relative_linear_residual": 1.769290611264296e-05,
+        "converged": true,
+        "brightness_residual_rms": 0.03999418765306473,
+        "differential_weight": 4.0,
+        "differential_residual_rms": 0.020828647539019585
+      }
+    },
+    {
+      "kind": "cached",
+      "repeat": 2,
+      "seconds": 1.6025718890596181,
+      "peak_allocated_mib": 1195.72509765625,
+      "diagnostic": {
+        "iterations": 350,
+        "relative_linear_residual": 1.7842256056610495e-05,
+        "converged": true,
+        "brightness_residual_rms": 0.03999418765306473,
+        "differential_weight": 4.0,
+        "differential_residual_rms": 0.020828647539019585
+      },
+      "agreement": {
+        "relative_l2": 4.2015367398562375e-06,
+        "max_absolute": 0.0012445449829101562,
+        "cosine": 0.9999999403953552
+      }
+    }
+  ],
+  "median_seconds": {
+    "legacy": 2.7359775849618018,
+    "cached": 1.602685336023569
+  },
+  "speedup": 1.7071208698708444,
+  "scope": "One frozen full-native-grid interval; no training, image loading, map integration or label scoring. Setup and scalar diagnostics included; detailed/adaptive diagnostics disabled."
+}

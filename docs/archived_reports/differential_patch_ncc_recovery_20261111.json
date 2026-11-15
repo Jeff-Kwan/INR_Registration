@@ -1,0 +1,241 @@
+{
+  "constant_0_1": {
+    "endpoint_quality_pass": false,
+    "threshold_db": 25.0,
+    "endpoint_source": {
+      "mse": 0.0058023228422735326,
+      "psnr_db": 22.36398110638968,
+      "psnr_infinite": false,
+      "global_ncc": 0.9691319611589106
+    },
+    "endpoint_target": {
+      "mse": 0.005901541996769319,
+      "psnr_db": 22.29034497986509,
+      "psnr_infinite": false,
+      "global_ncc": 0.9643418559375252
+    },
+    "before": {
+      "mse": 0.020899650131664817,
+      "psnr_db": 16.798609840879493,
+      "psnr_infinite": false,
+      "global_ncc": 0.8890241530412011
+    },
+    "after": {
+      "mse": 0.008673270986847644,
+      "psnr_db": 20.618170843425215,
+      "psnr_infinite": false,
+      "global_ncc": 0.9484619207096497
+    },
+    "labels": {
+      "dice": 0.5876702860529933,
+      "hd95_mm": 7.425450946603503,
+      "hd95_finite_labels_mean_mm": 7.425450946603503,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "folding_fraction": 0.00012451171875,
+    "jacobian_min": -4.185931205749512,
+    "jacobian_mean": 1.0190593004226685,
+    "flow_all_intervals_converged": true,
+    "flow_max_relative_residual": 1.9755956600420177e-05,
+    "recovery_gate_bypassed": true,
+    "recovery_config": {
+      "intervals": 16,
+      "smoothness": 0.01,
+      "ridge": 1e-06,
+      "iterations": 500,
+      "tolerance": 2e-05,
+      "substeps": 4
+    },
+    "training_config": {
+      "weight": 0.1,
+      "eta": 1e-06,
+      "variance_floor": 1e-06,
+      "spacing_voxels": 1.0
+    }
+  },
+  "constant_0_01": {
+    "endpoint_quality_pass": false,
+    "threshold_db": 25.0,
+    "endpoint_source": {
+      "mse": 0.004437914126702324,
+      "psnr_db": 23.52821105587594,
+      "psnr_infinite": false,
+      "global_ncc": 0.9764230438383233
+    },
+    "endpoint_target": {
+      "mse": 0.005022748588356854,
+      "psnr_db": 22.990585597305376,
+      "psnr_infinite": false,
+      "global_ncc": 0.9697169104174341
+    },
+    "before": {
+      "mse": 0.020899650131664817,
+      "psnr_db": 16.798609840879493,
+      "psnr_infinite": false,
+      "global_ncc": 0.8890241530412011
+    },
+    "after": {
+      "mse": 0.006997284413227658,
+      "psnr_db": 21.55070473295945,
+      "psnr_infinite": false,
+      "global_ncc": 0.9581857136767488
+    },
+    "labels": {
+      "dice": 0.593761823539223,
+      "hd95_mm": 7.356537750789097,
+      "hd95_finite_labels_mean_mm": 7.356537750789097,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "folding_fraction": 0.00016133626302083335,
+    "jacobian_min": -7.12111759185791,
+    "jacobian_mean": 1.0200382471084595,
+    "flow_all_intervals_converged": true,
+    "flow_max_relative_residual": 1.9770966900978237e-05,
+    "recovery_gate_bypassed": true,
+    "recovery_config": {
+      "intervals": 16,
+      "smoothness": 0.01,
+      "ridge": 1e-06,
+      "iterations": 500,
+      "tolerance": 2e-05,
+      "substeps": 4
+    },
+    "training_config": {
+      "weight": 0.01,
+      "eta": 1e-06,
+      "variance_floor": 1e-06,
+      "spacing_voxels": 1.0
+    }
+  },
+  "ramp_0_01_after_2000": {
+    "endpoint_quality_pass": false,
+    "threshold_db": 25.0,
+    "endpoint_source": {
+      "mse": 0.009576476007078609,
+      "psnr_db": 20.18794275079745,
+      "psnr_infinite": false,
+      "global_ncc": 0.948429929502642
+    },
+    "endpoint_target": {
+      "mse": 0.011015393536407965,
+      "psnr_db": 19.579999826133143,
+      "psnr_infinite": false,
+      "global_ncc": 0.932919085484124
+    },
+    "before": {
+      "mse": 0.020899650131664817,
+      "psnr_db": 16.798609840879493,
+      "psnr_infinite": false,
+      "global_ncc": 0.8890241530412011
+    },
+    "after": {
+      "mse": 0.009149358948098683,
+      "psnr_db": 20.386093338085676,
+      "psnr_infinite": false,
+      "global_ncc": 0.9460045859566438
+    },
+    "labels": {
+      "dice": 0.5639229858560222,
+      "hd95_mm": 7.997634704623904,
+      "hd95_finite_labels_mean_mm": 7.997634704623904,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "folding_fraction": 0.00044108072916666666,
+    "jacobian_min": -16.320430755615234,
+    "jacobian_mean": 1.0149052143096924,
+    "flow_all_intervals_converged": true,
+    "flow_max_relative_residual": 1.6159981896635145e-05,
+    "recovery_gate_bypassed": true,
+    "recovery_config": {
+      "intervals": 16,
+      "smoothness": 0.01,
+      "ridge": 1e-06,
+      "iterations": 500,
+      "tolerance": 2e-05,
+      "substeps": 4
+    },
+    "training_config": {
+      "weight": 0.01,
+      "eta": 1e-06,
+      "variance_floor": 1e-06,
+      "spacing_voxels": 1.0,
+      "ramp_start_step": 2000
+    }
+  },
+  "maintained_mse_pdlk_reference": {
+    "endpoint_quality_pass": true,
+    "endpoint_source": {
+      "mse": 0.0006023758616639339,
+      "psnr_db": 32.20132439457078,
+      "psnr_infinite": false,
+      "global_ncc": 0.9968275627037078
+    },
+    "endpoint_target": {
+      "mse": 0.0005645390883122475,
+      "psnr_db": 32.48305982435905,
+      "psnr_infinite": false,
+      "global_ncc": 0.9966396537523624
+    },
+    "after": {
+      "mse": 0.001886564789605163,
+      "psnr_db": 27.24328275390185,
+      "psnr_infinite": false,
+      "global_ncc": 0.9887098127479247
+    },
+    "labels": {
+      "dice": 0.7024524967585292,
+      "hd95_mm": 6.604823274271829,
+      "hd95_finite_labels_mean_mm": 6.604823274271829,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "folding_fraction": 0.0,
+    "flow_all_intervals_converged": false,
+    "flow_max_relative_residual": 2.0136019884375855e-05,
+    "source": "results/benchmark_20261110/siren/lpba/siren_pdlk/S02/metrics.json",
+    "recovery_warm_start": "zero initialization (historical benchmark implementation)"
+  }
+}

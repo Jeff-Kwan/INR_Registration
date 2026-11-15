@@ -1,0 +1,60 @@
+{
+  "runtime": {
+    "device": "cuda:0",
+    "seed": 42,
+    "inference_chunk": 65536,
+    "compile_derivatives": true,
+    "compile_endpoints": true
+  },
+  "model": {
+    "width": 256,
+    "layers": 6,
+    "omega": 30.0
+  },
+  "training": {
+    "steps": 5000,
+    "batch_size": 32768,
+    "lr": 0.0002,
+    "lr_final_factor": 0.25,
+    "log_every": 20,
+    "grad_clip": 1.0
+  },
+  "objective": {
+    "weight": 0.2,
+    "c": 4.0,
+    "eta": 1e-06,
+    "weight_schedule": "constant",
+    "endpoint": "ncc",
+    "registration": {
+      "weight": 0.0,
+      "registration_similarity": "ncc",
+      "grid_size": 8,
+      "particles": 32768,
+      "pairs_per_cell": 2,
+      "pair_offset_fraction": 0.2,
+      "crop_fraction": 0.5,
+      "sigma_cells": 0.75,
+      "gaussian_kernel": "three_tap",
+      "random_timesteps": true,
+      "particle_sampling_fraction": 0.8,
+      "chunk": 4096,
+      "recompute": false,
+      "compile_velocity": true,
+      "gw_ncc_sigma_cells": 0.75,
+      "gw_ncc_kernel": "three_tap",
+      "compile_decoder": false
+    },
+    "ncc": {
+      "moment_weight": 0.01,
+      "epsilon": 1e-08
+    }
+  },
+  "recovery": {
+    "intervals": 16,
+    "smoothness": 0.01,
+    "ridge": 1e-06,
+    "iterations": 500,
+    "tolerance": 2e-05,
+    "substeps": 4
+  }
+}

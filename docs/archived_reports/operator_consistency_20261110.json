@@ -1,0 +1,208 @@
+{
+  "dataset": "LPBA S02 to S01",
+  "seed": 42,
+  "source_run": "results/operator_consistency/20261110T095724_102075Z",
+  "protocol": {
+    "pair": "LPBA S02 moving to S01 fixed",
+    "seed": 42,
+    "steps": 5000,
+    "parameter_count": 2592,
+    "options": {
+      "intervals": 4,
+      "controls": 6,
+      "samples": 1024,
+      "weight": 0.1,
+      "activation_step": 2000,
+      "geometry_lr": 0.05,
+      "data_weight": 1.0,
+      "smoothness": 0.01,
+      "boundary_weight": 1.0,
+      "lipschitz": 0.25,
+      "gradient_budget": 0.1,
+      "monitor_samples": 65536,
+      "max_seconds": 180.0
+    },
+    "rule": "One fixed setting only. Abort on sampled reconstruction guard, non-finite gradients, or runtime budget. Final full endpoint gate and PCG+RK2 unchanged.",
+    "geometry": "Four compact cubic maps; coefficient projection gives global Lipschitz .25 per displacement; no auxiliary inference.",
+    "baseline_reference": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02",
+    "training_budget_seconds": 180,
+    "whole_pair_budget_seconds": 450,
+    "validation": "Fixed 2048 continuous points; fixed 65536 rounded continuous points for sampled reconstruction; full-volume final gate only.",
+    "synthetic": "42 medical tests + 1 Cameraman passed; full-width CUDA block gradients passed without optimizer step"
+  },
+  "heldout": {
+    "baseline": {
+      "identity_operator": 0.009012673050165176,
+      "learned_operator": 0.00327438791282475
+    },
+    "operator": {
+      "identity_operator": 0.008341407403349876,
+      "learned_operator": 0.00247193849645555
+    }
+  },
+  "warmup_max_absolute_logged_loss_difference": 0.0,
+  "conditions": {
+    "baseline": {
+      "endpoint_source": {
+        "mse": 0.0005991451947043228,
+        "psnr_db": 32.22467919484251,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968462648332425
+      },
+      "endpoint_target": {
+        "mse": 0.0005608012156195531,
+        "psnr_db": 32.51191053642874,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966633524185476
+      },
+      "endpoint_quality_pass": true,
+      "labels": {
+        "dice": 0.6982286114777837,
+        "hd95_mm": 6.565149873495102,
+        "hd95_finite_labels_mean_mm": 6.565149873495102,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "flow_all_intervals_converged": false,
+      "flow_max_relative_residual": 2.019498970184941e-05,
+      "training_seconds": 43.78405581694096,
+      "recovery_seconds": 19.582117318059318,
+      "flow_converged_intervals": 15,
+      "flow_total_intervals": 16,
+      "late_step_ms": 6.958584115963942
+    },
+    "operator": {
+      "endpoint_source": {
+        "mse": 0.0006065290532518291,
+        "psnr_db": 32.17148391228163,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968069002120143
+      },
+      "endpoint_target": {
+        "mse": 0.000568948971053822,
+        "psnr_db": 32.44926683663888,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966181039042696
+      },
+      "endpoint_quality_pass": true,
+      "labels": {
+        "dice": 0.7007653138467244,
+        "hd95_mm": 6.522703719990594,
+        "hd95_finite_labels_mean_mm": 6.522703719990594,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "flow_all_intervals_converged": false,
+      "flow_max_relative_residual": 2.0081448383280076e-05,
+      "training_seconds": 94.47091832500882,
+      "recovery_seconds": 17.986550831934437,
+      "flow_converged_intervals": 15,
+      "flow_total_intervals": 16,
+      "late_step_ms": 25.998584599813896
+    }
+  },
+  "gradient_logged_range": {
+    "op_gradient": {
+      "min": 0.01429795939475298,
+      "max": 0.023913439363241196
+    },
+    "op_base_gradient": {
+      "min": 0.041156020015478134,
+      "max": 0.07637596130371094
+    },
+    "op_applied_gradient": {
+      "min": 0.004115602029288151,
+      "max": 0.007637596016659365
+    },
+    "op_gradient_scale": {
+      "min": 0.18980646133422852,
+      "max": 0.449714720249176
+    },
+    "op_geometry_grad": {
+      "min": 0.00033565162448212504,
+      "max": 0.0009654656751081347
+    }
+  },
+  "validation_snapshots": [
+    {
+      "step": 2000.0,
+      "op_validation_operator": 0.008334508165717125,
+      "op_validation_identity": 0.008334508165717125,
+      "op_validation_data": 0.019216036424040794,
+      "op_validation_boundary": 0.0,
+      "op_coefficient_max": 0.0,
+      "op_monitor_source_mse": 0.0009007812477648258,
+      "op_monitor_target_mse": 0.0007571293972432613
+    },
+    {
+      "step": 2020.0,
+      "op_validation_operator": 0.003994625061750412,
+      "op_validation_identity": 0.007881741970777512,
+      "op_validation_data": 0.0107427341863513,
+      "op_validation_boundary": 0.0,
+      "op_coefficient_max": 0.9588950872421265,
+      "op_monitor_source_mse": 0.000927308457903564,
+      "op_monitor_target_mse": 0.000775447697378695
+    },
+    {
+      "step": 3000.0,
+      "op_validation_operator": 0.0024805855937302113,
+      "op_validation_identity": 0.008006665855646133,
+      "op_validation_data": 0.007842902094125748,
+      "op_validation_boundary": 4.1648632986834855e-07,
+      "op_coefficient_max": 2.2083334922790527,
+      "op_monitor_source_mse": 0.0007464062073267996,
+      "op_monitor_target_mse": 0.000688352098222822
+    },
+    {
+      "step": 4000.0,
+      "op_validation_operator": 0.002480523195117712,
+      "op_validation_identity": 0.00824565440416336,
+      "op_validation_data": 0.007716261316090822,
+      "op_validation_boundary": 4.814232283933961e-07,
+      "op_coefficient_max": 2.2083334922790527,
+      "op_monitor_source_mse": 0.0006582115311175585,
+      "op_monitor_target_mse": 0.0005923465942032635
+    },
+    {
+      "step": 5000.0,
+      "op_validation_operator": 0.00247193849645555,
+      "op_validation_identity": 0.008341407403349876,
+      "op_validation_data": 0.007740115746855736,
+      "op_validation_boundary": 5.475061470860965e-07,
+      "op_coefficient_max": 2.2083334922790527,
+      "op_monitor_source_mse": 0.0005845155101269484,
+      "op_monitor_target_mse": 0.000552703975699842
+    }
+  ],
+  "minimum_sampled_active_psnr": {
+    "source": 30.327757790350045,
+    "target": 30.847332572756237
+  },
+  "differences": {
+    "dice": 0.0025367023689406576,
+    "hd95_mm": -0.042446153504507755
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "method": "convexadam",
+  "seed": 42,
+  "evaluation": "oasis",
+  "native": {
+    "mind_r": 1,
+    "mind_d": 2,
+    "lambda_weight": 1.25,
+    "grid_sp": 6,
+    "disp_hw": 4,
+    "selected_niter": 80,
+    "selected_smooth": 0,
+    "grid_sp_adam": 2,
+    "ic": true,
+    "use_mask": false,
+    "verbose": true
+  }
+}

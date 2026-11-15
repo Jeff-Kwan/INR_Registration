@@ -1,0 +1,1124 @@
+{
+  "config": {
+    "dataset": {
+      "root": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation",
+      "fixed": "delineation_l_norm/fixed.nii.gz",
+      "moving_dir": "delineation_l_norm/test",
+      "label_dir": "label",
+      "fixed_label": "label/S01.delineation.structure.label.nii.gz",
+      "subjects": [
+        "S02"
+      ],
+      "require_labels": true,
+      "kind": "lpba",
+      "name": "lpba"
+    },
+    "runtime": {
+      "device": "cuda",
+      "seed": 42,
+      "inference_chunk": 262144,
+      "compile_derivatives": true
+    },
+    "model": {
+      "width": 256,
+      "layers": 4,
+      "omega": 30.0
+    },
+    "training": {
+      "steps": 5000,
+      "batch_size": 32768,
+      "lr": 0.0002,
+      "lr_final_factor": 0.25,
+      "log_every": 20,
+      "grad_clip": 1.0
+    },
+    "recovery": {
+      "intervals": 16,
+      "smoothness": 0.01,
+      "ridge": 1e-06,
+      "iterations": 500,
+      "tolerance": 2e-05,
+      "substeps": 4
+    },
+    "evaluation": {
+      "min_endpoint_psnr_db": 25.0,
+      "hd95": true
+    },
+    "schema_version": 2,
+    "objective": {
+      "weight": 0.0,
+      "c": 4.0,
+      "eta": 1e-06,
+      "rho": 0.0,
+      "points": 4096,
+      "differentiate_solve": false,
+      "weight_schedule": "constant",
+      "gaussian_registration": {
+        "grid_size": 24,
+        "particles": 256,
+        "substeps": 2,
+        "integrator": "euler",
+        "sigma_mm": 4.0,
+        "chunk": 4096,
+        "recompute": true,
+        "compile_velocity": true,
+        "weight": 0.01,
+        "gradient_budget": 0.1,
+        "activation_step": 2000,
+        "max_seconds": 0.25,
+        "startup_seconds": 60.0,
+        "runtime_patience": 3,
+        "hard_seconds": 2.0,
+        "crop_fraction": 0.5,
+        "crop_min_valid": 32,
+        "crop_max_skipped": 20
+      }
+    },
+    "preprocessing": {
+      "modality": "MR",
+      "percentiles": [
+        1,
+        99
+      ],
+      "ct_window": null,
+      "background_zero": true,
+      "expected_shape": null,
+      "expected_spacing": null
+    },
+    "baselines": {
+      "ants_syn": {
+        "iterations": [
+          50,
+          50,
+          30
+        ],
+        "metric": "cc",
+        "flow_sigma": 3.0,
+        "total_sigma": 0.0,
+        "gradient_step": 0.2,
+        "syn_sampling": 2
+      },
+      "elastix_bspline": {
+        "metric": "ncc",
+        "affine": true
+      },
+      "sitk_demons": {
+        "kind": "diffeomorphic",
+        "iterations": 100,
+        "standard_deviations": 1.0
+      }
+    }
+  },
+  "metrics": {
+    "metric_version": 2,
+    "before": {
+      "mse": 0.020899650131664817,
+      "psnr_db": 16.798609840879493,
+      "psnr_infinite": false,
+      "global_ncc": 0.8890241530415923
+    },
+    "after": {
+      "mse": 0.0032993731597911516,
+      "psnr_db": 24.8156856288047,
+      "psnr_infinite": false,
+      "global_ncc": 0.9807185668712239
+    },
+    "folding_fraction": 3.0517578125e-06,
+    "jacobian_min": -1.4929273128509521,
+    "jacobian_mean": 1.01385498046875,
+    "inverse_composition_mean_mm": 0.0544811487197876,
+    "sampling_outside_fraction": 0.03450480103492737,
+    "labels": {
+      "dice": 0.634555600051369,
+      "hd95_mm": 7.05269319670541,
+      "hd95_finite_labels_mean_mm": 7.05269319670541,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "endpoint_source": {
+      "mse": 0.000727304617941424,
+      "psnr_db": 31.382836549143196,
+      "psnr_infinite": false,
+      "global_ncc": 0.9961726596703953
+    },
+    "endpoint_target": {
+      "mse": 0.0006521669773168027,
+      "psnr_db": 31.856411956131332,
+      "psnr_infinite": false,
+      "global_ncc": 0.9961140893422584
+    },
+    "endpoint_quality_pass": true,
+    "threshold_db": 25.0,
+    "registration_skipped": false,
+    "flow_all_intervals_converged": true,
+    "flow_max_relative_residual": 1.9953311493736692e-05,
+    "pair_id": "S02",
+    "method": "siren_gaussian_crop_registration",
+    "pair_metadata": {
+      "pair_id": "S02",
+      "fixed_id": "S01",
+      "moving_id": "S02",
+      "fixed_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz",
+      "moving_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz",
+      "shape": [
+        160,
+        192,
+        160
+      ],
+      "affine": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          -0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          0.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "normalization": {
+        "fixed": {
+          "modality": "MR",
+          "method": "nonzero foreground percentile stretch",
+          "percentiles": [
+            1,
+            99
+          ],
+          "background_zero": true,
+          "low": 0.22392638027668,
+          "high": 0.9202454090118408,
+          "geometry": {
+            "shape": [
+              160,
+              192,
+              160
+            ],
+            "spacing": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "affine_diag": [
+              -1.0,
+              -1.0,
+              1.0
+            ],
+            "sform_code": 0
+          }
+        },
+        "moving": {
+          "modality": "MR",
+          "method": "nonzero foreground percentile stretch",
+          "percentiles": [
+            1,
+            99
+          ],
+          "background_zero": true,
+          "low": 0.2275763303041458,
+          "high": 0.8291984796524048,
+          "geometry": {
+            "shape": [
+              160,
+              192,
+              160
+            ],
+            "spacing": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "affine_diag": [
+              -1.0,
+              -1.0,
+              1.0
+            ],
+            "sform_code": 0
+          }
+        }
+      }
+    },
+    "seconds": 144.83904118300416,
+    "training_seconds": 129.21449961094186,
+    "recovery_seconds": 10.252109701978043
+  },
+  "controls": {
+    "mse_only": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530412011
+      },
+      "after": {
+        "mse": 0.0032131741062955657,
+        "psnr_db": 24.930657415026896,
+        "psnr_infinite": false,
+        "global_ncc": 0.9811731778464956
+      },
+      "folding_fraction": 1.0172526041666667e-06,
+      "jacobian_min": -0.33317798376083374,
+      "jacobian_mean": 1.0178896188735962,
+      "inverse_composition_mean_mm": 0.05137219280004501,
+      "sampling_outside_fraction": 0.03638814389705658,
+      "labels": {
+        "dice": 0.6343230376286166,
+        "hd95_mm": 7.120782554149628,
+        "hd95_finite_labels_mean_mm": 7.120782554149628,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "endpoint_source": {
+        "mse": 0.0004484301703176032,
+        "psnr_db": 33.48305175823574,
+        "psnr_infinite": false,
+        "global_ncc": 0.9976385035374399
+      },
+      "endpoint_target": {
+        "mse": 0.00040686455363426853,
+        "psnr_db": 33.90550144581704,
+        "psnr_infinite": false,
+        "global_ncc": 0.9975771192073358
+      },
+      "endpoint_quality_pass": true,
+      "threshold_db": 25.0,
+      "registration_skipped": false,
+      "flow_all_intervals_converged": true,
+      "flow_max_relative_residual": 1.9802386304945685e-05,
+      "pair_id": "S02",
+      "method": "siren_pdlk",
+      "pair_metadata": {
+        "pair_id": "S02",
+        "fixed_id": "S01",
+        "moving_id": "S02",
+        "fixed_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz",
+        "moving_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz",
+        "shape": [
+          160,
+          192,
+          160
+        ],
+        "affine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normalization": {
+          "fixed": {
+            "modality": "MR",
+            "method": "nonzero foreground percentile stretch",
+            "percentiles": [
+              1,
+              99
+            ],
+            "background_zero": true,
+            "low": 0.22392638027668,
+            "high": 0.9202454090118408,
+            "geometry": {
+              "shape": [
+                160,
+                192,
+                160
+              ],
+              "spacing": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "affine_diag": [
+                -1.0,
+                -1.0,
+                1.0
+              ],
+              "sform_code": 0
+            }
+          },
+          "moving": {
+            "modality": "MR",
+            "method": "nonzero foreground percentile stretch",
+            "percentiles": [
+              1,
+              99
+            ],
+            "background_zero": true,
+            "low": 0.2275763303041458,
+            "high": 0.8291984796524048,
+            "geometry": {
+              "shape": [
+                160,
+                192,
+                160
+              ],
+              "spacing": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "affine_diag": [
+                -1.0,
+                -1.0,
+                1.0
+              ],
+              "sform_code": 0
+            }
+          }
+        }
+      },
+      "seconds": 18.498029369977303,
+      "recovery_seconds": 13.461250433931127
+    },
+    "pdlk": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530415923
+      },
+      "after": {
+        "mse": 0.0018977415084201817,
+        "psnr_db": 27.217629431795164,
+        "psnr_infinite": false,
+        "global_ncc": 0.9886393483085556
+      },
+      "folding_fraction": 0.0,
+      "jacobian_min": 0.06868089735507965,
+      "jacobian_mean": 1.062575101852417,
+      "inverse_composition_mean_mm": 0.12677821516990662,
+      "sampling_outside_fraction": 0.07810363918542862,
+      "labels": {
+        "dice": 0.6982286114777837,
+        "hd95_mm": 6.565149873495102,
+        "hd95_finite_labels_mean_mm": 6.565149873495102,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "endpoint_source": {
+        "mse": 0.0005991451947043228,
+        "psnr_db": 32.22467919484251,
+        "psnr_infinite": false,
+        "global_ncc": 0.9968462648332425
+      },
+      "endpoint_target": {
+        "mse": 0.0005608012156195531,
+        "psnr_db": 32.51191053642874,
+        "psnr_infinite": false,
+        "global_ncc": 0.9966633524185476
+      },
+      "endpoint_quality_pass": true,
+      "threshold_db": 25.0,
+      "registration_skipped": false,
+      "flow_all_intervals_converged": false,
+      "flow_max_relative_residual": 2.019498970184941e-05,
+      "pair_id": "S02",
+      "method": "siren_pdlk",
+      "pair_metadata": {
+        "pair_id": "S02",
+        "fixed_id": "S01",
+        "moving_id": "S02",
+        "fixed_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz",
+        "moving_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz",
+        "shape": [
+          160,
+          192,
+          160
+        ],
+        "affine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normalization": {
+          "fixed": {
+            "modality": "MR",
+            "method": "nonzero foreground percentile stretch",
+            "percentiles": [
+              1,
+              99
+            ],
+            "background_zero": true,
+            "low": 0.22392638027668,
+            "high": 0.9202454090118408,
+            "geometry": {
+              "shape": [
+                160,
+                192,
+                160
+              ],
+              "spacing": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "affine_diag": [
+                -1.0,
+                -1.0,
+                1.0
+              ],
+              "sform_code": 0
+            }
+          },
+          "moving": {
+            "modality": "MR",
+            "method": "nonzero foreground percentile stretch",
+            "percentiles": [
+              1,
+              99
+            ],
+            "background_zero": true,
+            "low": 0.2275763303041458,
+            "high": 0.8291984796524048,
+            "geometry": {
+              "shape": [
+                160,
+                192,
+                160
+              ],
+              "spacing": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "affine_diag": [
+                -1.0,
+                -1.0,
+                1.0
+              ],
+              "sform_code": 0
+            }
+          }
+        }
+      },
+      "seconds": 68.96472643001471,
+      "training_seconds": 43.78405581694096,
+      "recovery_seconds": 19.582117318059318
+    },
+    "augmentation_euler2": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530415923
+      },
+      "after": {
+        "mse": 0.0019204628851607248,
+        "psnr_db": 27.1659408158688,
+        "psnr_infinite": false,
+        "global_ncc": 0.9885023228401376
+      },
+      "folding_fraction": 0.0,
+      "jacobian_min": 0.07744643092155457,
+      "jacobian_mean": 1.0632786750793457,
+      "inverse_composition_mean_mm": 0.1290685534477234,
+      "sampling_outside_fraction": 0.07885660976171494,
+      "labels": {
+        "dice": 0.6989936466727938,
+        "hd95_mm": 6.583636901208332,
+        "hd95_finite_labels_mean_mm": 6.583636901208332,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "endpoint_source": {
+        "mse": 0.0006251595289094805,
+        "psnr_db": 32.04009144760656,
+        "psnr_infinite": false,
+        "global_ncc": 0.9967087620652102
+      },
+      "endpoint_target": {
+        "mse": 0.0006009796138200196,
+        "psnr_db": 32.21140259703808,
+        "psnr_infinite": false,
+        "global_ncc": 0.9964213692227274
+      },
+      "endpoint_quality_pass": true,
+      "threshold_db": 25.0,
+      "registration_skipped": false,
+      "flow_all_intervals_converged": true,
+      "flow_max_relative_residual": 1.9404084014240652e-05,
+      "pair_id": "S02",
+      "method": "siren_pdlk_gaussian_registration",
+      "pair_metadata": {
+        "pair_id": "S02",
+        "fixed_id": "S01",
+        "moving_id": "S02",
+        "fixed_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz",
+        "moving_image": "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz",
+        "shape": [
+          160,
+          192,
+          160
+        ],
+        "affine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normalization": {
+          "fixed": {
+            "modality": "MR",
+            "method": "nonzero foreground percentile stretch",
+            "percentiles": [
+              1,
+              99
+            ],
+            "background_zero": true,
+            "low": 0.22392638027668,
+            "high": 0.9202454090118408,
+            "geometry": {
+              "shape": [
+                160,
+                192,
+                160
+              ],
+              "spacing": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "affine_diag": [
+                -1.0,
+                -1.0,
+                1.0
+              ],
+              "sform_code": 0
+            }
+          },
+          "moving": {
+            "modality": "MR",
+            "method": "nonzero foreground percentile stretch",
+            "percentiles": [
+              1,
+              99
+            ],
+            "background_zero": true,
+            "low": 0.2275763303041458,
+            "high": 0.8291984796524048,
+            "geometry": {
+              "shape": [
+                160,
+                192,
+                160
+              ],
+              "spacing": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "affine_diag": [
+                -1.0,
+                -1.0,
+                1.0
+              ],
+              "sform_code": 0
+            }
+          }
+        }
+      },
+      "seconds": 271.62687046499923,
+      "training_seconds": 248.1125515078893,
+      "recovery_seconds": 18.100518386927433
+    }
+  },
+  "training_summary": {
+    "seconds_per_step": {
+      "min": 0.037085622851736846,
+      "median": 0.03753721602261066,
+      "max": 0.41400753050111233
+    },
+    "gaussian_seconds": {
+      "min": 0.03266812604852021,
+      "median": 0.03301325399661437,
+      "max": 0.0340788799803704
+    },
+    "gaussian_retained_fraction": {
+      "min": 0.73046875,
+      "median": 0.87890625,
+      "max": 0.94140625
+    },
+    "gaussian_valid_particles": {
+      "min": 187.0,
+      "median": 225.0,
+      "max": 241.0
+    },
+    "gaussian_skipped": {
+      "min": 0.0,
+      "median": 0.0,
+      "max": 0.0
+    },
+    "gaussian_registration": {
+      "min": 0.0026569420006126165,
+      "median": 0.024137239903211594,
+      "max": 0.058956533670425415
+    },
+    "gaussian_source_raw": {
+      "min": 0.14170056581497192,
+      "median": 0.7193697094917297,
+      "max": 3.8409571647644043
+    },
+    "gaussian_target_raw": {
+      "min": 0.04671069234609604,
+      "median": 0.19754894822835922,
+      "max": 0.9173176288604736
+    },
+    "gaussian_source_scale": {
+      "min": 0.001098588458262384,
+      "median": 0.008337437640875578,
+      "max": 0.050329677760601044
+    },
+    "gaussian_target_scale": {
+      "min": 0.0050780074670910835,
+      "median": 0.033023687079548836,
+      "max": 0.15489235520362854
+    },
+    "gaussian_source_psnr": {
+      "min": 28.62131118774414,
+      "median": 30.625910758972168,
+      "max": 31.417926788330078
+    },
+    "gaussian_target_psnr": {
+      "min": 29.3364315032959,
+      "median": 31.102048873901367,
+      "max": 31.985685348510742
+    },
+    "rows": 250,
+    "active_rows": 150,
+    "pdlk_zero_all_logged_steps": true,
+    "finite_nonzero_registration_gradients": true
+  },
+  "profile": [
+    {
+      "cold": true,
+      "seconds": 12.974595783976838,
+      "peak_mib": 681.09130859375,
+      "gaussian_registration": 0.053335513919591904,
+      "gaussian_image_mse": 0.053335513919591904,
+      "gaussian_boundary": 0.0,
+      "gaussian_outside": 0.05078125,
+      "gaussian_weight": 0.01,
+      "gaussian_weighted": 0.000533355139195919,
+      "gaussian_seconds": 12.732841862016357,
+      "gaussian_slow_steps": 0,
+      "gaussian_valid_particles": 243.0,
+      "gaussian_retained_fraction": 0.94921875,
+      "gaussian_skipped": 0.0,
+      "gaussian_crop_x": 25.0,
+      "gaussian_crop_y": 6.0,
+      "gaussian_crop_z": 47.0,
+      "gaussian_skipped_streak": 0,
+      "gaussian_source_raw": 0.34383779764175415,
+      "gaussian_source_base": 4.132602214813232,
+      "gaussian_source_scale": 1.0,
+      "gaussian_source_applied": 0.34383779764175415,
+      "gaussian_source_psnr": 4.693135738372803,
+      "gaussian_target_raw": 0.3083806335926056,
+      "gaussian_target_base": 4.146626949310303,
+      "gaussian_target_scale": 1.0,
+      "gaussian_target_applied": 0.3083806335926056,
+      "gaussian_target_psnr": 4.715625286102295
+    },
+    {
+      "cold": false,
+      "seconds": 0.03761178394779563,
+      "peak_mib": 681.09326171875,
+      "gaussian_registration": 0.0470915213227272,
+      "gaussian_image_mse": 0.0470915213227272,
+      "gaussian_boundary": 0.0,
+      "gaussian_outside": 0.01953125,
+      "gaussian_weight": 0.01,
+      "gaussian_weighted": 0.000470915213227272,
+      "gaussian_seconds": 0.033873956999741495,
+      "gaussian_slow_steps": 0,
+      "gaussian_valid_particles": 251.0,
+      "gaussian_retained_fraction": 0.98046875,
+      "gaussian_skipped": 0.0,
+      "gaussian_crop_x": 39.0,
+      "gaussian_crop_y": 33.0,
+      "gaussian_crop_z": 70.0,
+      "gaussian_skipped_streak": 0,
+      "gaussian_source_raw": 0.21467852592468262,
+      "gaussian_source_base": 4.098852634429932,
+      "gaussian_source_scale": 1.0,
+      "gaussian_source_applied": 0.21467852592468262,
+      "gaussian_source_psnr": null,
+      "gaussian_target_raw": 0.21176773309707642,
+      "gaussian_target_base": 4.105264186859131,
+      "gaussian_target_scale": 1.0,
+      "gaussian_target_applied": 0.21176773309707642,
+      "gaussian_target_psnr": null
+    },
+    {
+      "cold": false,
+      "seconds": 0.036599614075385034,
+      "peak_mib": 681.09326171875,
+      "gaussian_registration": 0.05052395164966583,
+      "gaussian_image_mse": 0.05052395164966583,
+      "gaussian_boundary": 0.0,
+      "gaussian_outside": 0.0625,
+      "gaussian_weight": 0.01,
+      "gaussian_weighted": 0.0005052395164966584,
+      "gaussian_seconds": 0.03298107802402228,
+      "gaussian_slow_steps": 0,
+      "gaussian_valid_particles": 240.0,
+      "gaussian_retained_fraction": 0.9375,
+      "gaussian_skipped": 0.0,
+      "gaussian_crop_x": 29.0,
+      "gaussian_crop_y": 69.0,
+      "gaussian_crop_z": 22.0,
+      "gaussian_skipped_streak": 0,
+      "gaussian_source_raw": 0.2592223286628723,
+      "gaussian_source_base": 3.865388870239258,
+      "gaussian_source_scale": 1.0,
+      "gaussian_source_applied": 0.2592223286628723,
+      "gaussian_source_psnr": null,
+      "gaussian_target_raw": 0.2432033121585846,
+      "gaussian_target_base": 3.886902093887329,
+      "gaussian_target_scale": 1.0,
+      "gaussian_target_applied": 0.2432033121585846,
+      "gaussian_target_psnr": null
+    },
+    {
+      "cold": false,
+      "seconds": 0.03642230201512575,
+      "peak_mib": 681.09326171875,
+      "gaussian_registration": 0.040007345378398895,
+      "gaussian_image_mse": 0.040007345378398895,
+      "gaussian_boundary": 0.0,
+      "gaussian_outside": 0.015625,
+      "gaussian_weight": 0.01,
+      "gaussian_weighted": 0.000400073453783989,
+      "gaussian_seconds": 0.032815746031701565,
+      "gaussian_slow_steps": 0,
+      "gaussian_valid_particles": 252.0,
+      "gaussian_retained_fraction": 0.984375,
+      "gaussian_skipped": 0.0,
+      "gaussian_crop_x": 23.0,
+      "gaussian_crop_y": 58.0,
+      "gaussian_crop_z": 79.0,
+      "gaussian_skipped_streak": 0,
+      "gaussian_source_raw": 0.17422904074192047,
+      "gaussian_source_base": 4.197291851043701,
+      "gaussian_source_scale": 1.0,
+      "gaussian_source_applied": 0.17422904074192047,
+      "gaussian_source_psnr": null,
+      "gaussian_target_raw": 0.16066843271255493,
+      "gaussian_target_base": 4.230569362640381,
+      "gaussian_target_scale": 1.0,
+      "gaussian_target_applied": 0.16066843271255493,
+      "gaussian_target_psnr": null
+    },
+    {
+      "cold": false,
+      "seconds": 0.036559314001351595,
+      "peak_mib": 681.09326171875,
+      "gaussian_registration": 0.04201998934149742,
+      "gaussian_image_mse": 0.04201998934149742,
+      "gaussian_boundary": 0.0,
+      "gaussian_outside": 0.03125,
+      "gaussian_weight": 0.01,
+      "gaussian_weighted": 0.0004201998934149742,
+      "gaussian_seconds": 0.032972986926324666,
+      "gaussian_slow_steps": 0,
+      "gaussian_valid_particles": 248.0,
+      "gaussian_retained_fraction": 0.96875,
+      "gaussian_skipped": 0.0,
+      "gaussian_crop_x": 28.0,
+      "gaussian_crop_y": 79.0,
+      "gaussian_crop_z": 71.0,
+      "gaussian_skipped_streak": 0,
+      "gaussian_source_raw": 0.30642417073249817,
+      "gaussian_source_base": 4.157904624938965,
+      "gaussian_source_scale": 1.0,
+      "gaussian_source_applied": 0.30642417073249817,
+      "gaussian_source_psnr": null,
+      "gaussian_target_raw": 0.26687338948249817,
+      "gaussian_target_base": 4.1504645347595215,
+      "gaussian_target_scale": 1.0,
+      "gaussian_target_applied": 0.26687338948249817,
+      "gaussian_target_psnr": null
+    }
+  ],
+  "memory": {
+    "peak_allocated_mib": 684.13623046875
+  },
+  "flow": [
+    {
+      "interval": 0,
+      "time_a": 0.0,
+      "time_b": 0.0625,
+      "iterations": 210,
+      "relative_linear_residual": 1.7697337170829996e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.257301390171051
+    },
+    {
+      "interval": 1,
+      "time_a": 0.0625,
+      "time_b": 0.125,
+      "iterations": 190,
+      "relative_linear_residual": 1.8070551959681325e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.22120198607444763
+    },
+    {
+      "interval": 2,
+      "time_a": 0.125,
+      "time_b": 0.1875,
+      "iterations": 170,
+      "relative_linear_residual": 1.9953311493736692e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.20692260563373566
+    },
+    {
+      "interval": 3,
+      "time_a": 0.1875,
+      "time_b": 0.25,
+      "iterations": 170,
+      "relative_linear_residual": 1.2182990758446977e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.20221811532974243
+    },
+    {
+      "interval": 4,
+      "time_a": 0.25,
+      "time_b": 0.3125,
+      "iterations": 160,
+      "relative_linear_residual": 1.520483783679083e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.19890061020851135
+    },
+    {
+      "interval": 5,
+      "time_a": 0.3125,
+      "time_b": 0.375,
+      "iterations": 160,
+      "relative_linear_residual": 1.39494841278065e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.19529248774051666
+    },
+    {
+      "interval": 6,
+      "time_a": 0.375,
+      "time_b": 0.4375,
+      "iterations": 160,
+      "relative_linear_residual": 1.4514635950035881e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.19168314337730408
+    },
+    {
+      "interval": 7,
+      "time_a": 0.4375,
+      "time_b": 0.5,
+      "iterations": 160,
+      "relative_linear_residual": 1.447461181669496e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.18928959965705872
+    },
+    {
+      "interval": 8,
+      "time_a": 0.5,
+      "time_b": 0.5625,
+      "iterations": 160,
+      "relative_linear_residual": 1.5337407603510655e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.19042722880840302
+    },
+    {
+      "interval": 9,
+      "time_a": 0.5625,
+      "time_b": 0.625,
+      "iterations": 160,
+      "relative_linear_residual": 1.4646561794506852e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.19484439492225647
+    },
+    {
+      "interval": 10,
+      "time_a": 0.625,
+      "time_b": 0.6875,
+      "iterations": 160,
+      "relative_linear_residual": 1.5758536392240785e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.19946326315402985
+    },
+    {
+      "interval": 11,
+      "time_a": 0.6875,
+      "time_b": 0.75,
+      "iterations": 170,
+      "relative_linear_residual": 1.248661101271864e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.20194658637046814
+    },
+    {
+      "interval": 12,
+      "time_a": 0.75,
+      "time_b": 0.8125,
+      "iterations": 180,
+      "relative_linear_residual": 1.2854695341957267e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.20206166803836823
+    },
+    {
+      "interval": 13,
+      "time_a": 0.8125,
+      "time_b": 0.875,
+      "iterations": 190,
+      "relative_linear_residual": 1.3817565559293143e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.2032688558101654
+    },
+    {
+      "interval": 14,
+      "time_a": 0.875,
+      "time_b": 0.9375,
+      "iterations": 210,
+      "relative_linear_residual": 1.5668711057514884e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.2140936404466629
+    },
+    {
+      "interval": 15,
+      "time_a": 0.9375,
+      "time_b": 1.0,
+      "iterations": 230,
+      "relative_linear_residual": 1.3459523870551493e-05,
+      "converged": true,
+      "brightness_residual_rms": 0.2462177723646164
+    }
+  ],
+  "protected_unchanged": {
+    "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz": true,
+    "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz": true,
+    "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/label/S02.delineation.structure.label.nii.gz": true,
+    "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/label/S01.delineation.structure.label.nii.gz": true,
+    "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt": true,
+    "results/gaussian_euler2_training/20261111_retry1/run/siren_pdlk_gaussian_registration/S02/endpoints.pt": true,
+    "results/edge_wasserstein_controls/20261110T150354_725206Z/training/mse/S02/endpoints.pt": true
+  },
+  "source_hashes": {
+    "medical/registration/derivatives.py": "a22a8d5068dbac87d85c1d64fe21272bcac6a9671fe0cec03bc457d216e2bbd5",
+    "medical/registration/gaussian_registration.py": "1cb337e2ac1e09a1872d3e4563d93753a05c608e0fdb734715917933a6d84f99",
+    "medical/registration/cropped_registration.py": "990fdb4c7a4f6dc26118495f9a6367932a993361f7532f67448b794468653cda",
+    "medical/registration/training.py": "c87b1956a18395defa0d4641cb9299bdfd9acdbb9e98c885b906f70facefb226"
+  },
+  "run": "results/cropped_gaussian_registration/20261111"
+}

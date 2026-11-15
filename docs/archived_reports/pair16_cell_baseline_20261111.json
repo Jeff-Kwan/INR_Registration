@@ -1,0 +1,120 @@
+{
+  "checkpoint": "results/benchmark_20261110/siren/lpba/siren_pdlk/S02/endpoints.pt",
+  "checkpoint_hash_unchanged": true,
+  "scope": "Frozen whole-image16^3 cell-centred symmetric pair shared solve, no training or PCG.",
+  "radius_mm": 2.0,
+  "sigma_mm": 4.0,
+  "samples_per_node": 2,
+  "normalized_weights": [
+    0.5,
+    0.5
+  ],
+  "offset_seed": 42,
+  "offset_distribution": "isotropic normal direction normalized to radius2mm; fixed across fields and methods",
+  "nodes": 4096,
+  "full_radius_nodes": 4096,
+  "derivative_sites_per_field": 8192,
+  "derivative_sites_per_forward": 16384,
+  "boundary": "All symmetric-pair queries inside domain; cell-index mapping x/L*16-.5 with border extension.",
+  "gaussian_sigma_lattice": [
+    0.402515709400177,
+    0.33507853746414185,
+    0.402515709400177
+  ],
+  "startup_compile_seconds": 3.863573917071335,
+  "field_median_seconds": {
+    "0.0": 0.0022220390383154154,
+    "0.25": 0.002174958004616201,
+    "0.5": 0.0021614780416712165,
+    "0.75": 0.0021587180672213435,
+    "1.0": 0.0021514479303732514
+  },
+  "synthetic_checks": {
+    "stacked_least_squares": true,
+    "duplicate_point_equivalence": true,
+    "solve_gradcheck": true,
+    "physical_coordinates": true,
+    "cell_centre_indexing": true
+  },
+  "compiled_eager_velocity_relative_error": 7.089719019859331e-06,
+  "metrics": {
+    "euler2": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530412011
+      },
+      "after": {
+        "mse": 0.006869210825923699,
+        "psnr_db": 21.630931542990318,
+        "psnr_infinite": false,
+        "global_ncc": 0.9591579517755184
+      },
+      "folding_fraction": 0.000396728515625,
+      "jacobian_min": -2.230741500854492,
+      "jacobian_mean": 1.041566014289856,
+      "inverse_composition_mean_mm": 2.6448957920074463,
+      "sampling_outside_fraction": 0.06440165638923645,
+      "labels": {
+        "dice": 0.6597762150423867,
+        "hd95_mm": 6.905769935676029,
+        "hd95_finite_labels_mean_mm": 6.905769935676029,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "integration_forward_reverse_median_seconds": 0.0020359259797260165,
+      "shared_field_forward_reverse_seconds": 0.006534965010359883
+    },
+    "time_midpoint_euler2": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530412011
+      },
+      "after": {
+        "mse": 0.005858535703659565,
+        "psnr_db": 22.322109190139155,
+        "psnr_infinite": false,
+        "global_ncc": 0.9650085459984526
+      },
+      "folding_fraction": 6.205240885416666e-05,
+      "jacobian_min": -0.8689992427825928,
+      "jacobian_mean": 1.0415360927581787,
+      "inverse_composition_mean_mm": 0.6372789740562439,
+      "sampling_outside_fraction": 0.06106872856616974,
+      "labels": {
+        "dice": 0.6700447723269463,
+        "hd95_mm": 6.794121048280171,
+        "hd95_finite_labels_mean_mm": 6.794121048280171,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "integration_forward_reverse_median_seconds": 0.0020078159868717194,
+      "shared_field_forward_reverse_seconds": 0.0043336760718375444
+    }
+  }
+}

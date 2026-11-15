@@ -1,0 +1,106 @@
+{
+  "endpoint_source": {
+    "mse": 0.0058023228422735326,
+    "psnr_db": 22.36398110638968,
+    "psnr_infinite": false,
+    "global_ncc": 0.9691319611589106
+  },
+  "endpoint_target": {
+    "mse": 0.005901541996769319,
+    "psnr_db": 22.29034497986509,
+    "psnr_infinite": false,
+    "global_ncc": 0.9643418559375252
+  },
+  "endpoint_quality_pass": false,
+  "registration_skipped": true,
+  "skip_reason": "Endpoint PSNR below threshold",
+  "training_seconds": 38.91995170793962,
+  "seed": 42,
+  "steps": 5000,
+  "weight": 0.1,
+  "eta": 1e-06,
+  "variance_floor": 1e-06,
+  "spacing_voxels": 1.0,
+  "patch_count": 64,
+  "sites_per_patch": 64,
+  "median_step_seconds": 0.006995515146991238,
+  "total_gradient_norm_median": 48.64327621459961,
+  "total_gradient_norm_max": 7174.08935546875,
+  "logged_pdlk_always_zero": true,
+  "final_patch_loss": 0.029158012941479683,
+  "final_weighted_patch_loss": 0.0029158012475818396,
+  "followup_weight_0_01": {
+    "endpoint_source": {
+      "mse": 0.004437914126702324,
+      "psnr_db": 23.52821105587594,
+      "global_ncc": 0.9764230438383233
+    },
+    "endpoint_target": {
+      "mse": 0.005022748588356854,
+      "psnr_db": 22.990585597305376,
+      "global_ncc": 0.9697169104174341
+    },
+    "endpoint_quality_pass": false,
+    "threshold_db": 25.0,
+    "registration_skipped": true,
+    "skip_reason": "Endpoint PSNR below threshold",
+    "training_seconds": 37.03576759295538,
+    "total_seconds": 38.144414116977714,
+    "seed": 42,
+    "steps": 5000,
+    "weight": 0.01,
+    "eta": 1e-06,
+    "variance_floor": 1e-06,
+    "spacing_voxels": 1.0,
+    "patch_count": 64,
+    "sites_per_patch": 64,
+    "registration_metrics": null,
+    "output_dir": "results/differential_patch_ncc/20261111_weight001"
+  },
+  "ramp_after_step_2000": {
+    "endpoint_source": {
+      "mse": 0.009576476007078609,
+      "psnr_db": 20.18794275079745,
+      "global_ncc": 0.948429929502642
+    },
+    "endpoint_target": {
+      "mse": 0.011015393536407965,
+      "psnr_db": 19.579999826133143,
+      "global_ncc": 0.932919085484124
+    },
+    "endpoint_quality_pass": false,
+    "threshold_db": 25.0,
+    "registration_skipped": true,
+    "skip_reason": "Endpoint PSNR below threshold",
+    "training_seconds": 30.6661093859002,
+    "total_seconds": 31.804234723909758,
+    "seed": 42,
+    "steps": 5000,
+    "weight_max": 0.01,
+    "ramp_start_step": 2000,
+    "effective_weight_at_step_2000": 0.0,
+    "effective_weight_at_step_5000": 0.01,
+    "logged_step_2000": {
+      "source_mse": 0.0006055774283595383,
+      "target_mse": 0.0005751605494879186,
+      "patch_loss": 0.0,
+      "patch_weight": 0.0
+    },
+    "logged_step_2020": {
+      "source_mse": 0.0015250751748681068,
+      "target_mse": 0.0032063042744994164,
+      "patch_loss": 14.873676300048828,
+      "patch_weight": 6.666666740784422e-05,
+      "weighted_patch_loss": 0.000991578446701169
+    },
+    "logged_step_5000": {
+      "source_mse": 0.009631895460188389,
+      "target_mse": 0.011060715653002262,
+      "patch_loss": 1.596405267715454,
+      "patch_weight": 0.009999999776482582,
+      "weighted_patch_loss": 0.015964051708579063
+    },
+    "registration_metrics": null,
+    "output_dir": "results/differential_patch_ncc/20261111_ramp2000"
+  }
+}

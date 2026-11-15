@@ -1,0 +1,31 @@
+{
+  "name": "quick4",
+  "dataset": "oasis",
+  "selection": "uniform sample without replacement from the 19 official directed validation pairs; sorted for execution",
+  "selection_seed": 42,
+  "protocol_sha256": "427c3896abf3649346c8a4da99927120aeadf04abe69353441eb04c52f10acf6",
+  "pair_indices": [
+    1,
+    4,
+    8,
+    9
+  ],
+  "pairs": [
+    {
+      "fixed": "./imagesTr/OASIS_0395_0000.nii.gz",
+      "moving": "./imagesTr/OASIS_0396_0000.nii.gz"
+    },
+    {
+      "fixed": "./imagesTr/OASIS_0398_0000.nii.gz",
+      "moving": "./imagesTr/OASIS_0399_0000.nii.gz"
+    },
+    {
+      "fixed": "./imagesTr/OASIS_0402_0000.nii.gz",
+      "moving": "./imagesTr/OASIS_0403_0000.nii.gz"
+    },
+    {
+      "fixed": "./imagesTr/OASIS_0403_0000.nii.gz",
+      "moving": "./imagesTr/OASIS_0404_0000.nii.gz"
+    }
+  ]
+}

@@ -1,0 +1,436 @@
+{
+  "run": "results/gaussian_local_pcg_probe/20261110T161947_512004Z",
+  "protocol": {
+    "pair": "LPBA S02 to S01",
+    "checkpoints": {
+      "MSE": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt",
+      "NCC": "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt"
+    },
+    "times": [
+      0.21875,
+      0.46875,
+      0.71875
+    ],
+    "sigmas_mm": [
+      0,
+      1,
+      2,
+      4
+    ],
+    "filtering": "SciPy gaussian_filter, per vector component, sigma=(s,s,s,0), reflect boundary, truncate=4. No intensity/map recalibration.",
+    "samples": 65536,
+    "seed": 20261111,
+    "mask_counts": {
+      "foreground_union": 17322,
+      "strong_original_edges": 4331
+    },
+    "fields": "Dense local strict PD-LK c4 eta1e-6 rho0 and dense brightness-only ridge v=-gq/(|g|^2+1e-6)",
+    "pcg": {
+      "intervals": 16,
+      "smoothness": 0.01,
+      "ridge": 1e-06,
+      "iterations": 500,
+      "tolerance": 2e-05,
+      "substeps": 4
+    },
+    "units": "mm per unit interpolation time; 1mm native voxels",
+    "note": "Three fixed representative recovery midpoints, not all16; no anatomical labels or coefficient selection. No training, RK2, saved volumes or velocities."
+  },
+  "summary": {
+    "models": {
+      "MSE": {
+        "strict_pdlk": {
+          "0": {
+            "foreground_union": {
+              "vector_cosine": 0.39238654046169963,
+              "relative_vector_rmse": 2.529517075342285,
+              "local_rms_speed": 14.137113050821112,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 2.7487447117895893,
+              "brightness_rms": 0.0379813180189165,
+              "opposite_fraction": 0.16803617819686328,
+              "median_of_time_direction_medians": 0.6594039924241536
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.4130398826460759,
+              "relative_vector_rmse": 2.3872476796408826,
+              "local_rms_speed": 14.166815926593006,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 2.6197463489906805,
+              "brightness_rms": 0.044160738124324514,
+              "opposite_fraction": 0.14285714285714285,
+              "median_of_time_direction_medians": 0.7113715362885015
+            },
+            "neighbor_difference_ratio": 33.18687152891364
+          },
+          "1": {
+            "foreground_union": {
+              "vector_cosine": 0.703623101806833,
+              "relative_vector_rmse": 1.0656080322452246,
+              "local_rms_speed": 7.702999794427479,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 1.4977301146091508,
+              "brightness_rms": 0.04088302306234436,
+              "opposite_fraction": 0.08365245838545175,
+              "median_of_time_direction_medians": 0.8143207032686025
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.7341337511188876,
+              "relative_vector_rmse": 0.9762220715401788,
+              "local_rms_speed": 7.76294307466206,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 1.435533706560926,
+              "brightness_rms": 0.04739738724620619,
+              "opposite_fraction": 0.0648091133004926,
+              "median_of_time_direction_medians": 0.8475737146999314
+            },
+            "neighbor_difference_ratio": 5.616296908210035
+          },
+          "2": {
+            "foreground_union": {
+              "vector_cosine": 0.8506565106307413,
+              "relative_vector_rmse": 0.615340282277544,
+              "local_rms_speed": 6.019698153408768,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 1.1704379392220285,
+              "brightness_rms": 0.07739481455180965,
+              "opposite_fraction": 0.03562012893293563,
+              "median_of_time_direction_medians": 0.9114371853210073
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.8679920336987997,
+              "relative_vector_rmse": 0.5674041651349225,
+              "local_rms_speed": 6.1783330592332355,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 1.142505525492996,
+              "brightness_rms": 0.09083766320762102,
+              "opposite_fraction": 0.029325738916256158,
+              "median_of_time_direction_medians": 0.924850245788619
+            },
+            "neighbor_difference_ratio": 2.2281197808017015
+          },
+          "4": {
+            "foreground_union": {
+              "vector_cosine": 0.9442967307509771,
+              "relative_vector_rmse": 0.33040996818827484,
+              "local_rms_speed": 4.705183839515664,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 0.9148508008935616,
+              "brightness_rms": 0.14802982530158112,
+              "opposite_fraction": 0.012508900563862748,
+              "median_of_time_direction_medians": 0.9681403165460444
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.947461720299212,
+              "relative_vector_rmse": 0.322617472012208,
+              "local_rms_speed": 4.896357753477716,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 0.9054409554335395,
+              "brightness_rms": 0.16924901256790154,
+              "opposite_fraction": 0.013470864444615503,
+              "median_of_time_direction_medians": 0.9698669145495773
+            },
+            "neighbor_difference_ratio": 0.8219163160183844
+          }
+        },
+        "brightness_only": {
+          "0": {
+            "foreground_union": {
+              "vector_cosine": 0.5320736979899369,
+              "relative_vector_rmse": 0.9667057332620729,
+              "local_rms_speed": 5.13578121379765,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 0.9985738532036899,
+              "brightness_rms": 0.0008144123645662154,
+              "opposite_fraction": 0.12299768926487291,
+              "median_of_time_direction_medians": 0.5820367018270334
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.5748770940742446,
+              "relative_vector_rmse": 0.8698361323607003,
+              "local_rms_speed": 4.704713050869147,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 0.8700017634115857,
+              "brightness_rms": 0.0009156337223554645,
+              "opposite_fraction": 0.07894118568407862,
+              "median_of_time_direction_medians": 0.6346350720358171
+            },
+            "neighbor_difference_ratio": 8.170302750664948
+          },
+          "1": {
+            "foreground_union": {
+              "vector_cosine": 0.7008271943517911,
+              "relative_vector_rmse": 0.7137741379137456,
+              "local_rms_speed": 3.7337597854937363,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 0.7259722991938891,
+              "brightness_rms": 0.07254568135986865,
+              "opposite_fraction": 0.0555298383674729,
+              "median_of_time_direction_medians": 0.755764078099981
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.7408360553865616,
+              "relative_vector_rmse": 0.676295114976822,
+              "local_rms_speed": 3.579968753570741,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 0.662012559509774,
+              "brightness_rms": 0.0880873710154371,
+              "opposite_fraction": 0.02842796446504442,
+              "median_of_time_direction_medians": 0.7839315874834327
+            },
+            "neighbor_difference_ratio": 2.5263557529230303
+          },
+          "2": {
+            "foreground_union": {
+              "vector_cosine": 0.8185831749410413,
+              "relative_vector_rmse": 0.625756044380376,
+              "local_rms_speed": 2.9330724108948467,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 0.5702909250113748,
+              "brightness_rms": 0.1459044293889133,
+              "opposite_fraction": 0.021758385643316516,
+              "median_of_time_direction_medians": 0.8700996779443637
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.8412688714658607,
+              "relative_vector_rmse": 0.6149872910598513,
+              "local_rms_speed": 2.9640121417279115,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 0.5481090477133874,
+              "brightness_rms": 0.16506098887547588,
+              "opposite_fraction": 0.01378513669618791,
+              "median_of_time_direction_medians": 0.8817723471813905
+            },
+            "neighbor_difference_ratio": 1.136374122282428
+          },
+          "4": {
+            "foreground_union": {
+              "vector_cosine": 0.9122295329218505,
+              "relative_vector_rmse": 0.6352795994038579,
+              "local_rms_speed": 2.1945466309510064,
+              "pcg_rms_speed": 5.143116052278659,
+              "speed_ratio": 0.426695919097278,
+              "brightness_rms": 0.23641126473741192,
+              "opposite_fraction": 0.00623820709307251,
+              "median_of_time_direction_medians": 0.9476619989511963
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.9131577765731017,
+              "relative_vector_rmse": 0.6321099888396431,
+              "local_rms_speed": 2.3254322888501857,
+              "pcg_rms_speed": 5.407705189493291,
+              "speed_ratio": 0.43002201624605974,
+              "brightness_rms": 0.25900797742419845,
+              "opposite_fraction": 0.008706371831419986,
+              "median_of_time_direction_medians": 0.9432344015844458
+            },
+            "neighbor_difference_ratio": 0.41623627634043897
+          }
+        },
+        "pcg_converged": 2,
+        "pcg_max_residual": 2.019498970184941e-05
+      },
+      "NCC": {
+        "strict_pdlk": {
+          "0": {
+            "foreground_union": {
+              "vector_cosine": 0.36520270293696416,
+              "relative_vector_rmse": 2.8300146627705463,
+              "local_rms_speed": 18.80298506756042,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 3.0377213662448175,
+              "brightness_rms": 0.10843245085611518,
+              "opposite_fraction": 0.14474848939691337,
+              "median_of_time_direction_medians": 0.7250791249997506
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.36870579201694026,
+              "relative_vector_rmse": 2.7497947618938374,
+              "local_rms_speed": 18.39791919896999,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 2.956622945560628,
+              "brightness_rms": 0.13273728857401473,
+              "opposite_fraction": 0.14361579311937198,
+              "median_of_time_direction_medians": 0.7267433505653015
+            },
+            "neighbor_difference_ratio": 26.04586667994329
+          },
+          "1": {
+            "foreground_union": {
+              "vector_cosine": 0.7213395693143174,
+              "relative_vector_rmse": 1.0384652604993543,
+              "local_rms_speed": 9.254560557683796,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 1.4951230477645694,
+              "brightness_rms": 0.11264419709612153,
+              "opposite_fraction": 0.06565831505214949,
+              "median_of_time_direction_medians": 0.8597563543790684
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.7248960163620856,
+              "relative_vector_rmse": 1.0025778298760908,
+              "local_rms_speed": 9.04359700749205,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 1.4533440512257156,
+              "brightness_rms": 0.13410834994188733,
+              "opposite_fraction": 0.06688216732086508,
+              "median_of_time_direction_medians": 0.853060653018396
+            },
+            "neighbor_difference_ratio": 4.1071387246509365
+          },
+          "2": {
+            "foreground_union": {
+              "vector_cosine": 0.8697657618851035,
+              "relative_vector_rmse": 0.5648582827348958,
+              "local_rms_speed": 7.085146395360049,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 1.1446427527770258,
+              "brightness_rms": 0.21497126503460612,
+              "opposite_fraction": 0.024516029711734597,
+              "median_of_time_direction_medians": 0.9360623729471278
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.8707749845756209,
+              "relative_vector_rmse": 0.5551267835815036,
+              "local_rms_speed": 7.0221294191532415,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 1.128485713130382,
+              "brightness_rms": 0.2589566537725433,
+              "opposite_fraction": 0.025629184945740013,
+              "median_of_time_direction_medians": 0.930746240926551
+            },
+            "neighbor_difference_ratio": 1.5370386474427151
+          },
+          "4": {
+            "foreground_union": {
+              "vector_cosine": 0.932495164355931,
+              "relative_vector_rmse": 0.36360128967823246,
+              "local_rms_speed": 5.512817783125332,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 0.8906247762173518,
+              "brightness_rms": 0.41781545229941663,
+              "opposite_fraction": 0.010391609737323199,
+              "median_of_time_direction_medians": 0.9659228195265187
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.936518853112126,
+              "relative_vector_rmse": 0.35264538896516734,
+              "local_rms_speed": 5.592585735122692,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 0.8987520344368359,
+              "brightness_rms": 0.48467376212501867,
+              "opposite_fraction": 0.011313784345416763,
+              "median_of_time_direction_medians": 0.9682965638353256
+            },
+            "neighbor_difference_ratio": 0.5481561047755499
+          }
+        },
+        "brightness_only": {
+          "0": {
+            "foreground_union": {
+              "vector_cosine": 0.5421423880682159,
+              "relative_vector_rmse": 0.9597110690899919,
+              "local_rms_speed": 6.22563511029617,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 1.0057841733660577,
+              "brightness_rms": 0.0015277927883565418,
+              "opposite_fraction": 0.06400862068965517,
+              "median_of_time_direction_medians": 0.6312531370205314
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.5383825839511531,
+              "relative_vector_rmse": 0.9247685896720685,
+              "local_rms_speed": 5.720077510371871,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 0.9192404985938633,
+              "brightness_rms": 0.0013957959751353046,
+              "opposite_fraction": 0.05793688177107866,
+              "median_of_time_direction_medians": 0.6353977980561413
+            },
+            "neighbor_difference_ratio": 6.0176866689401045
+          },
+          "1": {
+            "foreground_union": {
+              "vector_cosine": 0.7297961741000422,
+              "relative_vector_rmse": 0.6841672408262706,
+              "local_rms_speed": 4.3550442325420375,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 0.7035803553850639,
+              "brightness_rms": 0.1988286486149207,
+              "opposite_fraction": 0.028510252502845237,
+              "median_of_time_direction_medians": 0.7762933818010147
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.723977541868804,
+              "relative_vector_rmse": 0.6928147246830113,
+              "local_rms_speed": 4.104858085825259,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 0.6596679479655776,
+              "brightness_rms": 0.23973318876434752,
+              "opposite_fraction": 0.03242241778601204,
+              "median_of_time_direction_medians": 0.7659803664489082
+            },
+            "neighbor_difference_ratio": 1.6579351347000997
+          },
+          "2": {
+            "foreground_union": {
+              "vector_cosine": 0.8264394171760342,
+              "relative_vector_rmse": 0.625920015954318,
+              "local_rms_speed": 3.422876824186764,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 0.5529837962162136,
+              "brightness_rms": 0.40553400618135965,
+              "opposite_fraction": 0.013651942850541072,
+              "median_of_time_direction_medians": 0.8777543558741461
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.815228425790738,
+              "relative_vector_rmse": 0.6403777627729612,
+              "local_rms_speed": 3.37234527204012,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 0.5419500598863881,
+              "brightness_rms": 0.4588904955588405,
+              "opposite_fraction": 0.020798028038822986,
+              "median_of_time_direction_medians": 0.8585552129883346
+            },
+            "neighbor_difference_ratio": 0.746835138180693
+          },
+          "4": {
+            "foreground_union": {
+              "vector_cosine": 0.8844480421602828,
+              "relative_vector_rmse": 0.663881609369877,
+              "local_rms_speed": 2.5516524810939485,
+              "pcg_rms_speed": 6.18983204862017,
+              "speed_ratio": 0.4122329105299004,
+              "brightness_rms": 0.6779745900102611,
+              "opposite_fraction": 0.010704040967984137,
+              "median_of_time_direction_medians": 0.9389921701062075
+            },
+            "strong_original_edges": {
+              "vector_cosine": 0.8730206009215112,
+              "relative_vector_rmse": 0.6621497128849322,
+              "local_rms_speed": 2.6454108099600995,
+              "pcg_rms_speed": 6.222612601513657,
+              "speed_ratio": 0.42512863637318515,
+              "brightness_rms": 0.7383477503649479,
+              "opposite_fraction": 0.013322039119051285,
+              "median_of_time_direction_medians": 0.9214716179241597
+            },
+            "neighbor_difference_ratio": 0.2772168757417028
+          }
+        },
+        "pcg_converged": 3,
+        "pcg_max_residual": 1.8331013052375056e-05
+      }
+    },
+    "elapsed_seconds": 32.14400970598217,
+    "protected_unchanged": true,
+    "protected_hashes": {
+      "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt": "bfc5936f5f872f5a1b6ecf31ea180027e3807ca4a38fd35b225baa48051c45f1",
+      "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt": "ec49b6ee58032771429cbb3bf69ab0e3833e1a1d812e2666e5a81cffe17b9ab3",
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz": "c8247b181e2d5509f254938017e6ddf1288a924ac23e992c11bb4bab07f75505",
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz": "2450ca264e76287b3702193907260fb61fefce5bc32f07a51267df8e7155dc46"
+    }
+  },
+  "interval_evidence": "results/gaussian_local_pcg_probe/20261110T161947_512004Z/intervals.json"
+}

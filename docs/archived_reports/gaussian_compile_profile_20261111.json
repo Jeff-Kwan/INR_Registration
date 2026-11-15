@@ -1,0 +1,1407 @@
+{
+  "timings": {
+    "device": "NVIDIA GeForce RTX 5090",
+    "protocol": {
+      "particles": 256,
+      "substeps": 4,
+      "sigma_mm": 4,
+      "weight": 0.01,
+      "budget": 0.1,
+      "updates": 0,
+      "repeats": 5,
+      "compile_velocity": true
+    },
+    "models": {
+      "mse": {
+        "checkpoint": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt",
+        "measurements": [
+          {
+            "grid": 0,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 2.30699845997151,
+            "registration_seconds": 0.0,
+            "total_seconds": 2.363214842043817,
+            "peak_mib": 974.744140625,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.00769591995049268,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.008270334918051958,
+            "peak_mib": 974.744140625,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.006776493974030018,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007063545985147357,
+            "peak_mib": 974.744140625,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006620091968216002,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.006891903933137655,
+            "peak_mib": 974.744140625,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.007245647022500634,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.0074878690065816045,
+            "peak_mib": 974.744140625,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007019195938482881,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.0072605370078235865,
+            "peak_mib": 974.744140625,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 16,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.006700982921756804,
+            "registration_seconds": 7.295976119930856,
+            "total_seconds": 7.3029706658562645,
+            "peak_mib": 974.79150390625,
+            "gradients": {
+              "source": {
+                "raw": 0.050160184502601624,
+                "base": 0.028459781780838966,
+                "scale": 0.05673779174685478,
+                "applied": 0.0028459781022924235
+              },
+              "target": {
+                "raw": 0.04151724651455879,
+                "base": 0.0318215973675251,
+                "scale": 0.07664669305086136,
+                "applied": 0.0031821596499183313
+              }
+            },
+            "losses": {
+              "registration": 0.007690927945077419,
+              "image_mse": 0.0076904296875,
+              "boundary": 4.98279632665799e-07,
+              "outside": 0.01953125
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006893223966471851,
+            "registration_seconds": 0.045439247973263264,
+            "total_seconds": 0.052644813898950815,
+            "peak_mib": 974.79443359375,
+            "gradients": {
+              "source": {
+                "raw": 0.028091557323932648,
+                "base": 0.028459781780838966,
+                "scale": 0.10131079703569412,
+                "applied": 0.002845978062461507
+              },
+              "target": {
+                "raw": 0.01954970695078373,
+                "base": 0.0318215973675251,
+                "scale": 0.1627727597951889,
+                "applied": 0.003182159753566255
+              }
+            },
+            "losses": {
+              "registration": 0.005560378078371286,
+              "image_mse": 0.005559525452554226,
+              "boundary": 8.526777151018905e-07,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.0068129830760881305,
+            "registration_seconds": 0.04460333101451397,
+            "total_seconds": 0.05171664617955685,
+            "peak_mib": 974.79443359375,
+            "gradients": {
+              "source": {
+                "raw": 0.08967791497707367,
+                "base": 0.028459781780838966,
+                "scale": 0.03173555061221123,
+                "applied": 0.0028459780095524967
+              },
+              "target": {
+                "raw": 0.08228393644094467,
+                "base": 0.0318215973675251,
+                "scale": 0.03867291659116745,
+                "applied": 0.003182159810773577
+              }
+            },
+            "losses": {
+              "registration": 0.00818280503153801,
+              "image_mse": 0.00818208884447813,
+              "boundary": 7.15784779004025e-07,
+              "outside": 0.01953125
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006791883963160217,
+            "registration_seconds": 0.0448801830643788,
+            "total_seconds": 0.05196874891407788,
+            "peak_mib": 974.79443359375,
+            "gradients": {
+              "source": {
+                "raw": 0.050705160945653915,
+                "base": 0.028459781780838966,
+                "scale": 0.05612797662615776,
+                "applied": 0.0028459780883832303
+              },
+              "target": {
+                "raw": 0.045790255069732666,
+                "base": 0.0318215973675251,
+                "scale": 0.06949425488710403,
+                "applied": 0.0031821596571615096
+              }
+            },
+            "losses": {
+              "registration": 0.009330814704298973,
+              "image_mse": 0.009330322965979576,
+              "boundary": 4.913895281788427e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006769083091057837,
+            "registration_seconds": 0.04539567697793245,
+            "total_seconds": 0.052501563099212945,
+            "peak_mib": 974.79443359375,
+            "gradients": {
+              "source": {
+                "raw": 0.09797629714012146,
+                "base": 0.028459781780838966,
+                "scale": 0.029047619551420212,
+                "applied": 0.0028459782043831483
+              },
+              "target": {
+                "raw": 0.07559613138437271,
+                "base": 0.0318215973675251,
+                "scale": 0.042094215750694275,
+                "applied": 0.0031821598644116156
+              }
+            },
+            "losses": {
+              "registration": 0.012170827947556973,
+              "image_mse": 0.012169009074568748,
+              "boundary": 1.8184352938988013e-06,
+              "outside": 0.01953125
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.006857973989099264,
+            "registration_seconds": 0.04456479090731591,
+            "total_seconds": 0.05171840696129948,
+            "peak_mib": 974.79443359375,
+            "gradients": {
+              "source": {
+                "raw": 0.12955117225646973,
+                "base": 0.028459781780838966,
+                "scale": 0.02196798473596573,
+                "applied": 0.0028459781746565938
+              },
+              "target": {
+                "raw": 0.0730806365609169,
+                "base": 0.0318215973675251,
+                "scale": 0.04354313015937805,
+                "applied": 0.003182159669902207
+              }
+            },
+            "losses": {
+              "registration": 0.007960278540849686,
+              "image_mse": 0.007960110902786255,
+              "boundary": 1.6723178930533322e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.00674494297709316,
+            "registration_seconds": 9.343669970985502,
+            "total_seconds": 9.350738067063503,
+            "peak_mib": 974.90576171875,
+            "gradients": {
+              "source": {
+                "raw": 0.058198232203722,
+                "base": 0.028459781780838966,
+                "scale": 0.048901453614234924,
+                "applied": 0.0028459781525407846
+              },
+              "target": {
+                "raw": 0.05013458803296089,
+                "base": 0.0318215973675251,
+                "scale": 0.06347234547138214,
+                "applied": 0.0031821598916935145
+              }
+            },
+            "losses": {
+              "registration": 0.005123557522892952,
+              "image_mse": 0.005123448558151722,
+              "boundary": 1.0873271349964853e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.0070009949849918485,
+            "registration_seconds": 0.1473152880789712,
+            "total_seconds": 0.15462716505862772,
+            "peak_mib": 974.90625,
+            "gradients": {
+              "source": {
+                "raw": 0.05757952854037285,
+                "base": 0.028459781780838966,
+                "scale": 0.049426909536123276,
+                "applied": 0.002845978148297637
+              },
+              "target": {
+                "raw": 0.06076427921652794,
+                "base": 0.0318215973675251,
+                "scale": 0.05236892029643059,
+                "applied": 0.0031821596951604053
+              }
+            },
+            "losses": {
+              "registration": 0.004467559512704611,
+              "image_mse": 0.004467520397156477,
+              "boundary": 3.9074297575325545e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007144216098822653,
+            "registration_seconds": 0.14977784699294716,
+            "total_seconds": 0.15738023712765425,
+            "peak_mib": 974.90625,
+            "gradients": {
+              "source": {
+                "raw": 0.050338733941316605,
+                "base": 0.028459781780838966,
+                "scale": 0.05653654411435127,
+                "applied": 0.002845978052133838
+              },
+              "target": {
+                "raw": 0.07007293403148651,
+                "base": 0.0318215973675251,
+                "scale": 0.045412108302116394,
+                "applied": 0.003182159669284923
+              }
+            },
+            "losses": {
+              "registration": 0.0043808650225400925,
+              "image_mse": 0.004380852449685335,
+              "boundary": 1.2679683969452071e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.007087246049195528,
+            "registration_seconds": 0.1512156289536506,
+            "total_seconds": 0.15876807901076972,
+            "peak_mib": 974.90625,
+            "gradients": {
+              "source": {
+                "raw": 0.036301396787166595,
+                "base": 0.028459781780838966,
+                "scale": 0.07839858531951904,
+                "applied": 0.002845978153236395
+              },
+              "target": {
+                "raw": 0.03051280975341797,
+                "base": 0.0318215973675251,
+                "scale": 0.10428930819034576,
+                "applied": 0.0031821598201275947
+              }
+            },
+            "losses": {
+              "registration": 0.006650984287261963,
+              "image_mse": 0.006650984287261963,
+              "boundary": 1.004619165634324e-10,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.007140225963667035,
+            "registration_seconds": 0.14817993598990142,
+            "total_seconds": 0.15563510393258184,
+            "peak_mib": 974.90625,
+            "gradients": {
+              "source": {
+                "raw": 0.060578275471925735,
+                "base": 0.028459781780838966,
+                "scale": 0.046980176120996475,
+                "applied": 0.002845978050777312
+              },
+              "target": {
+                "raw": 0.03881009668111801,
+                "base": 0.0318215973675251,
+                "scale": 0.08199308812618256,
+                "applied": 0.0031821596773605743
+              }
+            },
+            "losses": {
+              "registration": 0.00660012848675251,
+              "image_mse": 0.00660011125728488,
+              "boundary": 1.7364669702146784e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007206805981695652,
+            "registration_seconds": 0.1472364580258727,
+            "total_seconds": 0.15474037604872137,
+            "peak_mib": 974.90625,
+            "gradients": {
+              "source": {
+                "raw": 0.04282767325639725,
+                "base": 0.028459781780838966,
+                "scale": 0.06645184755325317,
+                "applied": 0.002845978014294648
+              },
+              "target": {
+                "raw": 0.026250634342432022,
+                "base": 0.0318215973675251,
+                "scale": 0.12122220546007156,
+                "applied": 0.003182159789715505
+              }
+            },
+            "losses": {
+              "registration": 0.004789874888956547,
+              "image_mse": 0.004789871163666248,
+              "boundary": 3.716494445527019e-09,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.007164885988458991,
+            "registration_seconds": 0.3166889710118994,
+            "total_seconds": 0.3242327000480145,
+            "peak_mib": 975.123046875,
+            "gradients": {
+              "source": {
+                "raw": 0.09844759106636047,
+                "base": 0.028459781780838966,
+                "scale": 0.028908560052514076,
+                "applied": 0.00284597809836723
+              },
+              "target": {
+                "raw": 0.18721872568130493,
+                "base": 0.0318215973675251,
+                "scale": 0.016997016966342926,
+                "applied": 0.003182159856822242
+              }
+            },
+            "losses": {
+              "registration": 0.00949675589799881,
+              "image_mse": 0.009496754966676235,
+              "boundary": 1.0573806275004927e-09,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007219156948849559,
+            "registration_seconds": 0.3138491379795596,
+            "total_seconds": 0.32141433691140264,
+            "peak_mib": 975.123046875,
+            "gradients": {
+              "source": {
+                "raw": 0.02695382386445999,
+                "base": 0.028459781780838966,
+                "scale": 0.1055871769785881,
+                "applied": 0.0028459781706264287
+              },
+              "target": {
+                "raw": 0.04019324108958244,
+                "base": 0.0318215973675251,
+                "scale": 0.07917151600122452,
+                "applied": 0.003182159830064951
+              }
+            },
+            "losses": {
+              "registration": 0.006075663957744837,
+              "image_mse": 0.006075555924326181,
+              "boundary": 1.0783864468066895e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.006933424971066415,
+            "registration_seconds": 0.31364171602763236,
+            "total_seconds": 0.3209051640005782,
+            "peak_mib": 975.123046875,
+            "gradients": {
+              "source": {
+                "raw": 0.0215837974101305,
+                "base": 0.028459781780838966,
+                "scale": 0.13185715675354004,
+                "applied": 0.002845978158444229
+              },
+              "target": {
+                "raw": 0.01879539154469967,
+                "base": 0.0318215973675251,
+                "scale": 0.16930532455444336,
+                "applied": 0.003182159865603218
+              }
+            },
+            "losses": {
+              "registration": 0.00440039811655879,
+              "image_mse": 0.004400305449962616,
+              "boundary": 9.25547354313494e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.00700222491286695,
+            "registration_seconds": 0.31400974898133427,
+            "total_seconds": 0.32147142791654915,
+            "peak_mib": 975.123046875,
+            "gradients": {
+              "source": {
+                "raw": 0.034337930381298065,
+                "base": 0.028459781780838966,
+                "scale": 0.08288147300481796,
+                "applied": 0.002845978249938874
+              },
+              "target": {
+                "raw": 0.028610967099666595,
+                "base": 0.0318215973675251,
+                "scale": 0.11122167855501175,
+                "applied": 0.003182159785907135
+              }
+            },
+            "losses": {
+              "registration": 0.007130682002753019,
+              "image_mse": 0.007130682002753019,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006840034038759768,
+            "registration_seconds": 0.31516229803673923,
+            "total_seconds": 0.32238370506092906,
+            "peak_mib": 975.123046875,
+            "gradients": {
+              "source": {
+                "raw": 0.02345801517367363,
+                "base": 0.028459781780838966,
+                "scale": 0.12132220715284348,
+                "applied": 0.0028459781762949776
+              },
+              "target": {
+                "raw": 0.037271078675985336,
+                "base": 0.0318215973675251,
+                "scale": 0.08537879586219788,
+                "applied": 0.0031821598178408683
+              }
+            },
+            "losses": {
+              "registration": 0.006693301722407341,
+              "image_mse": 0.0066932979971170425,
+              "boundary": 3.5487375260601084e-09,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.0068033430725336075,
+            "registration_seconds": 0.31439621304161847,
+            "total_seconds": 0.3215605680597946,
+            "peak_mib": 975.123046875,
+            "gradients": {
+              "source": {
+                "raw": 0.02486676536500454,
+                "base": 0.028459781780838966,
+                "scale": 0.11444906890392303,
+                "applied": 0.0028459781426770914
+              },
+              "target": {
+                "raw": 0.015424136072397232,
+                "base": 0.0318215973675251,
+                "scale": 0.20631040632724762,
+                "applied": 0.00318215978034303
+              }
+            },
+            "losses": {
+              "registration": 0.005020464304834604,
+              "image_mse": 0.00502020213752985,
+              "boundary": 2.6223193572150194e-07,
+              "outside": 0.00390625
+            }
+          }
+        ],
+        "weights_unchanged": true
+      },
+      "ncc": {
+        "checkpoint": "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt",
+        "measurements": [
+          {
+            "grid": 0,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.014223171980120242,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.0147902169264853,
+            "peak_mib": 978.5380859375,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007258486934006214,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.00754554895684123,
+            "peak_mib": 978.5361328125,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007201226078905165,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007479378022253513,
+            "peak_mib": 978.5361328125,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.0072968980530276895,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.0075606199679896235,
+            "peak_mib": 978.5361328125,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.0071956360479816794,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007460898021236062,
+            "peak_mib": 978.5361328125,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 0,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007165355957113206,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007424968061968684,
+            "peak_mib": 978.5361328125,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "grid": 16,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.007141166017390788,
+            "registration_seconds": 0.04506633500568569,
+            "total_seconds": 0.05245828290935606,
+            "peak_mib": 978.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.21236059069633484,
+                "base": 0.17282868921756744,
+                "scale": 0.08138453960418701,
+                "applied": 0.01728286890389441
+              },
+              "target": {
+                "raw": 0.12754227221012115,
+                "base": 0.17000766098499298,
+                "scale": 0.13329514861106873,
+                "applied": 0.01700076612844148
+              }
+            },
+            "losses": {
+              "registration": 0.010411565192043781,
+              "image_mse": 0.010409445501863956,
+              "boundary": 2.120012823070283e-06,
+              "outside": 0.01953125
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007213626988232136,
+            "registration_seconds": 0.04434851906262338,
+            "total_seconds": 0.05181257799267769,
+            "peak_mib": 978.58544921875,
+            "gradients": {
+              "source": {
+                "raw": 0.0929388701915741,
+                "base": 0.17282868921756744,
+                "scale": 0.18595954775810242,
+                "applied": 0.017282870269974104
+              },
+              "target": {
+                "raw": 0.0971388965845108,
+                "base": 0.17000766098499298,
+                "scale": 0.17501503229141235,
+                "applied": 0.017000767122490323
+              }
+            },
+            "losses": {
+              "registration": 0.006608028896152973,
+              "image_mse": 0.0066030872985720634,
+              "boundary": 4.941588485962711e-06,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007185616064816713,
+            "registration_seconds": 0.044365128967911005,
+            "total_seconds": 0.05180189700331539,
+            "peak_mib": 978.58544921875,
+            "gradients": {
+              "source": {
+                "raw": 0.339549720287323,
+                "base": 0.17282868921756744,
+                "scale": 0.05089937895536423,
+                "applied": 0.017282869887092378
+              },
+              "target": {
+                "raw": 0.25485527515411377,
+                "base": 0.17000766098499298,
+                "scale": 0.06670752912759781,
+                "applied": 0.017000765690665
+              }
+            },
+            "losses": {
+              "registration": 0.011753752827644348,
+              "image_mse": 0.011753031052649021,
+              "boundary": 7.213417916318576e-07,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.0071842370089143515,
+            "registration_seconds": 0.04421764798462391,
+            "total_seconds": 0.051652636961080134,
+            "peak_mib": 978.58544921875,
+            "gradients": {
+              "source": {
+                "raw": 0.13272351026535034,
+                "base": 0.17282868921756744,
+                "scale": 0.13021709024906158,
+                "applied": 0.017282869314395377
+              },
+              "target": {
+                "raw": 0.10932242125272751,
+                "base": 0.17000766098499298,
+                "scale": 0.1555103361606598,
+                "applied": 0.017000766478908913
+              }
+            },
+            "losses": {
+              "registration": 0.007423472125083208,
+              "image_mse": 0.007423065137118101,
+              "boundary": 4.0681672430764593e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.007191026001237333,
+            "registration_seconds": 0.04423120792489499,
+            "total_seconds": 0.05167056596837938,
+            "peak_mib": 978.58544921875,
+            "gradients": {
+              "source": {
+                "raw": 0.1854293793439865,
+                "base": 0.17282868921756744,
+                "scale": 0.09320459514856339,
+                "applied": 0.017282870230405645
+              },
+              "target": {
+                "raw": 0.22928714752197266,
+                "base": 0.17000766098499298,
+                "scale": 0.07414618134498596,
+                "applied": 0.017000766420238733
+              }
+            },
+            "losses": {
+              "registration": 0.013409513980150223,
+              "image_mse": 0.013404056429862976,
+              "boundary": 5.457887709781062e-06,
+              "outside": 0.03515625
+            }
+          },
+          {
+            "grid": 16,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007204925990663469,
+            "registration_seconds": 0.04428815795108676,
+            "total_seconds": 0.0517456759698689,
+            "peak_mib": 978.58544921875,
+            "gradients": {
+              "source": {
+                "raw": 0.10442206263542175,
+                "base": 0.17282868921756744,
+                "scale": 0.16550974547863007,
+                "applied": 0.01728286900914222
+              },
+              "target": {
+                "raw": 0.12927323579788208,
+                "base": 0.17000766098499298,
+                "scale": 0.13151033222675323,
+                "applied": 0.01700076618780688
+              }
+            },
+            "losses": {
+              "registration": 0.006589053198695183,
+              "image_mse": 0.00658794678747654,
+              "boundary": 1.106404056372412e-06,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.0071873069973662496,
+            "registration_seconds": 0.14799427392426878,
+            "total_seconds": 0.15547350293491036,
+            "peak_mib": 978.69677734375,
+            "gradients": {
+              "source": {
+                "raw": 0.06617214530706406,
+                "base": 0.17282868921756744,
+                "scale": 0.26118043065071106,
+                "applied": 0.01728286940838042
+              },
+              "target": {
+                "raw": 0.1047888696193695,
+                "base": 0.17000766098499298,
+                "scale": 0.16223828494548798,
+                "applied": 0.017000766488422858
+              }
+            },
+            "losses": {
+              "registration": 0.005025649908930063,
+              "image_mse": 0.005025099031627178,
+              "boundary": 5.50721097170026e-07,
+              "outside": 0.015625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007266676984727383,
+            "registration_seconds": 0.14627481997013092,
+            "total_seconds": 0.15383683994878083,
+            "peak_mib": 978.69677734375,
+            "gradients": {
+              "source": {
+                "raw": 0.08268334716558456,
+                "base": 0.17282868921756744,
+                "scale": 0.2090248018503189,
+                "applied": 0.01728287025760744
+              },
+              "target": {
+                "raw": 0.07372306287288666,
+                "base": 0.17000766098499298,
+                "scale": 0.23060309886932373,
+                "applied": 0.01700076675662565
+              }
+            },
+            "losses": {
+              "registration": 0.003953224513679743,
+              "image_mse": 0.003953220788389444,
+              "boundary": 3.6425296112696515e-09,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007241716957651079,
+            "registration_seconds": 0.14677102398127317,
+            "total_seconds": 0.15429794392548501,
+            "peak_mib": 978.69677734375,
+            "gradients": {
+              "source": {
+                "raw": 0.14639659225940704,
+                "base": 0.17282868921756744,
+                "scale": 0.11805513501167297,
+                "applied": 0.017282869464433137
+              },
+              "target": {
+                "raw": 0.12450569868087769,
+                "base": 0.17000766098499298,
+                "scale": 0.1365460902452469,
+                "applied": 0.01700076636812664
+              }
+            },
+            "losses": {
+              "registration": 0.005853353533893824,
+              "image_mse": 0.005853292532265186,
+              "boundary": 6.080240666506143e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.007243396947160363,
+            "registration_seconds": 0.42634085309691727,
+            "total_seconds": 0.43398346297908574,
+            "peak_mib": 978.69677734375,
+            "gradients": {
+              "source": {
+                "raw": 0.17763735353946686,
+                "base": 0.17282868921756744,
+                "scale": 0.09729298949241638,
+                "applied": 0.017282869171376003
+              },
+              "target": {
+                "raw": 0.1018274575471878,
+                "base": 0.17000766098499298,
+                "scale": 0.1669566035270691,
+                "applied": 0.017000766457875294
+              }
+            },
+            "losses": {
+              "registration": 0.0057931398041546345,
+              "image_mse": 0.0057931398041546345,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.007479068939574063,
+            "registration_seconds": 0.1474512389395386,
+            "total_seconds": 0.15525574097409844,
+            "peak_mib": 975.66357421875,
+            "gradients": {
+              "source": {
+                "raw": 0.08676677942276001,
+                "base": 0.17282868921756744,
+                "scale": 0.19918763637542725,
+                "applied": 0.017282869709127624
+              },
+              "target": {
+                "raw": 0.17504796385765076,
+                "base": 0.17000766098499298,
+                "scale": 0.09712062031030655,
+                "applied": 0.017000766833911163
+              }
+            },
+            "losses": {
+              "registration": 0.00589150283485651,
+              "image_mse": 0.00589082483202219,
+              "boundary": 6.778452643629862e-07,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "grid": 24,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007301446981728077,
+            "registration_seconds": 0.14689853496383876,
+            "total_seconds": 0.15450347389560193,
+            "peak_mib": 975.66357421875,
+            "gradients": {
+              "source": {
+                "raw": 0.06721551716327667,
+                "base": 0.17282868921756744,
+                "scale": 0.25712618231773376,
+                "applied": 0.01728286932070544
+              },
+              "target": {
+                "raw": 0.1256173551082611,
+                "base": 0.17000766098499298,
+                "scale": 0.1353377252817154,
+                "applied": 0.01700076709625753
+              }
+            },
+            "losses": {
+              "registration": 0.0064532277174293995,
+              "image_mse": 0.00644997414201498,
+              "boundary": 3.2536663638893515e-06,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.0072447770508006215,
+            "registration_seconds": 0.31495902698952705,
+            "total_seconds": 0.3225641460157931,
+            "peak_mib": 975.88037109375,
+            "gradients": {
+              "source": {
+                "raw": 0.12536445260047913,
+                "base": 0.17282868921756744,
+                "scale": 0.13786101341247559,
+                "applied": 0.017282870481402313
+              },
+              "target": {
+                "raw": 0.21355944871902466,
+                "base": 0.17000766098499298,
+                "scale": 0.07960671931505203,
+                "applied": 0.017000767091252644
+              }
+            },
+            "losses": {
+              "registration": 0.007856995798647404,
+              "image_mse": 0.007856938987970352,
+              "boundary": 5.657727797370171e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007913341978564858,
+            "registration_seconds": 0.31399990897625685,
+            "total_seconds": 0.3222683039493859,
+            "peak_mib": 975.88037109375,
+            "gradients": {
+              "source": {
+                "raw": 0.09710772335529327,
+                "base": 0.17282868921756744,
+                "scale": 0.17797626554965973,
+                "applied": 0.01728286995880457
+              },
+              "target": {
+                "raw": 0.0875292643904686,
+                "base": 0.17000766098499298,
+                "scale": 0.19422951340675354,
+                "applied": 0.017000766431411796
+              }
+            },
+            "losses": {
+              "registration": 0.006716000847518444,
+              "image_mse": 0.006715747993439436,
+              "boundary": 2.530730682792637e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007615979993715882,
+            "registration_seconds": 0.313666125992313,
+            "total_seconds": 0.32164016901515424,
+            "peak_mib": 975.88037109375,
+            "gradients": {
+              "source": {
+                "raw": 0.06192227825522423,
+                "base": 0.17282868921756744,
+                "scale": 0.2791058421134949,
+                "applied": 0.01728286961801051
+              },
+              "target": {
+                "raw": 0.04946543648838997,
+                "base": 0.17000766098499298,
+                "scale": 0.34368979930877686,
+                "applied": 0.017000765939415796
+              }
+            },
+            "losses": {
+              "registration": 0.0042475368827581406,
+              "image_mse": 0.00424750754609704,
+              "boundary": 2.9226622899614085e-08,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.007536169025115669,
+            "registration_seconds": 0.31513429793994874,
+            "total_seconds": 0.3230771899688989,
+            "peak_mib": 975.88037109375,
+            "gradients": {
+              "source": {
+                "raw": 0.13523218035697937,
+                "base": 0.17282868921756744,
+                "scale": 0.12780146300792694,
+                "applied": 0.017282870495373803
+              },
+              "target": {
+                "raw": 0.10177978128194809,
+                "base": 0.17000766098499298,
+                "scale": 0.1670348048210144,
+                "applied": 0.017000765901155734
+              }
+            },
+            "losses": {
+              "registration": 0.005858264863491058,
+              "image_mse": 0.005858264863491058,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.007765362039208412,
+            "registration_seconds": 0.3142098499229178,
+            "total_seconds": 0.3223402149742469,
+            "peak_mib": 975.88037109375,
+            "gradients": {
+              "source": {
+                "raw": 0.13585296273231506,
+                "base": 0.17282868921756744,
+                "scale": 0.12721747159957886,
+                "applied": 0.017282870428116937
+              },
+              "target": {
+                "raw": 0.087397001683712,
+                "base": 0.17000766098499298,
+                "scale": 0.19452345371246338,
+                "applied": 0.017000766611629636
+              }
+            },
+            "losses": {
+              "registration": 0.004823610652238131,
+              "image_mse": 0.0048232595436275005,
+              "boundary": 3.5112100249534706e-07,
+              "outside": 0.015625
+            }
+          },
+          {
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007774561992846429,
+            "registration_seconds": 0.313574475934729,
+            "total_seconds": 0.32171562092844397,
+            "peak_mib": 975.88037109375,
+            "gradients": {
+              "source": {
+                "raw": 0.03692626953125,
+                "base": 0.17282868921756744,
+                "scale": 0.4680372476577759,
+                "applied": 0.01728286955767544
+              },
+              "target": {
+                "raw": 0.04958686977624893,
+                "base": 0.17000766098499298,
+                "scale": 0.34284815192222595,
+                "applied": 0.017000766662395028
+              }
+            },
+            "losses": {
+              "registration": 0.00407857121899724,
+              "image_mse": 0.004078468307852745,
+              "boundary": 1.0294110097675002e-07,
+              "outside": 0.00390625
+            }
+          }
+        ],
+        "weights_unchanged": true
+      }
+    }
+  },
+  "parity": {
+    "records": [
+      {
+        "model": "mse",
+        "grid": 16,
+        "eager": {
+          "registration": 0.007217573933303356,
+          "image_mse": 0.0072174640372395515,
+          "boundary": 1.0988256349264702e-07,
+          "outside": 0.01171875
+        },
+        "compiled": {
+          "registration": 0.0072180419228971004,
+          "image_mse": 0.007217932026833296,
+          "boundary": 1.0988203769102256e-07,
+          "outside": 0.01171875
+        },
+        "gradients": {
+          "source": {
+            "eager_norm": 19.89524269104004,
+            "compiled_norm": 19.909229278564453,
+            "relative_error": 0.003188099479302764,
+            "cosine": 0.9999951124191284,
+            "finite": true
+          },
+          "target": {
+            "eager_norm": 31.043235778808594,
+            "compiled_norm": 31.048595428466797,
+            "relative_error": 0.0014023911207914352,
+            "cosine": 0.999998927116394,
+            "finite": true
+          }
+        }
+      },
+      {
+        "model": "mse",
+        "grid": 24,
+        "eager": {
+          "registration": 0.007398857735097408,
+          "image_mse": 0.007398857735097408,
+          "boundary": 0.0,
+          "outside": 0.0
+        },
+        "compiled": {
+          "registration": 0.007398840971291065,
+          "image_mse": 0.007398840971291065,
+          "boundary": 0.0,
+          "outside": 0.0
+        },
+        "gradients": {
+          "source": {
+            "eager_norm": 4.752074241638184,
+            "compiled_norm": 4.75262451171875,
+            "relative_error": 0.00025718030519783497,
+            "cosine": 0.9999999403953552,
+            "finite": true
+          },
+          "target": {
+            "eager_norm": 3.701012134552002,
+            "compiled_norm": 3.701153516769409,
+            "relative_error": 0.00020337897876743227,
+            "cosine": 1.0,
+            "finite": true
+          }
+        }
+      },
+      {
+        "model": "mse",
+        "grid": 32,
+        "eager": {
+          "registration": 0.007266848348081112,
+          "image_mse": 0.007266848348081112,
+          "boundary": 1.2880652100477619e-10,
+          "outside": 0.00390625
+        },
+        "compiled": {
+          "registration": 0.0072668204084038734,
+          "image_mse": 0.0072668204084038734,
+          "boundary": 1.2880092825628964e-10,
+          "outside": 0.00390625
+        },
+        "gradients": {
+          "source": {
+            "eager_norm": 3.050297975540161,
+            "compiled_norm": 3.0504415035247803,
+            "relative_error": 0.0002089256013277918,
+            "cosine": 1.0,
+            "finite": true
+          },
+          "target": {
+            "eager_norm": 2.265998125076294,
+            "compiled_norm": 2.266061782836914,
+            "relative_error": 0.0005024151178076863,
+            "cosine": 1.0,
+            "finite": true
+          }
+        }
+      },
+      {
+        "model": "ncc",
+        "grid": 16,
+        "eager": {
+          "registration": 0.008988644927740097,
+          "image_mse": 0.008987437933683395,
+          "boundary": 1.2066692534062895e-06,
+          "outside": 0.0234375
+        },
+        "compiled": {
+          "registration": 0.008988573215901852,
+          "image_mse": 0.00898736622184515,
+          "boundary": 1.2066791441611713e-06,
+          "outside": 0.0234375
+        },
+        "gradients": {
+          "source": {
+            "eager_norm": 10.534788131713867,
+            "compiled_norm": 10.534809112548828,
+            "relative_error": 0.00015369578613899648,
+            "cosine": 1.0,
+            "finite": true
+          },
+          "target": {
+            "eager_norm": 7.274435043334961,
+            "compiled_norm": 7.273983478546143,
+            "relative_error": 0.00019313255324959755,
+            "cosine": 1.0,
+            "finite": true
+          }
+        }
+      },
+      {
+        "model": "ncc",
+        "grid": 24,
+        "eager": {
+          "registration": 0.004838738590478897,
+          "image_mse": 0.004838648717850447,
+          "boundary": 8.975922582976636e-08,
+          "outside": 0.00390625
+        },
+        "compiled": {
+          "registration": 0.004838974215090275,
+          "image_mse": 0.004838884342461824,
+          "boundary": 8.975910503750129e-08,
+          "outside": 0.00390625
+        },
+        "gradients": {
+          "source": {
+            "eager_norm": 6.3168745040893555,
+            "compiled_norm": 6.316307067871094,
+            "relative_error": 0.0018594316206872463,
+            "cosine": 0.9999982118606567,
+            "finite": true
+          },
+          "target": {
+            "eager_norm": 6.418508052825928,
+            "compiled_norm": 6.424458980560303,
+            "relative_error": 0.002344754058867693,
+            "cosine": 0.9999977350234985,
+            "finite": true
+          }
+        }
+      },
+      {
+        "model": "ncc",
+        "grid": 32,
+        "eager": {
+          "registration": 0.004995069000869989,
+          "image_mse": 0.0049950373359024525,
+          "boundary": 3.155481209660138e-08,
+          "outside": 0.00390625
+        },
+        "compiled": {
+          "registration": 0.004994932562112808,
+          "image_mse": 0.004994900897145271,
+          "boundary": 3.155481209660138e-08,
+          "outside": 0.00390625
+        },
+        "gradients": {
+          "source": {
+            "eager_norm": 3.156222105026245,
+            "compiled_norm": 3.1563305854797363,
+            "relative_error": 0.0017610730137676,
+            "cosine": 0.9999985098838806,
+            "finite": true
+          },
+          "target": {
+            "eager_norm": 3.5780014991760254,
+            "compiled_norm": 3.5773117542266846,
+            "relative_error": 0.00058679812354967,
+            "cosine": 0.9999998807907104,
+            "finite": true
+          }
+        }
+      }
+    ],
+    "files_unchanged": {
+      "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt": true,
+      "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt": true,
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz": true,
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz": true
+    }
+  }
+}

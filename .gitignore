@@ -1,0 +1,42 @@
+# Local medical data and generated artifacts
+/Data/
+/data/
+/results/
+/medical/results/
+/baselines/results/
+/baselines/upstream/
+/checkpoints/
+/runs/
+*.nii
+*.nii.gz
+*.raw
+*.mha
+*.mhd
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+# Environment, build products, caches and machine settings
+/.local/
+/.venv
+/venv/
+/.vscode/
+.env
+.env.*
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/dist/
+.pytest_cache/
+.ipynb_checkpoints/
+# Credentials
+.credentials*
+credentials*.json
+*.pem
+*.key

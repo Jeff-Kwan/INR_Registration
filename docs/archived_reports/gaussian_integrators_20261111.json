@@ -1,0 +1,2747 @@
+{
+  "cost": {
+    "device": "NVIDIA GeForce RTX 5090",
+    "protocol": {
+      "particles": 256,
+      "conditions": [
+        "euler1",
+        "euler2",
+        "rk2_2",
+        "rk2_4"
+      ],
+      "sigma_mm": 4,
+      "weight": 0.01,
+      "budget": 0.1,
+      "updates": 0,
+      "repeats": 5,
+      "compile_velocity": true
+    },
+    "models": {
+      "mse": {
+        "checkpoint": "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt",
+        "measurements": [
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 5.665261454996653,
+            "registration_seconds": 0.0,
+            "total_seconds": 5.722743785008788,
+            "peak_mib": 1022.44873046875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007325469981878996,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.00764659303240478,
+            "peak_mib": 1022.44873046875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.006750255008228123,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007017236901447177,
+            "peak_mib": 1022.44873046875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006528803030960262,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.006778865004889667,
+            "peak_mib": 1022.44873046875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006397852092050016,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.006642364081926644,
+            "peak_mib": 1022.44873046875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.00665961392223835,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.006893565994687378,
+            "peak_mib": 1022.44873046875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.0066691640531644225,
+            "registration_seconds": 2.388189668999985,
+            "total_seconds": 2.395141334971413,
+            "peak_mib": 1022.82421875,
+            "gradients": {
+              "source": {
+                "raw": 0.1096610426902771,
+                "base": 0.028459778055548668,
+                "scale": 0.025952497497200966,
+                "applied": 0.0028459779359598647
+              },
+              "target": {
+                "raw": 0.011881072074174881,
+                "base": 0.0318216010928154,
+                "scale": 0.2678344249725342,
+                "applied": 0.003182160107043863
+              }
+            },
+            "losses": {
+              "registration": 0.00964569766074419,
+              "image_mse": 0.009644681587815285,
+              "boundary": 1.0159294561162824e-06,
+              "outside": 0.02734375
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006649715011008084,
+            "registration_seconds": 0.03535558900330216,
+            "total_seconds": 0.042251916020177305,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.09770084917545319,
+                "base": 0.028459778055548668,
+                "scale": 0.02912951074540615,
+                "applied": 0.0028459779358916693
+              },
+              "target": {
+                "raw": 0.007694180589169264,
+                "base": 0.0318216010928154,
+                "scale": 0.41358011960983276,
+                "applied": 0.0031821601283682777
+              }
+            },
+            "losses": {
+              "registration": 0.007784940768033266,
+              "image_mse": 0.007783710956573486,
+              "boundary": 1.2297407465666765e-06,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.006644144072197378,
+            "registration_seconds": 0.035526691004633904,
+            "total_seconds": 0.042391207069158554,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.14498957991600037,
+                "base": 0.028459778055548668,
+                "scale": 0.019628845155239105,
+                "applied": 0.002845978013294337
+              },
+              "target": {
+                "raw": 0.008083981461822987,
+                "base": 0.0318216010928154,
+                "scale": 0.3936377465724945,
+                "applied": 0.0031821602459658205
+              }
+            },
+            "losses": {
+              "registration": 0.008286720141768456,
+              "image_mse": 0.00828405749052763,
+              "boundary": 2.6626648832461797e-06,
+              "outside": 0.0390625
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006658793892711401,
+            "registration_seconds": 0.03512382705230266,
+            "total_seconds": 0.04198977292980999,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.40771108865737915,
+                "base": 0.028459778055548668,
+                "scale": 0.006980379112064838,
+                "applied": 0.002845977967021185
+              },
+              "target": {
+                "raw": 0.017162149772047997,
+                "base": 0.0318216010928154,
+                "scale": 0.18541733920574188,
+                "applied": 0.003182160145783569
+              }
+            },
+            "losses": {
+              "registration": 0.011437322944402695,
+              "image_mse": 0.011435027234256268,
+              "boundary": 2.29540250984428e-06,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006728544947691262,
+            "registration_seconds": 0.03484372503589839,
+            "total_seconds": 0.041783821885474026,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.684637188911438,
+                "base": 0.028459778055548668,
+                "scale": 0.004156914073973894,
+                "applied": 0.0028459779661518803
+              },
+              "target": {
+                "raw": 0.02978285402059555,
+                "base": 0.0318216010928154,
+                "scale": 0.10684537142515182,
+                "applied": 0.003182160099931608
+              }
+            },
+            "losses": {
+              "registration": 0.012059349566698074,
+              "image_mse": 0.012058524414896965,
+              "boundary": 8.254481826952542e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.006624283967539668,
+            "registration_seconds": 0.034650443005375564,
+            "total_seconds": 0.041478208964690566,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.1318630427122116,
+                "base": 0.028459778055548668,
+                "scale": 0.0215828325599432,
+                "applied": 0.0028459779717023015
+              },
+              "target": {
+                "raw": 0.011107360944151878,
+                "base": 0.0318216010928154,
+                "scale": 0.28649112582206726,
+                "applied": 0.0031821603418021316
+              }
+            },
+            "losses": {
+              "registration": 0.006821317132562399,
+              "image_mse": 0.006821105256676674,
+              "boundary": 2.119244300047285e-07,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.006717005046084523,
+            "registration_seconds": 0.06810958695132285,
+            "total_seconds": 0.07510319503489882,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.09526984393596649,
+                "base": 0.028459778055548668,
+                "scale": 0.02987280860543251,
+                "applied": 0.002845977813768552
+              },
+              "target": {
+                "raw": 0.018770402297377586,
+                "base": 0.0318216010928154,
+                "scale": 0.1695307344198227,
+                "applied": 0.0031821600868299493
+              }
+            },
+            "losses": {
+              "registration": 0.007011872716248035,
+              "image_mse": 0.0070118373259902,
+              "boundary": 3.55579068411771e-08,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006784855970181525,
+            "registration_seconds": 0.0675811329856515,
+            "total_seconds": 0.07460430997889489,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.05371979996562004,
+                "base": 0.028459778055548668,
+                "scale": 0.052978191524744034,
+                "applied": 0.0028459778512495565
+              },
+              "target": {
+                "raw": 0.026042742654681206,
+                "base": 0.0318216010928154,
+                "scale": 0.12218990176916122,
+                "applied": 0.0031821601667750415
+              }
+            },
+            "losses": {
+              "registration": 0.004933482501655817,
+              "image_mse": 0.0049329702742397785,
+              "boundary": 5.120314767737e-07,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.006711884983815253,
+            "registration_seconds": 0.06777904508635402,
+            "total_seconds": 0.07473248208407313,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.05993456766009331,
+                "base": 0.028459778055548668,
+                "scale": 0.04748474806547165,
+                "applied": 0.0028459778457524953
+              },
+              "target": {
+                "raw": 0.021839244291186333,
+                "base": 0.0318216010928154,
+                "scale": 0.1457083523273468,
+                "applied": 0.0031821603017431754
+              }
+            },
+            "losses": {
+              "registration": 0.005362096708267927,
+              "image_mse": 0.005361897870898247,
+              "boundary": 1.9893261082870595e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.00644297304097563,
+            "registration_seconds": 0.067566063022241,
+            "total_seconds": 0.0742422480834648,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.09410873055458069,
+                "base": 0.028459778055548668,
+                "scale": 0.030241379514336586,
+                "applied": 0.002845977836313518
+              },
+              "target": {
+                "raw": 0.030573435127735138,
+                "base": 0.0318216010928154,
+                "scale": 0.10408251732587814,
+                "applied": 0.003182160091394104
+              }
+            },
+            "losses": {
+              "registration": 0.008167137391865253,
+              "image_mse": 0.008167129009962082,
+              "boundary": 8.115406124886704e-09,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.00648343306966126,
+            "registration_seconds": 0.06748969200998545,
+            "total_seconds": 0.07420638704206795,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.06480090320110321,
+                "base": 0.028459778055548668,
+                "scale": 0.04391879960894585,
+                "applied": 0.0028459778821679493
+              },
+              "target": {
+                "raw": 0.022859912365674973,
+                "base": 0.0318216010928154,
+                "scale": 0.13920263946056366,
+                "applied": 0.003182160139139134
+              }
+            },
+            "losses": {
+              "registration": 0.005158542655408382,
+              "image_mse": 0.005158324725925922,
+              "boundary": 2.1774346237179998e-07,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.00650044297799468,
+            "registration_seconds": 0.0675002810312435,
+            "total_seconds": 0.07425067597068846,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.07348781824111938,
+                "base": 0.028459778055548668,
+                "scale": 0.038727205246686935,
+                "applied": 0.0028459778201550545
+              },
+              "target": {
+                "raw": 0.058499641716480255,
+                "base": 0.0318216010928154,
+                "scale": 0.05439623445272446,
+                "applied": 0.00318216022621004
+              }
+            },
+            "losses": {
+              "registration": 0.006047689355909824,
+              "image_mse": 0.006047689355909824,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.006377761950716376,
+            "registration_seconds": 0.13421254698187113,
+            "total_seconds": 0.14087384089361876,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.05599670857191086,
+                "base": 0.028459778055548668,
+                "scale": 0.05082402005791664,
+                "applied": 0.00284597783963611
+              },
+              "target": {
+                "raw": 0.039164502173662186,
+                "base": 0.0318216010928154,
+                "scale": 0.08125113695859909,
+                "applied": 0.003182160330027578
+              }
+            },
+            "losses": {
+              "registration": 0.009598243981599808,
+              "image_mse": 0.009598243981599808,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006724496022798121,
+            "registration_seconds": 0.13299100694712251,
+            "total_seconds": 0.13999610603787005,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.02519836276769638,
+                "base": 0.028459778055548668,
+                "scale": 0.11294297128915787,
+                "applied": 0.002845977962605717
+              },
+              "target": {
+                "raw": 0.03605090454220772,
+                "base": 0.0318216010928154,
+                "scale": 0.08826852589845657,
+                "applied": 0.0031821602012466477
+              }
+            },
+            "losses": {
+              "registration": 0.005823526531457901,
+              "image_mse": 0.0058233472518622875,
+              "boundary": 1.7940799068583146e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.006800696020945907,
+            "registration_seconds": 0.132640914991498,
+            "total_seconds": 0.1397144130896777,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.03038981929421425,
+                "base": 0.028459778055548668,
+                "scale": 0.09364905953407288,
+                "applied": 0.0028459779963135867
+              },
+              "target": {
+                "raw": 0.02722303196787834,
+                "base": 0.0318216010928154,
+                "scale": 0.11689220368862152,
+                "applied": 0.0031821601978110903
+              }
+            },
+            "losses": {
+              "registration": 0.005548728629946709,
+              "image_mse": 0.005548655055463314,
+              "boundary": 7.366195831082223e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006547943921759725,
+            "registration_seconds": 0.13238527299836278,
+            "total_seconds": 0.13919688889291137,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.06704989075660706,
+                "base": 0.028459778055548668,
+                "scale": 0.042445674538612366,
+                "applied": 0.0028459778409044567
+              },
+              "target": {
+                "raw": 0.05688668414950371,
+                "base": 0.0318216010928154,
+                "scale": 0.05593857914209366,
+                "applied": 0.003182160283428298
+              }
+            },
+            "losses": {
+              "registration": 0.007133597508072853,
+              "image_mse": 0.007133597508072853,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006452592904679477,
+            "registration_seconds": 0.13236627203878015,
+            "total_seconds": 0.1390849578892812,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.07514121383428574,
+                "base": 0.028459778055548668,
+                "scale": 0.037875059992074966,
+                "applied": 0.0028459779818509057
+              },
+              "target": {
+                "raw": 0.11952570080757141,
+                "base": 0.0318216010928154,
+                "scale": 0.026623230427503586,
+                "applied": 0.003182160274608825
+              }
+            },
+            "losses": {
+              "registration": 0.00736472150310874,
+              "image_mse": 0.007364701945334673,
+              "boundary": 1.9663202621700293e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.006745365099050105,
+            "registration_seconds": 0.13229979202151299,
+            "total_seconds": 0.13931728911120445,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.0547647550702095,
+                "base": 0.028459778055548668,
+                "scale": 0.051967326551675797,
+                "applied": 0.00284597791025612
+              },
+              "target": {
+                "raw": 0.05513184890151024,
+                "base": 0.0318216010928154,
+                "scale": 0.057719092816114426,
+                "applied": 0.0031821603038702656
+              }
+            },
+            "losses": {
+              "registration": 0.005682425573468208,
+              "image_mse": 0.005682018585503101,
+              "boundary": 4.0721599248172424e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.006588382995687425,
+            "registration_seconds": 0.2647258839569986,
+            "total_seconds": 0.27161989000160247,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.0346967838704586,
+                "base": 0.028459778055548668,
+                "scale": 0.08202425390481949,
+                "applied": 0.002845977809871142
+              },
+              "target": {
+                "raw": 0.03372550755739212,
+                "base": 0.0318216010928154,
+                "scale": 0.09435470402240753,
+                "applied": 0.003182160283583202
+              }
+            },
+            "losses": {
+              "registration": 0.006652146577835083,
+              "image_mse": 0.006652146577835083,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006722345016896725,
+            "registration_seconds": 0.5029554819921032,
+            "total_seconds": 0.5100620100274682,
+            "peak_mib": 1022.82666015625,
+            "gradients": {
+              "source": {
+                "raw": 0.037396423518657684,
+                "base": 0.028459778055548668,
+                "scale": 0.07610294222831726,
+                "applied": 0.0028459778585860906
+              },
+              "target": {
+                "raw": 0.02707403153181076,
+                "base": 0.0318216010928154,
+                "scale": 0.11753551661968231,
+                "applied": 0.0031821602830689466
+              }
+            },
+            "losses": {
+              "registration": 0.005364305339753628,
+              "image_mse": 0.005364305339753628,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.00668910495005548,
+            "registration_seconds": 0.2652656079735607,
+            "total_seconds": 0.2723213059362024,
+            "peak_mib": 1022.826171875,
+            "gradients": {
+              "source": {
+                "raw": 0.02901635318994522,
+                "base": 0.028459778055548668,
+                "scale": 0.09808185696601868,
+                "applied": 0.002845977803251687
+              },
+              "target": {
+                "raw": 0.03784635663032532,
+                "base": 0.0318216010928154,
+                "scale": 0.0840810164809227,
+                "applied": 0.003182160135577261
+              }
+            },
+            "losses": {
+              "registration": 0.006590717937797308,
+              "image_mse": 0.006590463221073151,
+              "boundary": 2.5458507479925174e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006820564973168075,
+            "registration_seconds": 0.26293174002785236,
+            "total_seconds": 0.2700799179729074,
+            "peak_mib": 1022.826171875,
+            "gradients": {
+              "source": {
+                "raw": 0.02715686894953251,
+                "base": 0.028459778055548668,
+                "scale": 0.10479772090911865,
+                "applied": 0.002845977972938618
+              },
+              "target": {
+                "raw": 0.024218987673521042,
+                "base": 0.0318216010928154,
+                "scale": 0.13139113783836365,
+                "applied": 0.0031821603477172333
+              }
+            },
+            "losses": {
+              "registration": 0.005050752777606249,
+              "image_mse": 0.005050752777606249,
+              "boundary": 6.791830292618428e-11,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006832615006715059,
+            "registration_seconds": 0.26323233207222074,
+            "total_seconds": 0.27039552002679557,
+            "peak_mib": 1022.826171875,
+            "gradients": {
+              "source": {
+                "raw": 0.035892240703105927,
+                "base": 0.028459778055548668,
+                "scale": 0.07929228991270065,
+                "applied": 0.00284597795544711
+              },
+              "target": {
+                "raw": 0.03711441531777382,
+                "base": 0.0318216010928154,
+                "scale": 0.08573919534683228,
+                "applied": 0.0031821601051140735
+              }
+            },
+            "losses": {
+              "registration": 0.005214334931224585,
+              "image_mse": 0.005214231088757515,
+              "boundary": 1.0395185512379612e-07,
+              "outside": 0.015625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.00662149500567466,
+            "registration_seconds": 0.2635851849336177,
+            "total_seconds": 0.27055129199288785,
+            "peak_mib": 1022.826171875,
+            "gradients": {
+              "source": {
+                "raw": 0.024095742031931877,
+                "base": 0.028459778055548668,
+                "scale": 0.11811123788356781,
+                "applied": 0.0028459779191145895
+              },
+              "target": {
+                "raw": 0.026977235451340675,
+                "base": 0.0318216010928154,
+                "scale": 0.11795724183320999,
+                "applied": 0.003182160286125238
+              }
+            },
+            "losses": {
+              "registration": 0.006376310717314482,
+              "image_mse": 0.006376310717314482,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          }
+        ],
+        "weights_unchanged": true
+      },
+      "ncc": {
+        "checkpoint": "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt",
+        "measurements": [
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.01414437498897314,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.014759190962649882,
+            "peak_mib": 1026.2412109375,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006954537006095052,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007219478953629732,
+            "peak_mib": 1023.2060546875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007107018027454615,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007369940052740276,
+            "peak_mib": 1023.2060546875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006666974048130214,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.006918405997566879,
+            "peak_mib": 1023.2060546875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006961556966416538,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007202908978797495,
+            "peak_mib": 1023.2060546875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "baseline",
+            "grid": 0,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.006937607075087726,
+            "registration_seconds": 0.0,
+            "total_seconds": 0.007183159003034234,
+            "peak_mib": 1023.2060546875,
+            "gradients": {},
+            "losses": {}
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.0070430770283564925,
+            "registration_seconds": 0.03507762693334371,
+            "total_seconds": 0.042352256015874445,
+            "peak_mib": 1023.58154296875,
+            "gradients": {
+              "source": {
+                "raw": 0.26200762391090393,
+                "base": 0.17282845079898834,
+                "scale": 0.06596314162015915,
+                "applied": 0.017282846001596353
+              },
+              "target": {
+                "raw": 0.012045629322528839,
+                "base": 0.17000757157802582,
+                "scale": 1.0,
+                "applied": 0.012045629322528839
+              }
+            },
+            "losses": {
+              "registration": 0.007894800044596195,
+              "image_mse": 0.007883589714765549,
+              "boundary": 1.1210649972781539e-05,
+              "outside": 0.04296875
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007011228008195758,
+            "registration_seconds": 0.03582639305386692,
+            "total_seconds": 0.04306590207852423,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.3685859441757202,
+                "base": 0.17282845079898834,
+                "scale": 0.046889595687389374,
+                "applied": 0.01728284589845419
+              },
+              "target": {
+                "raw": 0.011933759786188602,
+                "base": 0.17000757157802582,
+                "scale": 1.0,
+                "applied": 0.011933759786188602
+              }
+            },
+            "losses": {
+              "registration": 0.009066624566912651,
+              "image_mse": 0.009056547656655312,
+              "boundary": 1.0077294064103626e-05,
+              "outside": 0.03125
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.0069018269423395395,
+            "registration_seconds": 0.03495671600103378,
+            "total_seconds": 0.04208714491687715,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.46761980652809143,
+                "base": 0.17282845079898834,
+                "scale": 0.03695918247103691,
+                "applied": 0.01728284575654271
+              },
+              "target": {
+                "raw": 0.012716605328023434,
+                "base": 0.17000757157802582,
+                "scale": 1.0,
+                "applied": 0.012716605328023434
+              }
+            },
+            "losses": {
+              "registration": 0.011633897200226784,
+              "image_mse": 0.011623973026871681,
+              "boundary": 9.924510777636897e-06,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.00715470896102488,
+            "registration_seconds": 0.034656443051062524,
+            "total_seconds": 0.04204503400251269,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.4330659806728363,
+                "base": 0.17282845079898834,
+                "scale": 0.03990811109542847,
+                "applied": 0.01728284526834223
+              },
+              "target": {
+                "raw": 0.019604546949267387,
+                "base": 0.17000757157802582,
+                "scale": 0.8671844005584717,
+                "applied": 0.017000757294420854
+              }
+            },
+            "losses": {
+              "registration": 0.01568673737347126,
+              "image_mse": 0.015684906393289566,
+              "boundary": 1.8308993503524107e-06,
+              "outside": 0.015625
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.0071420189924538136,
+            "registration_seconds": 0.03465933306142688,
+            "total_seconds": 0.042030813987366855,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.3748829662799835,
+                "base": 0.17282845079898834,
+                "scale": 0.046101976186037064,
+                "applied": 0.017282845583990736
+              },
+              "target": {
+                "raw": 0.010973229072988033,
+                "base": 0.17000757157802582,
+                "scale": 1.0,
+                "applied": 0.010973229072988033
+              }
+            },
+            "losses": {
+              "registration": 0.013457276858389378,
+              "image_mse": 0.013455674052238464,
+              "boundary": 1.6031241329983459e-06,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "euler1",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.007040427066385746,
+            "registration_seconds": 0.034580513020046055,
+            "total_seconds": 0.04184857208747417,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.6041578054428101,
+                "base": 0.17282845079898834,
+                "scale": 0.028606507927179337,
+                "applied": 0.017282845050667017
+              },
+              "target": {
+                "raw": 0.009860814549028873,
+                "base": 0.17000757157802582,
+                "scale": 1.0,
+                "applied": 0.009860814549028873
+              }
+            },
+            "losses": {
+              "registration": 0.006440063007175922,
+              "image_mse": 0.006435088347643614,
+              "boundary": 4.974722287443001e-06,
+              "outside": 0.02734375
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.0068631559843197465,
+            "registration_seconds": 0.06755399203393608,
+            "total_seconds": 0.07466092996764928,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.10668952018022537,
+                "base": 0.17282845079898834,
+                "scale": 0.16199196875095367,
+                "applied": 0.01728284541908931
+              },
+              "target": {
+                "raw": 0.059505827724933624,
+                "base": 0.17000757157802582,
+                "scale": 0.2856990396976471,
+                "applied": 0.01700075783742716
+              }
+            },
+            "losses": {
+              "registration": 0.005796011071652174,
+              "image_mse": 0.0057950615882873535,
+              "boundary": 9.494093546891236e-07,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006914067082107067,
+            "registration_seconds": 0.06746481102891266,
+            "total_seconds": 0.0746163601288572,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.1384466141462326,
+                "base": 0.17282845079898834,
+                "scale": 0.12483400851488113,
+                "applied": 0.017282845809187264
+              },
+              "target": {
+                "raw": 0.02356128953397274,
+                "base": 0.17000757157802582,
+                "scale": 0.7215546369552612,
+                "applied": 0.017000757715883497
+              }
+            },
+            "losses": {
+              "registration": 0.007530571427196264,
+              "image_mse": 0.007528328336775303,
+              "boundary": 2.243074050056748e-06,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.0069782470818609,
+            "registration_seconds": 0.06816527689807117,
+            "total_seconds": 0.07541404606308788,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.06037919595837593,
+                "base": 0.17282845079898834,
+                "scale": 0.2862384021282196,
+                "applied": 0.01728284457291218
+              },
+              "target": {
+                "raw": 0.03570731729269028,
+                "base": 0.17000757157802582,
+                "scale": 0.47611409425735474,
+                "applied": 0.01700075703116921
+              }
+            },
+            "losses": {
+              "registration": 0.0046972474083304405,
+              "image_mse": 0.004697105381637812,
+              "boundary": 1.4220609045878518e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.007112817955203354,
+            "registration_seconds": 0.06754834204912186,
+            "total_seconds": 0.07491149194538593,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.16843806207180023,
+                "base": 0.17282845079898834,
+                "scale": 0.10260653495788574,
+                "applied": 0.0172828459042087
+              },
+              "target": {
+                "raw": 0.04682973399758339,
+                "base": 0.17000757157802582,
+                "scale": 0.36303338408470154,
+                "applied": 0.017000756808929096
+              }
+            },
+            "losses": {
+              "registration": 0.006645026616752148,
+              "image_mse": 0.00664500892162323,
+              "boundary": 1.7831206733376348e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.0069826970575377345,
+            "registration_seconds": 0.06754086201544851,
+            "total_seconds": 0.07477135106455535,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.17466802895069122,
+                "base": 0.17282845079898834,
+                "scale": 0.09894681721925735,
+                "applied": 0.017282845534631996
+              },
+              "target": {
+                "raw": 0.07916387170553207,
+                "base": 0.17000757157802582,
+                "scale": 0.21475398540496826,
+                "applied": 0.017000756948850615
+              }
+            },
+            "losses": {
+              "registration": 0.007667862810194492,
+              "image_mse": 0.007667109370231628,
+              "boundary": 7.535219310739194e-07,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "euler2",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.006746444967575371,
+            "registration_seconds": 0.0676462440751493,
+            "total_seconds": 0.0746706509962678,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.16992774605751038,
+                "base": 0.17282845079898834,
+                "scale": 0.10170702636241913,
+                "applied": 0.01728284574797767
+              },
+              "target": {
+                "raw": 0.12212302535772324,
+                "base": 0.17000757157802582,
+                "scale": 0.13921009004116058,
+                "applied": 0.01700075735614759
+              }
+            },
+            "losses": {
+              "registration": 0.006480645388364792,
+              "image_mse": 0.00647644093260169,
+              "boundary": 4.204658580420073e-06,
+              "outside": 0.0234375
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.0071019179886206985,
+            "registration_seconds": 0.13337143103126436,
+            "total_seconds": 0.14079390093684196,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.09142613410949707,
+                "base": 0.17282845079898834,
+                "scale": 0.18903616070747375,
+                "applied": 0.017282845380385936
+              },
+              "target": {
+                "raw": 0.21168306469917297,
+                "base": 0.17000757157802582,
+                "scale": 0.0803123190999031,
+                "applied": 0.017000757840165415
+              }
+            },
+            "losses": {
+              "registration": 0.00661880150437355,
+              "image_mse": 0.006618356332182884,
+              "boundary": 4.4527325826493325e-07,
+              "outside": 0.01171875
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.007005067076534033,
+            "registration_seconds": 0.13291723595466465,
+            "total_seconds": 0.14021319604944438,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.0641120970249176,
+                "base": 0.17282845079898834,
+                "scale": 0.26957228779792786,
+                "applied": 0.017282844670529762
+              },
+              "target": {
+                "raw": 0.05112141743302345,
+                "base": 0.17000757157802582,
+                "scale": 0.33255645632743835,
+                "applied": 0.01700075742396201
+              }
+            },
+            "losses": {
+              "registration": 0.005850047804415226,
+              "image_mse": 0.005849489010870457,
+              "boundary": 5.589344027612242e-07,
+              "outside": 0.0078125
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.007135548046790063,
+            "registration_seconds": 0.13246303203050047,
+            "total_seconds": 0.13987443305086344,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.042368173599243164,
+                "base": 0.17282845079898834,
+                "scale": 0.4079204797744751,
+                "applied": 0.01728284570177152
+              },
+              "target": {
+                "raw": 0.048481374979019165,
+                "base": 0.17000757157802582,
+                "scale": 0.35066574811935425,
+                "applied": 0.017000757626872698
+              }
+            },
+            "losses": {
+              "registration": 0.004043270833790302,
+              "image_mse": 0.004043270833790302,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.006904396926984191,
+            "registration_seconds": 0.1323317619971931,
+            "total_seconds": 0.13950852095149457,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.11980625987052917,
+                "base": 0.17282845079898834,
+                "scale": 0.1442566215991974,
+                "applied": 0.017282846295358034
+              },
+              "target": {
+                "raw": 0.25792768597602844,
+                "base": 0.17000757157802582,
+                "scale": 0.0659128800034523,
+                "applied": 0.01700075661530609
+              }
+            },
+            "losses": {
+              "registration": 0.005153238773345947,
+              "image_mse": 0.005152976140379906,
+              "boundary": 2.626172204145405e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.006913346936926246,
+            "registration_seconds": 0.1323478219565004,
+            "total_seconds": 0.1395296409027651,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.2100195586681366,
+                "base": 0.17282845079898834,
+                "scale": 0.0822916030883789,
+                "applied": 0.017282846162714804
+              },
+              "target": {
+                "raw": 0.09505145251750946,
+                "base": 0.17000757157802582,
+                "scale": 0.17885847389698029,
+                "applied": 0.017000757738973027
+              }
+            },
+            "losses": {
+              "registration": 0.004873739089816809,
+              "image_mse": 0.004871836863458157,
+              "boundary": 1.9023486856895033e-06,
+              "outside": 0.01953125
+            }
+          },
+          {
+            "condition": "rk2_2",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.006903316010721028,
+            "registration_seconds": 0.1323613920249045,
+            "total_seconds": 0.13953329005744308,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.03595593199133873,
+                "base": 0.17282845079898834,
+                "scale": 0.48066744208335876,
+                "applied": 0.017282845857999996
+              },
+              "target": {
+                "raw": 0.046895068138837814,
+                "base": 0.17000757157802582,
+                "scale": 0.36252760887145996,
+                "applied": 0.01700075692023706
+              }
+            },
+            "losses": {
+              "registration": 0.0033118606079369783,
+              "image_mse": 0.00331147201359272,
+              "boundary": 3.886895001414814e-07,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 0,
+            "cold": true,
+            "base_seconds": 0.007108447956852615,
+            "registration_seconds": 0.26471653394401073,
+            "total_seconds": 0.2721456349827349,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.9144951701164246,
+                "base": 0.17282845079898834,
+                "scale": 0.01889878325164318,
+                "applied": 0.017282846004704866
+              },
+              "target": {
+                "raw": 0.140623077750206,
+                "base": 0.17000757157802582,
+                "scale": 0.12089592218399048,
+                "applied": 0.017000756664962147
+              }
+            },
+            "losses": {
+              "registration": 0.006307050585746765,
+              "image_mse": 0.006307050585746765,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 1,
+            "cold": false,
+            "base_seconds": 0.006748585030436516,
+            "registration_seconds": 0.26383224700111896,
+            "total_seconds": 0.2709560049697757,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.051686111837625504,
+                "base": 0.17282845079898834,
+                "scale": 0.3343808352947235,
+                "applied": 0.017282845249401713
+              },
+              "target": {
+                "raw": 0.03883472457528114,
+                "base": 0.17000757157802582,
+                "scale": 0.43777206540107727,
+                "applied": 0.0170007575866028
+              }
+            },
+            "losses": {
+              "registration": 0.0045098187401890755,
+              "image_mse": 0.0045098187401890755,
+              "boundary": 0.0,
+              "outside": 0.0
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 2,
+            "cold": false,
+            "base_seconds": 0.0071047680685296655,
+            "registration_seconds": 0.26451639307197183,
+            "total_seconds": 0.27188802312593907,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.07148382067680359,
+                "base": 0.17282845079898834,
+                "scale": 0.2417728304862976,
+                "applied": 0.01728284565900573
+              },
+              "target": {
+                "raw": 0.16683676838874817,
+                "base": 0.17000757157802582,
+                "scale": 0.10190054029226303,
+                "applied": 0.017000756839428588
+              }
+            },
+            "losses": {
+              "registration": 0.006246084347367287,
+              "image_mse": 0.006246083416044712,
+              "boundary": 1.0571002961867748e-09,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 3,
+            "cold": false,
+            "base_seconds": 0.007248759036883712,
+            "registration_seconds": 0.26346568402368575,
+            "total_seconds": 0.27105562610086054,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.05777999758720398,
+                "base": 0.17282845079898834,
+                "scale": 0.2991146743297577,
+                "applied": 0.017282845161070703
+              },
+              "target": {
+                "raw": 0.061440929770469666,
+                "base": 0.17000757157802582,
+                "scale": 0.27670085430145264,
+                "applied": 0.01700075775656451
+              }
+            },
+            "losses": {
+              "registration": 0.0037953921128064394,
+              "image_mse": 0.0037953632418066263,
+              "boundary": 2.8813886387979437e-08,
+              "outside": 0.00390625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 4,
+            "cold": false,
+            "base_seconds": 0.0072193690575659275,
+            "registration_seconds": 0.2637058550026268,
+            "total_seconds": 0.27118498703930527,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.026365183293819427,
+                "base": 0.17282845079898834,
+                "scale": 0.6555177569389343,
+                "applied": 0.017282845814048375
+              },
+              "target": {
+                "raw": 0.02418355643749237,
+                "base": 0.17000757157802582,
+                "scale": 0.70298832654953,
+                "applied": 0.017000757870008876
+              }
+            },
+            "losses": {
+              "registration": 0.005316960625350475,
+              "image_mse": 0.005316164344549179,
+              "boundary": 7.960580887811375e-07,
+              "outside": 0.015625
+            }
+          },
+          {
+            "condition": "rk2_4",
+            "grid": 32,
+            "repeat": 5,
+            "cold": false,
+            "base_seconds": 0.0072509999154135585,
+            "registration_seconds": 0.4821140810381621,
+            "total_seconds": 0.4897417939500883,
+            "peak_mib": 1023.58349609375,
+            "gradients": {
+              "source": {
+                "raw": 0.03541645407676697,
+                "base": 0.17282845079898834,
+                "scale": 0.4879891574382782,
+                "applied": 0.017282845584372986
+              },
+              "target": {
+                "raw": 0.03812052309513092,
+                "base": 0.17000757157802582,
+                "scale": 0.44597387313842773,
+                "applied": 0.01700075733079842
+              }
+            },
+            "losses": {
+              "registration": 0.0050389934331178665,
+              "image_mse": 0.005038512870669365,
+              "boundary": 4.807657205674332e-07,
+              "outside": 0.0078125
+            }
+          }
+        ],
+        "weights_unchanged": true
+      }
+    }
+  },
+  "maps": {
+    "pair": "S02",
+    "shape": [
+      160,
+      192,
+      160
+    ],
+    "evaluation_direction": "moving-grid: compare M(a) with F(phi(a)); warp fixed labels with forward moving-to-fixed map",
+    "models": {
+      "mse": {
+        "pcg_recovery_seconds": 21.140875809942372,
+        "pcg_diagnostics": [
+          {
+            "interval": 0,
+            "time_a": 0.0,
+            "time_b": 0.0625,
+            "iterations": 400,
+            "relative_linear_residual": 1.914903987199068e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04928913339972496
+          },
+          {
+            "interval": 1,
+            "time_a": 0.0625,
+            "time_b": 0.125,
+            "iterations": 400,
+            "relative_linear_residual": 1.9063378204009496e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.046130258589982986
+          },
+          {
+            "interval": 2,
+            "time_a": 0.125,
+            "time_b": 0.1875,
+            "iterations": 400,
+            "relative_linear_residual": 1.962103669939097e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04505201429128647
+          },
+          {
+            "interval": 3,
+            "time_a": 0.1875,
+            "time_b": 0.25,
+            "iterations": 400,
+            "relative_linear_residual": 1.9632310795714147e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04407043755054474
+          },
+          {
+            "interval": 4,
+            "time_a": 0.25,
+            "time_b": 0.3125,
+            "iterations": 410,
+            "relative_linear_residual": 1.6935557141550817e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04272390529513359
+          },
+          {
+            "interval": 5,
+            "time_a": 0.3125,
+            "time_b": 0.375,
+            "iterations": 410,
+            "relative_linear_residual": 1.8423033907311037e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04128814488649368
+          },
+          {
+            "interval": 6,
+            "time_a": 0.375,
+            "time_b": 0.4375,
+            "iterations": 410,
+            "relative_linear_residual": 1.8922906747320667e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04019148647785187
+          },
+          {
+            "interval": 7,
+            "time_a": 0.4375,
+            "time_b": 0.5,
+            "iterations": 420,
+            "relative_linear_residual": 1.6828935258672573e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.03970041871070862
+          },
+          {
+            "interval": 8,
+            "time_a": 0.5,
+            "time_b": 0.5625,
+            "iterations": 420,
+            "relative_linear_residual": 1.8091965102939866e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.03979763388633728
+          },
+          {
+            "interval": 9,
+            "time_a": 0.5625,
+            "time_b": 0.625,
+            "iterations": 420,
+            "relative_linear_residual": 1.917968984344043e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.040260668843984604
+          },
+          {
+            "interval": 10,
+            "time_a": 0.625,
+            "time_b": 0.6875,
+            "iterations": 420,
+            "relative_linear_residual": 1.9974044334958307e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04077238216996193
+          },
+          {
+            "interval": 11,
+            "time_a": 0.6875,
+            "time_b": 0.75,
+            "iterations": 420,
+            "relative_linear_residual": 2.019498970184941e-05,
+            "converged": false,
+            "brightness_residual_rms": 0.041002240031957626
+          },
+          {
+            "interval": 12,
+            "time_a": 0.75,
+            "time_b": 0.8125,
+            "iterations": 430,
+            "relative_linear_residual": 1.8306029232917354e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04069606214761734
+          },
+          {
+            "interval": 13,
+            "time_a": 0.8125,
+            "time_b": 0.875,
+            "iterations": 430,
+            "relative_linear_residual": 1.9194652850273997e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.039874665439128876
+          },
+          {
+            "interval": 14,
+            "time_a": 0.875,
+            "time_b": 0.9375,
+            "iterations": 430,
+            "relative_linear_residual": 1.984785012609791e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.03925754502415657
+          },
+          {
+            "interval": 15,
+            "time_a": 0.9375,
+            "time_b": 1.0,
+            "iterations": 430,
+            "relative_linear_residual": 1.962053465831559e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.04085695743560791
+          }
+        ],
+        "pcg": {
+          "images": {
+            "mse": 0.0022524541555373023,
+            "psnr_db": 26.473440395052986,
+            "psnr_infinite": false,
+            "global_ncc": 0.9881689301761799
+          },
+          "labels": {
+            "dice": 0.6984638390796525,
+            "hd95_mm": 7.193426821913038,
+            "hd95_finite_labels_mean_mm": 7.193426821913038,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.0,
+          "folded_voxels": 0,
+          "voxel_count": 4915200,
+          "jacobian_min": 0.02105865627527237,
+          "outside_fraction": 0.0019508871482685208,
+          "displacement": {
+            "rms_mm": 3.6880695819854736,
+            "mean_mm": 3.2817153930664062,
+            "p95_mm": 6.418471336364746,
+            "max_mm": 13.284249305725098
+          }
+        },
+        "euler1": {
+          "images": {
+            "mse": 0.009491564132512969,
+            "psnr_db": 20.2266221347943,
+            "psnr_infinite": false,
+            "global_ncc": 0.949238549658542
+          },
+          "labels": {
+            "dice": 0.6328362237129893,
+            "hd95_mm": 7.504400857857296,
+            "hd95_finite_labels_mean_mm": 7.504400857857296,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.008392740885416666,
+          "folded_voxels": 41252,
+          "voxel_count": 4915200,
+          "jacobian_min": -2.8045568466186523,
+          "outside_fraction": 0.025842489674687386,
+          "displacement": {
+            "rms_mm": 3.7529537677764893,
+            "mean_mm": 3.377774715423584,
+            "p95_mm": 6.466742992401123,
+            "max_mm": 20.076505661010742
+          },
+          "full_map_first_seconds": 2.582871766993776,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 3.2578933238983154,
+                "mean_mm": 2.928332567214966,
+                "p95_mm": 5.519986152648926,
+                "max_mm": 20.546709060668945
+              },
+              "relative_rmse": 0.8833600282669067,
+              "pooled_cosine": 0.61673504114151
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 3.645473003387451,
+                "mean_mm": 3.2123372554779053,
+                "p95_mm": 6.453864574432373,
+                "max_mm": 20.546709060668945
+              },
+              "relative_rmse": 0.771142303943634,
+              "pooled_cosine": 0.6928460597991943
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.05156709626317024,
+            "mean_mm": 0.02448359504342079,
+            "p95_mm": 0.11836904287338257,
+            "max_mm": 0.8442183136940002
+          },
+          "particle_inference_seconds": [
+            0.008679340011440217,
+            0.007925904006697237,
+            0.007859265082515776
+          ]
+        },
+        "euler2": {
+          "images": {
+            "mse": 0.006475996382019577,
+            "psnr_db": 21.886934025482766,
+            "psnr_infinite": false,
+            "global_ncc": 0.965579567481005
+          },
+          "labels": {
+            "dice": 0.6689987177295345,
+            "hd95_mm": 7.175879333700452,
+            "hd95_finite_labels_mean_mm": 7.175879333700452,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.00012125651041666666,
+          "folded_voxels": 596,
+          "voxel_count": 4915200,
+          "jacobian_min": -0.788749098777771,
+          "outside_fraction": 0.014620768837630749,
+          "displacement": {
+            "rms_mm": 3.174074411392212,
+            "mean_mm": 2.7889792919158936,
+            "p95_mm": 5.864264965057373,
+            "max_mm": 12.220184326171875
+          },
+          "full_map_first_seconds": 0.016319002956151962,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.248617649078369,
+                "mean_mm": 2.0287694931030273,
+                "p95_mm": 3.803964376449585,
+                "max_mm": 10.868547439575195
+              },
+              "relative_rmse": 0.6097003817558289,
+              "pooled_cosine": 0.7953184247016907
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 2.332059144973755,
+                "mean_mm": 2.0772864818573,
+                "p95_mm": 4.057467460632324,
+                "max_mm": 10.868547439575195
+              },
+              "relative_rmse": 0.4933103322982788,
+              "pooled_cosine": 0.871863067150116
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.03238259628415108,
+            "mean_mm": 0.01901613548398018,
+            "p95_mm": 0.0708116963505745,
+            "max_mm": 0.6343224048614502
+          },
+          "particle_inference_seconds": [
+            0.016543125035241246,
+            0.015706898062489927,
+            0.015713977976702154
+          ]
+        },
+        "rk2_2": {
+          "images": {
+            "mse": 0.006066281899269438,
+            "psnr_db": 22.170774119527316,
+            "psnr_infinite": false,
+            "global_ncc": 0.9678855836394731
+          },
+          "labels": {
+            "dice": 0.6751754975744656,
+            "hd95_mm": 7.249689817428589,
+            "hd95_finite_labels_mean_mm": 7.249689817428589,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.0002349853515625,
+          "folded_voxels": 1155,
+          "voxel_count": 4915200,
+          "jacobian_min": -1.3848429918289185,
+          "outside_fraction": 0.008821411058306694,
+          "displacement": {
+            "rms_mm": 3.0582261085510254,
+            "mean_mm": 2.611488103866577,
+            "p95_mm": 5.930285453796387,
+            "max_mm": 16.598854064941406
+          },
+          "full_map_first_seconds": 0.03247788501903415,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.071627378463745,
+                "mean_mm": 1.8614819049835205,
+                "p95_mm": 3.4883363246917725,
+                "max_mm": 16.30862045288086
+              },
+              "relative_rmse": 0.56171053647995,
+              "pooled_cosine": 0.8273360133171082
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 2.18056583404541,
+                "mean_mm": 1.9033993482589722,
+                "p95_mm": 3.891220808029175,
+                "max_mm": 16.30862045288086
+              },
+              "relative_rmse": 0.4612642526626587,
+              "pooled_cosine": 0.8897659182548523
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.02860717661678791,
+            "mean_mm": 0.016470342874526978,
+            "p95_mm": 0.05913495272397995,
+            "max_mm": 0.687564492225647
+          },
+          "particle_inference_seconds": [
+            0.03250667604152113,
+            0.031383436056785285,
+            0.03137415600940585
+          ]
+        },
+        "rk2_4": {
+          "images": {
+            "mse": 0.005905093889662132,
+            "psnr_db": 22.28773192811176,
+            "psnr_infinite": false,
+            "global_ncc": 0.9687823849510386
+          },
+          "labels": {
+            "dice": 0.6808527080076081,
+            "hd95_mm": 7.037220439740589,
+            "hd95_finite_labels_mean_mm": 7.037220439740589,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 1.220703125e-06,
+          "folded_voxels": 6,
+          "voxel_count": 4915200,
+          "jacobian_min": -0.1271231770515442,
+          "outside_fraction": 0.007517293561249971,
+          "displacement": {
+            "rms_mm": 2.910478115081787,
+            "mean_mm": 2.4890401363372803,
+            "p95_mm": 5.660501956939697,
+            "max_mm": 12.686079025268555
+          },
+          "full_map_first_seconds": 0.06492750893812627,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 1.8869333267211914,
+                "mean_mm": 1.7013458013534546,
+                "p95_mm": 3.2077527046203613,
+                "max_mm": 7.577821254730225
+              },
+              "relative_rmse": 0.5116316676139832,
+              "pooled_cosine": 0.8623133897781372
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 1.7871211767196655,
+                "mean_mm": 1.5924335718154907,
+                "p95_mm": 3.115560531616211,
+                "max_mm": 7.577821254730225
+              },
+              "relative_rmse": 0.37803730368614197,
+              "pooled_cosine": 0.9258606433868408
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.020834680646657944,
+            "mean_mm": 0.013133389875292778,
+            "p95_mm": 0.04426400363445282,
+            "max_mm": 0.24994948506355286
+          },
+          "particle_inference_seconds": [
+            0.06352220801636577,
+            0.06258343998342752,
+            0.06250485999044031
+          ]
+        },
+        "vs_gaussian_rk2_4": {
+          "euler1": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.8797121047973633,
+                "mean_mm": 2.5694892406463623,
+                "p95_mm": 4.957053184509277,
+                "max_mm": 20.388477325439453
+              },
+              "relative_rmse": 0.9894291758537292,
+              "pooled_cosine": 0.652885913848877
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 3.3622543811798096,
+                "mean_mm": 2.9400248527526855,
+                "p95_mm": 6.05842924118042,
+                "max_mm": 20.388477325439453
+              },
+              "relative_rmse": 0.7777634263038635,
+              "pooled_cosine": 0.7152372598648071
+            }
+          },
+          "euler2": {
+            "whole": {
+              "error": {
+                "rms_mm": 1.5913503170013428,
+                "mean_mm": 1.410256266593933,
+                "p95_mm": 2.772037982940674,
+                "max_mm": 10.88487434387207
+              },
+              "relative_rmse": 0.5467659831047058,
+              "pooled_cosine": 0.8666976094245911
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 1.971064567565918,
+                "mean_mm": 1.7323814630508423,
+                "p95_mm": 3.498445510864258,
+                "max_mm": 10.88487434387207
+              },
+              "relative_rmse": 0.4559505879878998,
+              "pooled_cosine": 0.898065447807312
+            }
+          },
+          "rk2_2": {
+            "whole": {
+              "error": {
+                "rms_mm": 1.1481398344039917,
+                "mean_mm": 0.934383749961853,
+                "p95_mm": 2.1446821689605713,
+                "max_mm": 14.265803337097168
+              },
+              "relative_rmse": 0.3944849669933319,
+              "pooled_cosine": 0.9271761775016785
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 1.7217601537704468,
+                "mean_mm": 1.4355288743972778,
+                "p95_mm": 3.2394516468048096,
+                "max_mm": 14.265803337097168
+              },
+              "relative_rmse": 0.3982810378074646,
+              "pooled_cosine": 0.9251776933670044
+            }
+          }
+        },
+        "weights_unchanged": true
+      },
+      "ncc": {
+        "pcg_recovery_seconds": 15.125907152076252,
+        "pcg_diagnostics": [
+          {
+            "interval": 0,
+            "time_a": 0.0,
+            "time_b": 0.0625,
+            "iterations": 310,
+            "relative_linear_residual": 1.812513619370293e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.09103110432624817
+          },
+          {
+            "interval": 1,
+            "time_a": 0.0625,
+            "time_b": 0.125,
+            "iterations": 320,
+            "relative_linear_residual": 1.9034992874367163e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.08091732114553452
+          },
+          {
+            "interval": 2,
+            "time_a": 0.125,
+            "time_b": 0.1875,
+            "iterations": 330,
+            "relative_linear_residual": 1.837708623497747e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.07554233819246292
+          },
+          {
+            "interval": 3,
+            "time_a": 0.1875,
+            "time_b": 0.25,
+            "iterations": 340,
+            "relative_linear_residual": 1.8331013052375056e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.07103374600410461
+          },
+          {
+            "interval": 4,
+            "time_a": 0.25,
+            "time_b": 0.3125,
+            "iterations": 340,
+            "relative_linear_residual": 1.9221286493120715e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.06621140241622925
+          },
+          {
+            "interval": 5,
+            "time_a": 0.3125,
+            "time_b": 0.375,
+            "iterations": 350,
+            "relative_linear_residual": 1.897073889267631e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.061794668436050415
+          },
+          {
+            "interval": 6,
+            "time_a": 0.375,
+            "time_b": 0.4375,
+            "iterations": 360,
+            "relative_linear_residual": 1.642412280489225e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.0585915744304657
+          },
+          {
+            "interval": 7,
+            "time_a": 0.4375,
+            "time_b": 0.5,
+            "iterations": 360,
+            "relative_linear_residual": 1.791831527953036e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.05660142004489899
+          },
+          {
+            "interval": 8,
+            "time_a": 0.5,
+            "time_b": 0.5625,
+            "iterations": 370,
+            "relative_linear_residual": 1.652946048125159e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.05578772351145744
+          },
+          {
+            "interval": 9,
+            "time_a": 0.5625,
+            "time_b": 0.625,
+            "iterations": 370,
+            "relative_linear_residual": 1.950566002051346e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.056116733700037
+          },
+          {
+            "interval": 10,
+            "time_a": 0.625,
+            "time_b": 0.6875,
+            "iterations": 370,
+            "relative_linear_residual": 1.730411167955026e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.05716945603489876
+          },
+          {
+            "interval": 11,
+            "time_a": 0.6875,
+            "time_b": 0.75,
+            "iterations": 370,
+            "relative_linear_residual": 1.784387495717965e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.05868544057011604
+          },
+          {
+            "interval": 12,
+            "time_a": 0.75,
+            "time_b": 0.8125,
+            "iterations": 370,
+            "relative_linear_residual": 1.7504145944258198e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.06029453128576279
+          },
+          {
+            "interval": 13,
+            "time_a": 0.8125,
+            "time_b": 0.875,
+            "iterations": 370,
+            "relative_linear_residual": 1.6761954611865804e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.06176469847559929
+          },
+          {
+            "interval": 14,
+            "time_a": 0.875,
+            "time_b": 0.9375,
+            "iterations": 360,
+            "relative_linear_residual": 1.9049695765716024e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.064176544547081
+          },
+          {
+            "interval": 15,
+            "time_a": 0.9375,
+            "time_b": 1.0,
+            "iterations": 350,
+            "relative_linear_residual": 1.9443124983808957e-05,
+            "converged": true,
+            "brightness_residual_rms": 0.07118891179561615
+          }
+        ],
+        "pcg": {
+          "images": {
+            "mse": 0.0014779922890525363,
+            "psnr_db": 28.303278317264905,
+            "psnr_infinite": false,
+            "global_ncc": 0.9922033293649601
+          },
+          "labels": {
+            "dice": 0.6969077337001052,
+            "hd95_mm": 7.048903418438775,
+            "hd95_finite_labels_mean_mm": 7.048903418438775,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 1.9327799479166666e-05,
+          "folded_voxels": 95,
+          "voxel_count": 4915200,
+          "jacobian_min": -3.736205577850342,
+          "outside_fraction": 0.0033758545760065317,
+          "displacement": {
+            "rms_mm": 4.105802059173584,
+            "mean_mm": 3.6525700092315674,
+            "p95_mm": 7.154419422149658,
+            "max_mm": 18.6264591217041
+          }
+        },
+        "euler1": {
+          "images": {
+            "mse": 0.011127727544392086,
+            "psnr_db": 19.53593516320794,
+            "psnr_infinite": false,
+            "global_ncc": 0.9402762226792225
+          },
+          "labels": {
+            "dice": 0.6177838822560651,
+            "hd95_mm": 8.123991825750895,
+            "hd95_finite_labels_mean_mm": 8.123991825750895,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.08028157552083333,
+          "folded_voxels": 394600,
+          "voxel_count": 4915200,
+          "jacobian_min": -6.349284648895264,
+          "outside_fraction": 0.04056396707892418,
+          "displacement": {
+            "rms_mm": 5.795127868652344,
+            "mean_mm": 5.240485668182373,
+            "p95_mm": 9.67581558227539,
+            "max_mm": 39.71904373168945
+          },
+          "full_map_first_seconds": 0.008773991954512894,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 4.904709815979004,
+                "mean_mm": 4.353219985961914,
+                "p95_mm": 8.437975883483887,
+                "max_mm": 38.92951202392578
+              },
+              "relative_rmse": 1.194580316543579,
+              "pooled_cosine": 0.554453432559967
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 4.935583591461182,
+                "mean_mm": 4.190934181213379,
+                "p95_mm": 8.978322982788086,
+                "max_mm": 38.92951202392578
+              },
+              "relative_rmse": 0.8889948129653931,
+              "pooled_cosine": 0.6397361755371094
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.08450644463300705,
+            "mean_mm": 0.0391274094581604,
+            "p95_mm": 0.19183769822120667,
+            "max_mm": 2.5810205936431885
+          },
+          "particle_inference_seconds": [
+            0.008673931006342173,
+            0.007975813932716846,
+            0.007933784043416381
+          ]
+        },
+        "euler2": {
+          "images": {
+            "mse": 0.006872731506494884,
+            "psnr_db": 21.628706221211086,
+            "psnr_infinite": false,
+            "global_ncc": 0.963433362201626
+          },
+          "labels": {
+            "dice": 0.6627516496394362,
+            "hd95_mm": 7.503304472991398,
+            "hd95_finite_labels_mean_mm": 7.503304472991398,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.0032832845052083335,
+          "folded_voxels": 16138,
+          "voxel_count": 4915200,
+          "jacobian_min": -1.900224208831787,
+          "outside_fraction": 0.024630941450595856,
+          "displacement": {
+            "rms_mm": 4.446031093597412,
+            "mean_mm": 4.014488697052002,
+            "p95_mm": 7.553191661834717,
+            "max_mm": 19.64153289794922
+          },
+          "full_map_first_seconds": 0.01642762403935194,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 3.1014225482940674,
+                "mean_mm": 2.775974750518799,
+                "p95_mm": 5.28923225402832,
+                "max_mm": 19.85155487060547
+              },
+              "relative_rmse": 0.7553757429122925,
+              "pooled_cosine": 0.7397065162658691
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 3.125272274017334,
+                "mean_mm": 2.7049150466918945,
+                "p95_mm": 5.647500038146973,
+                "max_mm": 19.85155487060547
+              },
+              "relative_rmse": 0.5629224181175232,
+              "pooled_cosine": 0.835593044757843
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.05338333919644356,
+            "mean_mm": 0.03214308246970177,
+            "p95_mm": 0.11471788585186005,
+            "max_mm": 1.4235255718231201
+          },
+          "particle_inference_seconds": [
+            0.016548925079405308,
+            0.015757718007080257,
+            0.01570294809062034
+          ]
+        },
+        "rk2_2": {
+          "images": {
+            "mse": 0.006002332732303749,
+            "psnr_db": 22.216799336365586,
+            "psnr_infinite": false,
+            "global_ncc": 0.9682042224464242
+          },
+          "labels": {
+            "dice": 0.671747088432312,
+            "hd95_mm": 7.252077115433557,
+            "hd95_finite_labels_mean_mm": 7.252077115433557,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.0021272786458333332,
+          "folded_voxels": 10456,
+          "voxel_count": 4915200,
+          "jacobian_min": -10.493293762207031,
+          "outside_fraction": 0.012316894717514515,
+          "displacement": {
+            "rms_mm": 4.198336124420166,
+            "mean_mm": 3.72113037109375,
+            "p95_mm": 7.2866106033325195,
+            "max_mm": 58.51805114746094
+          },
+          "full_map_first_seconds": 0.03252305497881025,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.72247052192688,
+                "mean_mm": 2.4093551635742188,
+                "p95_mm": 4.563292503356934,
+                "max_mm": 55.73935317993164
+              },
+              "relative_rmse": 0.6630789041519165,
+              "pooled_cosine": 0.7852569222450256
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 3.0839288234710693,
+                "mean_mm": 2.605811595916748,
+                "p95_mm": 5.324726581573486,
+                "max_mm": 55.73935317993164
+              },
+              "relative_rmse": 0.555475652217865,
+              "pooled_cosine": 0.8449087142944336
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.04839785769581795,
+            "mean_mm": 0.029891543090343475,
+            "p95_mm": 0.10134746134281158,
+            "max_mm": 0.9533324837684631
+          },
+          "particle_inference_seconds": [
+            0.032275503035634756,
+            0.031482686987146735,
+            0.031225104932673275
+          ]
+        },
+        "rk2_4": {
+          "images": {
+            "mse": 0.005662886924878367,
+            "psnr_db": 22.469621101713958,
+            "psnr_infinite": false,
+            "global_ncc": 0.9700190288891675
+          },
+          "labels": {
+            "dice": 0.6769197365002972,
+            "hd95_mm": 7.148313109363828,
+            "hd95_finite_labels_mean_mm": 7.148313109363828,
+            "hd95_infinite": false,
+            "missing_labels": [],
+            "label_count": 56,
+            "metric_definition": {
+              "implementation": "MONAI",
+              "version": "1.6.1",
+              "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+              "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+              "spacing": "millimetres in NIfTI array-axis order",
+              "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+              "hd95_enabled": true
+            }
+          },
+          "folding_fraction": 0.00028279622395833336,
+          "folded_voxels": 1390,
+          "voxel_count": 4915200,
+          "jacobian_min": -2.913703441619873,
+          "outside_fraction": 0.010718587785959244,
+          "displacement": {
+            "rms_mm": 3.8082220554351807,
+            "mean_mm": 3.387728691101074,
+            "p95_mm": 6.732782363891602,
+            "max_mm": 23.353864669799805
+          },
+          "full_map_first_seconds": 0.06487506802659482,
+          "vs_pcg": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.239689588546753,
+                "mean_mm": 2.004441738128662,
+                "p95_mm": 3.8059258460998535,
+                "max_mm": 22.453548431396484
+              },
+              "relative_rmse": 0.5454939007759094,
+              "pooled_cosine": 0.8424239754676819
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 2.4920897483825684,
+                "mean_mm": 2.160435438156128,
+                "p95_mm": 4.4542741775512695,
+                "max_mm": 22.453548431396484
+              },
+              "relative_rmse": 0.44887393712997437,
+              "pooled_cosine": 0.893778383731842
+            }
+          },
+          "particle_vs_sampled_dense_map": {
+            "rms_mm": 0.03364301472902298,
+            "mean_mm": 0.022635119035840034,
+            "p95_mm": 0.06987370550632477,
+            "max_mm": 0.5280035734176636
+          },
+          "particle_inference_seconds": [
+            0.06349026702810079,
+            0.0624307879479602,
+            0.062449908000417054
+          ]
+        },
+        "vs_gaussian_rk2_4": {
+          "euler1": {
+            "whole": {
+              "error": {
+                "rms_mm": 4.830403804779053,
+                "mean_mm": 4.272806644439697,
+                "p95_mm": 8.357941627502441,
+                "max_mm": 36.314884185791016
+              },
+              "relative_rmse": 1.2684143781661987,
+              "pooled_cosine": 0.5608118176460266
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 4.715935707092285,
+                "mean_mm": 3.9411966800689697,
+                "p95_mm": 8.780532836914062,
+                "max_mm": 36.314884185791016
+              },
+              "relative_rmse": 0.9315211176872253,
+              "pooled_cosine": 0.6512416005134583
+            }
+          },
+          "euler2": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.8343465328216553,
+                "mean_mm": 2.512845516204834,
+                "p95_mm": 4.88222599029541,
+                "max_mm": 20.83461570739746
+              },
+              "relative_rmse": 0.7442702054977417,
+              "pooled_cosine": 0.7747768759727478
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 2.8379056453704834,
+                "mean_mm": 2.3994147777557373,
+                "p95_mm": 5.249632835388184,
+                "max_mm": 20.83461570739746
+              },
+              "relative_rmse": 0.5605608820915222,
+              "pooled_cosine": 0.8517642617225647
+            }
+          },
+          "rk2_2": {
+            "whole": {
+              "error": {
+                "rms_mm": 2.2860515117645264,
+                "mean_mm": 1.9599344730377197,
+                "p95_mm": 3.8717024326324463,
+                "max_mm": 58.87809753417969
+              },
+              "relative_rmse": 0.6002936959266663,
+              "pooled_cosine": 0.8413253426551819
+            },
+            "foreground": {
+              "error": {
+                "rms_mm": 2.787482500076294,
+                "mean_mm": 2.227661371231079,
+                "p95_mm": 5.0328803062438965,
+                "max_mm": 58.87809753417969
+              },
+              "relative_rmse": 0.5506009459495544,
+              "pooled_cosine": 0.8648118376731873
+            }
+          }
+        },
+        "weights_unchanged": true
+      }
+    },
+    "identity": {
+      "images": {
+        "mse": 0.020899646147626367,
+        "psnr_db": 16.79861066876229,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241737904123
+      },
+      "labels": {
+        "dice": 0.5630480074988944,
+        "hd95_mm": 7.837057509592602,
+        "hd95_finite_labels_mean_mm": 7.837057509592602,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "folding_fraction": 0.0,
+      "folded_voxels": 0,
+      "voxel_count": 4915200,
+      "jacobian_min": 1.0,
+      "outside_fraction": 0.0,
+      "displacement": {
+        "rms_mm": 0.0,
+        "mean_mm": 0.0,
+        "p95_mm": 0.0,
+        "max_mm": 0.0
+      }
+    },
+    "files_unchanged": {
+      "results/mc_registration/20261110T052912_070532Z/baseline/lpba/siren_pdlk/S02/endpoints.pt": true,
+      "results/ncc_moment_screen/20261110T132700_429803Z/training/w001/S02/endpoints.pt": true,
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/test/S02.delineation.skullstripped.nii.gz": true,
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/delineation_l_norm/fixed.nii.gz": true,
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/label/S02.delineation.structure.label.nii.gz": true,
+      "/workspace/INR_Registration/Data/LPBA40/LPBA40_delineation/label/S01.delineation.structure.label.nii.gz": true
+    },
+    "elapsed_seconds": 74.21513144101482
+  },
+  "source_hashes": {
+    "medical/registration/derivatives.py": "a22a8d5068dbac87d85c1d64fe21272bcac6a9671fe0cec03bc457d216e2bbd5",
+    "medical/registration/gaussian_registration.py": "d395e67022f7be24090eb533796e35d1052e39e28f8cb538e1c1e0d5d98aceb6",
+    "medical/registration/recovery.py": "a68318c1b46801f8286d722b6f63b9ec638d7e86f2168be70ab2535bb08fe241"
+  }
+}

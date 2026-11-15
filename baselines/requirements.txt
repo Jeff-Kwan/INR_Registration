@@ -1,0 +1,16 @@
+# Install into /venv/main. Retain its CUDA-enabled torch and torchvision.
+SimpleITK>=2.3
+nibabel>=5.2
+scipy>=1.10
+scikit-image
+matplotlib
+pandas
+hydra-core
+einops
+torchdiffeq
+pynrrd
+surface-distance @ git+https://github.com/google-deepmind/surface-distance.git@1f805cea446805e559badc80dd27f34175e4173d
+configargparse
+tensorboard
+opencv-python-headless
+scikit-learn

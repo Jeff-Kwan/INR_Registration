@@ -1,0 +1,27 @@
+{
+  "fireants": {
+    "url": "https://github.com/rohitrango/FireANTs.git",
+    "revision": "f8a9cc259ab9113fc43bd99797000fa8fc34eb59",
+    "paths": ["fireants", "fused_ops", "scripts", "docs", "pyproject.toml", "README.md", "LICENSE", "CHANGELOG.md"],
+    "entry": "fireants.registration.syn.SyNRegistration"
+  },
+  "convexadam": {
+    "url": "https://github.com/multimodallearning/convexAdam.git",
+    "revision": "b229e52e44b114e2040a503334c92269750c16b2",
+    "paths": ["src", "self_configuring", "README.md", "LICENSE", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"],
+    "entry": "convexAdam.convex_adam_MIND.convex_adam_pt"
+  },
+  "ccidir": {
+    "url": "https://github.com/Louisvh/cycle_consistent_INR.git",
+    "revision": "f6a624c1f2347fd44eb7d212e950ec12041baa61",
+    "paths": ["models", "networks", "objectives", "utils", "README.md", "requirements.txt", "run_dirlab_cycle_consistent.py", "cycle_inference_script.py"],
+    "entry": "models.models.ImplicitRegistrator"
+  },
+  "nir": {
+    "url": "https://github.com/uci-cbcl/NIR.git",
+    "revision": "45c0d5ccbe22c72603e4782560f487ff1e20bcfd",
+    "paths": ["src", "scripts", "configs", "README.md", "PARAMETERS.md", "LICENSE", "environment.yml"],
+    "patch": "patches/nir-imports.patch",
+    "entry": "training.train_efficient_pairwise"
+  }
+}

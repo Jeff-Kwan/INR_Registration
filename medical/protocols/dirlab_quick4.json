@@ -1,0 +1,339 @@
+{
+  "name": "quick4",
+  "dataset": "dirlab",
+  "selection": "Four smallest prepared endpoint pairs by summed T00/T50 voxel count; ties broken by case number. Frozen selection, no random draw or score-based selection.",
+  "size_ranked_cases": [
+    1,
+    4,
+    3,
+    5
+  ],
+  "case_indices": [
+    1,
+    3,
+    4,
+    5
+  ],
+  "all_case_sizes": [
+    {
+      "case": 1,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            256,
+            256,
+            94
+          ],
+          "voxel_count": 6160384,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            256,
+            256,
+            94
+          ],
+          "voxel_count": 6160384,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 12320768
+    },
+    {
+      "case": 2,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            256,
+            256,
+            112
+          ],
+          "voxel_count": 7340032,
+          "spacing_xyz_mm": [
+            1.159999966621399,
+            1.159999966621399,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            256,
+            256,
+            112
+          ],
+          "voxel_count": 7340032,
+          "spacing_xyz_mm": [
+            1.159999966621399,
+            1.159999966621399,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 14680064
+    },
+    {
+      "case": 3,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            256,
+            256,
+            104
+          ],
+          "voxel_count": 6815744,
+          "spacing_xyz_mm": [
+            1.149999976158142,
+            1.149999976158142,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            256,
+            256,
+            104
+          ],
+          "voxel_count": 6815744,
+          "spacing_xyz_mm": [
+            1.149999976158142,
+            1.149999976158142,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 13631488
+    },
+    {
+      "case": 4,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            256,
+            256,
+            99
+          ],
+          "voxel_count": 6488064,
+          "spacing_xyz_mm": [
+            1.1299999952316284,
+            1.1299999952316284,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            256,
+            256,
+            99
+          ],
+          "voxel_count": 6488064,
+          "spacing_xyz_mm": [
+            1.1299999952316284,
+            1.1299999952316284,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 12976128
+    },
+    {
+      "case": 5,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            256,
+            256,
+            106
+          ],
+          "voxel_count": 6946816,
+          "spacing_xyz_mm": [
+            1.100000023841858,
+            1.100000023841858,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            256,
+            256,
+            106
+          ],
+          "voxel_count": 6946816,
+          "spacing_xyz_mm": [
+            1.100000023841858,
+            1.100000023841858,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 13893632
+    },
+    {
+      "case": 6,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            512,
+            512,
+            128
+          ],
+          "voxel_count": 33554432,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            512,
+            512,
+            128
+          ],
+          "voxel_count": 33554432,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 67108864
+    },
+    {
+      "case": 7,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            512,
+            512,
+            136
+          ],
+          "voxel_count": 35651584,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            512,
+            512,
+            136
+          ],
+          "voxel_count": 35651584,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 71303168
+    },
+    {
+      "case": 8,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            512,
+            512,
+            128
+          ],
+          "voxel_count": 33554432,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            512,
+            512,
+            128
+          ],
+          "voxel_count": 33554432,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 67108864
+    },
+    {
+      "case": 9,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            512,
+            512,
+            128
+          ],
+          "voxel_count": 33554432,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            512,
+            512,
+            128
+          ],
+          "voxel_count": 33554432,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 67108864
+    },
+    {
+      "case": 10,
+      "volumes": {
+        "T00": {
+          "shape_xyz": [
+            512,
+            512,
+            120
+          ],
+          "voxel_count": 31457280,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        },
+        "T50": {
+          "shape_xyz": [
+            512,
+            512,
+            120
+          ],
+          "voxel_count": 31457280,
+          "spacing_xyz_mm": [
+            0.9700000286102295,
+            0.9700000286102295,
+            2.5
+          ]
+        }
+      },
+      "pair_voxel_count": 62914560
+    }
+  ]
+}

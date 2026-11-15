@@ -1,0 +1,35 @@
+diff --git a/src/dataio.py b/src/dataio.py
+index 58410b7..b8f0df0 100644
+--- a/src/dataio.py
++++ b/src/dataio.py
+@@ -7,7 +7,7 @@ import matplotlib.colors as colors
+ import numpy as np
+ import nrrd
+ import nibabel as nib
+-from numpy.lib.arraysetops import isin
++from numpy import isin
+ import scipy.io.wavfile as wavfile
+ import scipy.ndimage
+ import scipy.special
+diff --git a/src/efficient_modules.py b/src/efficient_modules.py
+index df427f1..d11e627 100644
+--- a/src/efficient_modules.py
++++ b/src/efficient_modules.py
+@@ -1,4 +1,7 @@
+-import tinycudann as tcnn
++try:
++    import tinycudann as tcnn
++except ImportError:
++    tcnn = None
+ import torch
+ from torch import nn
+ from torch.nn import Module, Sequential, Linear
+@@ -71,6 +74,8 @@ class HashEncoding(nn.Module):
+         super().__init__()
+ 
+         growth_factor = np.exp((np.log(max_res) - np.log(min_res)) / (num_levels - 1)) if num_levels > 1 else 1
++        if tcnn is None:
++            raise ImportError("Hash encoding requires the optional tinycudann CUDA extension")
+         encoding_config = {
+             "otype": "Grid",          
+             "type": "Hash",  

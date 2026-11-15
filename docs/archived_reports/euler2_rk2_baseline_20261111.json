@@ -1,0 +1,140 @@
+{
+  "checkpoint": "results/benchmark_20261110/siren/lpba/siren_pdlk/S02/endpoints.pt",
+  "checkpoint_hash_unchanged": true,
+  "scope": "Frozen inference only. Whole-volume24^3 Gaussian local fields; not PCG recovery, not crop trajectories.",
+  "sigma_mm": 4.0,
+  "grid_size": 24,
+  "field_times": [
+    0.0,
+    0.5,
+    1.0
+  ],
+  "startup_compile_seconds": 7.06929003901314,
+  "field_median_seconds": {
+    "0.0": 0.003741438966244459,
+    "0.5": 0.003722448949702084,
+    "1.0": 0.0037200190126895905
+  },
+  "metrics": {
+    "euler2": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530412011
+      },
+      "after": {
+        "mse": 0.007482399382654844,
+        "psnr_db": 21.259591144946658,
+        "psnr_infinite": false,
+        "global_ncc": 0.9555059411290133
+      },
+      "folding_fraction": 0.0012111409505208334,
+      "jacobian_min": -1.8379868268966675,
+      "jacobian_mean": 1.048266053199768,
+      "inverse_composition_mean_mm": 2.619609832763672,
+      "sampling_outside_fraction": 0.0625661239027977,
+      "labels": {
+        "dice": 0.6567780338227749,
+        "hd95_mm": 6.944374408040728,
+        "hd95_finite_labels_mean_mm": 6.944374408040728,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "integration_forward_reverse_median_seconds": 0.001881605014204979,
+      "field_forward_seconds": 0.007463887915946543,
+      "field_forward_reverse_shared_seconds": 0.011183906928636134,
+      "trained_checkpoint": "results/benchmark_20261110/siren/lpba/siren_pdlk/S02/endpoints.pt",
+      "velocity_estimator": "24^3 whole-image local solve + Gaussian sigma4mm",
+      "integrator": "euler2"
+    },
+    "rk2_1": {
+      "metric_version": 2,
+      "before": {
+        "mse": 0.020899650131664817,
+        "psnr_db": 16.798609840879493,
+        "psnr_infinite": false,
+        "global_ncc": 0.8890241530412011
+      },
+      "after": {
+        "mse": 0.006853717568813838,
+        "psnr_db": 21.640737961467288,
+        "psnr_infinite": false,
+        "global_ncc": 0.9588376157178108
+      },
+      "folding_fraction": 0.011934407552083333,
+      "jacobian_min": -6.30565881729126,
+      "jacobian_mean": 1.0281847715377808,
+      "inverse_composition_mean_mm": 1.383813738822937,
+      "sampling_outside_fraction": 0.051172688603401184,
+      "labels": {
+        "dice": 0.6476324908435345,
+        "hd95_mm": 7.222638704947063,
+        "hd95_finite_labels_mean_mm": 7.222638704947063,
+        "hd95_infinite": false,
+        "missing_labels": [],
+        "label_count": 56,
+        "metric_definition": {
+          "implementation": "MONAI",
+          "version": "1.6.1",
+          "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+          "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+          "spacing": "millimetres in NIfTI array-axis order",
+          "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+          "hd95_enabled": true
+        }
+      },
+      "integration_forward_reverse_median_seconds": 0.001849364023655653,
+      "field_forward_seconds": 0.007463887915946543,
+      "field_forward_reverse_shared_seconds": 0.011183906928636134,
+      "trained_checkpoint": "results/benchmark_20261110/siren/lpba/siren_pdlk/S02/endpoints.pt",
+      "velocity_estimator": "24^3 whole-image local solve + Gaussian sigma4mm",
+      "integrator": "rk2_1"
+    }
+  },
+  "endpoint_map_difference": {
+    "forward": {
+      "mean_mm": 2.2150447368621826,
+      "p95_mm": 4.407284259796143,
+      "max_mm": 40.02156448364258
+    },
+    "inverse": {
+      "mean_mm": 2.105130195617676,
+      "p95_mm": 4.07578706741333,
+      "max_mm": 21.448829650878906
+    }
+  },
+  "historical_pcg_rk2_reference": {
+    "labels": {
+      "dice": 0.7024524967585292,
+      "hd95_mm": 6.604823274271829,
+      "hd95_finite_labels_mean_mm": 6.604823274271829,
+      "hd95_infinite": false,
+      "missing_labels": [],
+      "label_count": 56,
+      "metric_definition": {
+        "implementation": "MONAI",
+        "version": "1.6.1",
+        "dice": "compute_dice(ignore_empty=False); macro mean over union of nonzero labels",
+        "hd95": "max of the two directed 95th-percentile Euclidean surface distances",
+        "spacing": "millimetres in NIfTI array-axis order",
+        "missing_label": "Dice=0; HD95=infinite represented by null plus hd95_infinite=true; aggregate invalid",
+        "hd95_enabled": true
+      }
+    },
+    "folding_fraction": 0.0,
+    "flow_all_intervals_converged": false,
+    "flow_max_relative_residual": 2.0136019884375855e-05
+  }
+}

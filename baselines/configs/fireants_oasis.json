@@ -1,0 +1,28 @@
+{
+  "method": "fireants",
+  "seed": 42,
+  "evaluation": "oasis",
+  "native": {
+    "scales": [
+      4,
+      2,
+      1
+    ],
+    "iterations": [
+      200,
+      100,
+      50
+    ],
+    "loss_type": "cc",
+    "deformation_type": "compositive",
+    "optimizer": "Adam",
+    "optimizer_lr": 0.1,
+    "cc_kernel_type": "rectangular",
+    "cc_kernel_size": 7,
+    "smooth_warp_sigma": 0.5,
+    "smooth_grad_sigma": 1.0,
+    "reduction": "mean",
+    "tolerance": 1e-06,
+    "max_tolerance_iters": 10
+  }
+}
