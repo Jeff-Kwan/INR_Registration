@@ -17,3 +17,5 @@ The maintained entry point for our four official datasets is scripts/launch_our_
 The default official run is results/official_ours_cosine_20261116 (309 cases), including per-case checkpoint.pt, run.json and metrics.json plus root-level plans/configurations/summaries. Preserve that whole folder separately. Its file sizes and SHA-256 checksums are recorded in docs/reproducibility/default_run_inventory.jsonl. Checksum verification confirms backup integrity; reproduction also requires the matching prepared inputs.
 
 The reproducibility archive retains compact metadata for the corrected external-baseline results, tuning and ablations. It also records dataset selection/preparation and analysis selections. It contains no checkpoint weights, image arrays, deformation fields, credentials or raw process logs. Current aggregate tables remain in docs/BASELINES_REPORT.md and docs/ABLATIONS_REPORT.md. The original default is distinct from the later manually promoted registration-weight trial.
+
+See the [supplementary material index](docs/SUPPLEMENT_INDEX.md) for existing tables/figures, evidence sources, generation tools and remaining artifact dependencies.
