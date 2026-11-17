@@ -1,0 +1,50 @@
+{
+  "archives": [
+    {
+      "archive": "dataset_manifests.jsonl",
+      "records": 8
+    },
+    {
+      "records": 2490,
+      "archives": [
+        "classical.001.jsonl",
+        "classical.002.jsonl",
+        "classical.003.jsonl"
+      ]
+    },
+    {
+      "records": 2493,
+      "archives": [
+        "neural_corrected.001.jsonl",
+        "neural_corrected.002.jsonl",
+        "neural_corrected.003.jsonl",
+        "neural_corrected.004.jsonl"
+      ]
+    },
+    {
+      "archive": "ablations.jsonl",
+      "records": 275
+    },
+    {
+      "records": 5444,
+      "archives": [
+        "tuning.001.jsonl",
+        "tuning.002.jsonl",
+        "tuning.003.jsonl",
+        "tuning.004.jsonl",
+        "tuning.005.jsonl",
+        "tuning.006.jsonl",
+        "tuning.007.jsonl",
+        "tuning.008.jsonl",
+        "tuning.009.jsonl",
+        "tuning.010.jsonl"
+      ]
+    },
+    {
+      "archive": "analysis.jsonl",
+      "records": 17
+    }
+  ],
+  "default_run_files": 1244,
+  "default_run_bytes": 2027821377
+}

@@ -1,0 +1,159 @@
+[
+  {
+    "method": "fireants",
+    "source": {
+      "url": "https://github.com/rohitrango/FireANTs.git",
+      "revision": "f8a9cc259ab9113fc43bd99797000fa8fc34eb59",
+      "paths": [
+        "fireants",
+        "fused_ops",
+        "scripts",
+        "docs",
+        "pyproject.toml",
+        "README.md",
+        "LICENSE",
+        "CHANGELOG.md"
+      ],
+      "entry": "fireants.registration.syn.SyNRegistration"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_source_files": []
+  },
+  {
+    "method": "convexadam",
+    "source": {
+      "url": "https://github.com/multimodallearning/convexAdam.git",
+      "revision": "b229e52e44b114e2040a503334c92269750c16b2",
+      "paths": [
+        "src",
+        "self_configuring",
+        "README.md",
+        "LICENSE",
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt"
+      ],
+      "entry": "convexAdam.convex_adam_MIND.convex_adam_pt"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_source_files": []
+  },
+  {
+    "method": "ccidir",
+    "source": {
+      "url": "https://github.com/Louisvh/cycle_consistent_INR.git",
+      "revision": "f6a624c1f2347fd44eb7d212e950ec12041baa61",
+      "paths": [
+        "models",
+        "networks",
+        "objectives",
+        "utils",
+        "README.md",
+        "requirements.txt",
+        "run_dirlab_cycle_consistent.py",
+        "cycle_inference_script.py"
+      ],
+      "entry": "models.models.ImplicitRegistrator"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_source_files": []
+  },
+  {
+    "method": "nir",
+    "source": {
+      "url": "https://github.com/uci-cbcl/NIR.git",
+      "revision": "45c0d5ccbe22c72603e4782560f487ff1e20bcfd",
+      "paths": [
+        "src",
+        "scripts",
+        "configs",
+        "README.md",
+        "PARAMETERS.md",
+        "LICENSE",
+        "environment.yml"
+      ],
+      "patch": "patches/nir-mri.patch",
+      "entry": "training.train_efficient_pairwise"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "e5fca824eef2c019a30919507963536634820470cbcbe4d958bc08282c105902",
+    "untracked_source_files": []
+  },
+  {
+    "method": "demons",
+    "source": {
+      "url": "https://github.com/SimpleITK/SimpleITK",
+      "revision": "2.5.7",
+      "package": "SimpleITK",
+      "device": "cpu",
+      "entry": "SimpleITK.DemonsRegistrationFilter"
+    },
+    "verification": "passed"
+  },
+  {
+    "method": "niftyreg",
+    "source": {
+      "url": "https://github.com/KCL-BMEIS/niftyreg.git",
+      "revision": "662fa999ea89a9ed3610b9183d8af9325b6e984c",
+      "paths": [
+        "*"
+      ],
+      "device": "cpu",
+      "entry": "reg_f3d v2.1.1",
+      "tag": "v2.1.1"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_source_files": []
+  },
+  {
+    "method": "nodeo",
+    "source": {
+      "url": "https://github.com/yifannnwu/NODEO-DIR.git",
+      "revision": "fb010664d02ca6c6bca01c0f50f2de17f61d23ed",
+      "paths": [
+        "Registration.py",
+        "Network.py",
+        "NeuralODE.py",
+        "Utils.py",
+        "Loss.py",
+        "README.md"
+      ],
+      "entry": "Registration.registration",
+      "patch": "patches/nodeo-shapes.patch"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "b89ac6e2e385e1d8862b7b48232527c1025709f321ca73515041e4e98fb7f3ff",
+    "untracked_source_files": []
+  },
+  {
+    "method": "dnvf",
+    "source": {
+      "url": "https://github.com/uci-cbcl/DNVF.git",
+      "revision": "27cf2f6e6bffc7b00f8c2721cc48553e415bf8f9",
+      "paths": [
+        "models",
+        "utils",
+        "data",
+        "opt_nf_diff.py",
+        "run_diff.sh",
+        "README.md"
+      ],
+      "entry": "opt_nf_diff.main"
+    },
+    "verification": "passed",
+    "untracked_files": [],
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "untracked_source_files": []
+  }
+]
