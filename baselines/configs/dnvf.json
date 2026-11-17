@@ -1,0 +1,14 @@
+{
+  "method": "dnvf",
+  "seed": 42,
+  "evaluation": "dirlab",
+  "native": {
+    "optimization_epoch": 200,
+    "weight_jdet": 50,
+    "downsample_factor": 2,
+    "val_iter": 20,
+    "lr": 0.0001,
+    "hidden_layers": 5,
+    "hidden_features": 512
+  }
+}

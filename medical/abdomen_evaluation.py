@@ -143,8 +143,15 @@ def evaluate(case,prediction,protocol="abdomenctct"):
     """Prediction: absolute moving XYZ voxels on fixed XYZ grid, or point callable."""
     fixed=np.asarray(nib.load(label_path(case['fixed'])).dataobj)
     moving=np.asarray(nib.load(label_path(case['moving'])).dataobj)
-    functions=official_functions()
     labels=next(method['labels'] for method in PROTOCOLS[protocol]['evaluation_methods'] if method['metric']=='dice')
+    result = evaluate_labels(fixed, moving, prediction, labels)
+    result.update(dataset=protocol, evaluator_revision=REVISION)
+    return result
+
+
+def evaluate_labels(fixed, moving, prediction, labels):
+    """Learn2Reg metrics for arrays on their preserved evaluation grid."""
+    functions=official_functions()
     # The Triton EDT tiles a full axis of the released native grids. Larger
     # and user-supplied label formats retain the generic CPU implementation.
     cuda_native = (isinstance(prediction, torch.Tensor) and supported(prediction.device)
@@ -178,4 +185,4 @@ def evaluate(case,prediction,protocol="abdomenctct"):
             'LogJacDetStd':{'mean':float(sdlog),'definition':'std(log(clip(detJ+3,1e-9,1e9)))'},
             'num_foldings':{'mean':float(shifted_foldings),'definition':'official shifted/clipped count'},
             'folding_fraction':float(folding),'folding_status':'evaluated_unshifted_interior_detJ',
-            'labels':labels,'dataset':protocol,'evaluator_revision':REVISION,'missing_or_nonfinite_metric_policy':'null; never silently replaced with zero'}
+            'labels':labels,'missing_or_nonfinite_metric_policy':'null; never silently replaced with zero'}

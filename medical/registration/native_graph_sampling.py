@@ -3,6 +3,7 @@ import math
 import torch
 from medical.models.siren import coordinates_from_indices
 from medical.registration.query_geometry import normal_count,query_directions
+from medical.registration.training_integrators import sample_times
 
 
 class NativeGraphInputs:
@@ -24,7 +25,6 @@ class NativeGraphInputs:
                 choices[step:step+1].copy_(torch.randint(len(branch.crop_center_sites),(1,),
                     device=branch.moving.device,generator=generator))
             self.choices=choices.cpu().tolist()
-        self.early=branch.moving.new_tensor(.25);self.late=branch.moving.new_tensor(.75)
 
     def generator(self,seed):
         return torch.Generator(device=self.branch.moving.device).manual_seed(seed)
@@ -47,7 +47,7 @@ class NativeGraphInputs:
         for _ in range(2):torch.rand(branch.particles,3,device=device,generator=particle)
         torch.randn(len(branch.centres),normal_count(branch.pairs_per_cell,branch.query_geometry),3,device=device,generator=query)
         if branch.random_timesteps:
-            for _ in range(2):torch.rand((),device=device,generator=time)
+            for _ in range(branch.time_strata):torch.rand((),device=device,generator=time)
         return [source_offsets[0],particle.get_offset(),query.get_offset(),time.get_offset()]
 
     def reset_offsets(self,tag,step):
@@ -85,10 +85,7 @@ class NativeGraphInputs:
         centers=branch.local_centres+xyz_origin
         sites=centers[:,None,None]+torch.stack((offsets,-offsets),-2)
         queries=2*sites/branch.extent-1
-        early,late=self.early,self.late
-        if branch.random_timesteps:
-            early=.5*torch.rand((),device=device,dtype=branch.moving.dtype,generator=time)
-            late=.5+.5*torch.rand((),device=device,dtype=branch.moving.dtype,generator=time)
+        times=sample_times(branch.moving,branch.time_strata,branch.random_timesteps,time)
         return {'coordinates':coordinates,'source_truth':branch.moving.flatten()[indices],
                 'target_truth':branch.fixed.flatten()[indices],'forward_positions':positions[0],
-                'reverse_positions':positions[1],'queries':queries,'origin':xyz_origin,'early':early,'late':late}
+                'reverse_positions':positions[1],'queries':queries,'origin':xyz_origin,'times':times}

@@ -1,0 +1,21 @@
+{
+  "method": "nodeo",
+  "seed": 42,
+  "evaluation": "dirlab",
+  "native": {
+    "ds": 2,
+    "bs": 16,
+    "smoothing_kernel": "AK",
+    "smoothing_win": 15,
+    "smoothing_pass": 1,
+    "time_steps": 2,
+    "optimizer": "Euler",
+    "STEP_SIZE": 0.001,
+    "epoches": 300,
+    "NCC_win": 21,
+    "lr": 0.005,
+    "lambda_J": 2.5,
+    "lambda_df": 0.05,
+    "lambda_v": 5e-05
+  }
+}

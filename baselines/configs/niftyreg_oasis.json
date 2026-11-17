@@ -1,0 +1,6 @@
+{
+  "method": "niftyreg",
+  "seed": 42,
+  "evaluation": "oasis",
+  "native": {}
+}

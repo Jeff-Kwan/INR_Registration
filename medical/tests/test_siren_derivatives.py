@@ -195,7 +195,9 @@ class TestLiveRegistration(unittest.TestCase):
         target = torch.tensor([[.7, 0., 0.]], dtype=torch.float64)
         batch = TrainingBatch(source, pair.source(source).flatten(), pair.target(target).flatten(),
                               target_coordinates=target)
-        self.assertEqual(endpoint_loss(pair, batch, {'endpoint':'mse'})['total'], 0)
+        terms = endpoint_loss(pair, batch, {'endpoint':'ncc', 'ncc': {'moment_weight': 0.}})
+        self.assertEqual(terms['source_mse'], 0)
+        self.assertEqual(terms['target_mse'], 0)
 
     def test_recomputation_and_tail_chunks_preserve_live_solve_gradients(self):
         pair = make_pair(width=4, omega=10.)

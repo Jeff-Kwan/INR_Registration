@@ -13,8 +13,9 @@ import subprocess
 import sys
 from medical.abdomen_evaluation import PROTOCOL,PROTOCOLS
 from medical.gpu_worker import GPUWorker
+from baselines.sources import SOURCES
 
-METHODS={'ours':'medical.abdomen_method',**{name:f'baselines.{name}' for name in ('fireants','convexadam','ccidir','nir')}}
+METHODS={'ours':'medical.abdomen_method',**{name:f'baselines.{name}' for name in ('fireants','convexadam','ccidir','nir','demons','niftyreg')}}
 ROOT=Path(__file__).resolve().parent.parent
 
 def make_jobs(methods,pairs,data,output,dataset="abdomenctct",own_config=None):
@@ -34,8 +35,9 @@ def make_jobs(methods,pairs,data,output,dataset="abdomenctct",own_config=None):
             seed=settings['runtime']['seed'] if method=='ours' else settings['seed']
             module='medical' if method=='ours' else 'baselines.case_runner'
             adapter=('medical.oasis_method' if dataset=='oasis' else METHODS[method]) if method=='ours' else method
+            device = SOURCES[method].get('device', 'cuda:0') if method != 'ours' else 'cuda:0'
             command=[sys.executable,'-m',module,'--method',adapter,'--moving',str(moving),'--fixed',str(fixed),
-                     '--config',str(config),'--device','cuda:0','--output',str(target)]
+                     '--config',str(config),'--device',device,'--output',str(target)]
             if method!='ours': command+=['--seed',str(seed)]
             jobs.append({'method':method,'pair_index':index,'seed':seed,'output':str(target),'command':command,
                          'missing_inputs':[str(p) for p in inputs if not p.is_file()]})
@@ -124,21 +126,16 @@ def main(argv=None,*,dataset="abdomenctct"):
     for method in args.methods:
         rows=[r for r in results if r['method']==method]
         aggregates={}
-        for metric in ('DSC','HD95','LogJacDetStd','moving_psnr_db','fixed_psnr_db','working_grid_moving_psnr_db','working_grid_fixed_psnr_db',
-                       'original_grid_moving_psnr_db','original_grid_fixed_psnr_db','seconds'):
+        for metric in ('DSC','HD95','LogJacDetStd','moving_psnr_db','fixed_psnr_db','seconds'):
             values=[]
             for row in rows:
                 path=Path(row['output'])/'metrics.json'
                 if row['returncode']==0 and path.is_file():
                     scores=json.loads(path.read_text())
                     reconstruction=scores.get('reconstruction',{})
-                    if metric.startswith(('working_grid_','original_grid_')):
-                        scope,endpoint=metric.rsplit('_',3)[0],metric.rsplit('_',3)[1]
-                        value=reconstruction.get(scope,{}).get(endpoint,{}).get('psnr_db')
-                    else:
-                        value=(row['seconds'] if metric=='seconds' else
-                               reconstruction.get(metric.split('_')[0],{}).get('psnr_db')
-                           if metric.endswith('_psnr_db') else scores[metric]['mean'])
+                    value=(row['seconds'] if metric=='seconds' else
+                           reconstruction.get(metric.split('_')[0],{}).get('psnr_db')
+                       if metric.endswith('_psnr_db') else scores[metric]['mean'])
                     if value is not None: values.append(value)
             aggregates[metric]={'mean':float(np.mean(values)) if values else None,
                                 'std':float(np.std(values)) if values else None,

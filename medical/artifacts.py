@@ -56,11 +56,6 @@ def save_checkpoint(path, pair, config, metadata):
     payload = {'format_version': FORMAT_VERSION, 'dimensions': pair.dimensions,
                'model': pair.model_config, 'config': config, 'metadata': metadata,
                'state': {k: v.detach().cpu().clone() for k, v in pair.state_dict().items()}}
-    if config.get('spatial_units','voxel')=='mm':
-        from medical.physical_units import validate_metadata
-        value=getattr(pair,'physical_units_metadata',None)
-        if value is None:raise ValueError('Missing physical-units checkpoint geometry')
-        payload['physical_units']=validate_metadata(value,value['shape_zyx'])
     path = Path(path)
     temporary = path.with_suffix('.tmp')
     torch.save(payload, temporary)
@@ -70,14 +65,11 @@ def save_checkpoint(path, pair, config, metadata):
 def load_checkpoint(path, device='cpu'):
     from medical.models.siren import PairedSiren
     payload = torch.load(path, map_location='cpu', weights_only=True)
-    if payload.get('format_version') != FORMAT_VERSION or set(payload)-{'physical_units'} != {
+    if payload.get('format_version') != FORMAT_VERSION or set(payload) != {
             'format_version', 'dimensions', 'model', 'config', 'metadata', 'state'}:
         raise ValueError('Unsupported checkpoint; historical formats are archival only')
-    if payload['config'].get('spatial_units','voxel')=='mm':
-        from medical.physical_units import restore_checkpoint
-        return restore_checkpoint(payload,device),payload
-    if 'physical_units' in payload:
-        raise ValueError('Physical geometry requires spatial_units=mm')
+    if 'working_grid' in payload['config'] or payload['config'].get('spatial_units', 'voxel') != 'voxel':
+        raise ValueError('Only native-voxel checkpoints are supported')
     pair = PairedSiren(payload['dimensions'], **payload['model']).to(device)
     pair.load_state_dict(payload['state'], strict=True)
     return pair.eval(), payload

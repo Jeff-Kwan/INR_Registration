@@ -7,7 +7,7 @@ class TestTrainingRK2(unittest.TestCase):
     def branch(self):
         image=torch.zeros(17,17,17)
         return SymmetricPairRegistration(image,image,torch.eye(4),grid_size=4,particles=32,
-                                         compile_derivatives=False)
+                                         compile_derivatives=False,training_integrator='rk2')
 
     def test_linear_field_midpoint_formula_and_full_gradient(self):
         branch=self.branch(); start=torch.tensor([[5.,6.,7.]])
@@ -44,19 +44,6 @@ class TestTrainingRK2(unittest.TestCase):
         xyz=torch.stack((indices%17,(indices//17)%17,indices//(17*17)),-1).float()
         self.assertTrue(branch.supported(xyz).all())
 
-    def test_tied_batch_reuses_points_and_interpolates_targets(self):
-        from medical.registration.training import shared_particle_batch
-        branch=self.branch()
-        z,y,x=torch.meshgrid(*(torch.arange(17.) for _ in range(3)),indexing='ij')
-        moving=x+2*y+3*z;fixed=2*moving+5
-        batch,positions=shared_particle_batch(branch,moving,fixed)
-        self.assertIs(positions[0],positions[1])
-        self.assertIs(batch.coordinates,batch.target_coordinates)
-        self.assertEqual(len(positions[0]),32)
-        expected=positions[0]@torch.tensor([1.,2.,3.])
-        torch.testing.assert_close(batch.source,expected)
-        torch.testing.assert_close(batch.target,2*expected+5)
-        torch.testing.assert_close((batch.coordinates+1)*branch.extent/2,positions[0])
 
     def test_diagnostics_do_not_change_registration_loss_or_gradients(self):
         from medical.models.siren import PairedSiren
@@ -66,7 +53,7 @@ class TestTrainingRK2(unittest.TestCase):
         with torch.no_grad():
             for parameter in pair.target.parameters():
                 parameter.add_(.001 * torch.randn_like(parameter))
-        for similarity in ('ncc', 'gw_ncc'):
+        for similarity in ('gw_ncc',):
             results = []
             for diagnostics in (True, False):
                 branch = SymmetricPairRegistration(

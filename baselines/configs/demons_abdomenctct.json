@@ -1,0 +1,12 @@
+{
+  "method": "demons",
+  "seed": 42,
+  "evaluation": "abdomenctct",
+  "native": {
+    "iterations": 50,
+    "standard_deviations": 1.0,
+    "histogram_matching": false,
+    "histogram_levels": 1024,
+    "match_points": 7
+  }
+}

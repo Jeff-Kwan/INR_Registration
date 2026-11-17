@@ -27,24 +27,6 @@ class TestMaskedCrop(unittest.TestCase):
   a,c=b.sample_positions()
   self.assertTrue(b.supported(a).all());self.assertFalse(torch.equal(a,c))
   self.assertGreater(len(a.unique(dim=0)),60)
- def test_fit_endpoint_batches_share_crop_without_mask_filter(self):
-  from medical.configuration import DEFAULT
-  from medical.registration.training import fit_pair
-  config=copy.deepcopy(DEFAULT);config['model'].update(width=4,layers=1)
-  config['runtime'].update(device='cpu',compile_derivatives=False,compile_endpoints=False)
-  config['training']['batch_size']=128
-  config['objective']['registration']['crop_fraction']=.36
-  config['objective']['registration']['compile_velocity']=False
-  image=torch.rand(25,25,25);mask=torch.zeros_like(image,dtype=torch.bool);mask[5,5,5]=True
-  class StopBeforeLoss(Exception):pass
-  def capture(pair,batch,*args,**kwargs):
-   self.assertIs(batch.coordinates,batch.target_coordinates)
-   xyz=(batch.coordinates+1)*12
-   self.assertTrue(((xyz>=1-1e-5)&(xyz<=9+1e-5)).all())
-   self.assertGreater(len(xyz.unique(dim=0)),50)
-   raise StopBeforeLoss
-  with patch('medical.registration.training.endpoint_loss',side_effect=capture):
-   with self.assertRaises(StopBeforeLoss):fit_pair(image,image,config,affine=torch.eye(4),moving_mask=mask,fixed_mask=mask)
 
  def test_crop_exit_keeps_ncc_gradient_inside_image(self):
   b=self.branch();b.set_origin(torch.tensor([4.,4.,4.]))
@@ -80,21 +62,6 @@ class TestMaskedCrop(unittest.TestCase):
    self.assertTrue(torch.equal(b.origin,origin.flip(0).float()))
   self.assertEqual(actual.get_offset(),expected.get_offset())
 
- def test_nonfinite_loss_stops_before_optimizer(self):
-  from medical.configuration import DEFAULT
-  from medical.registration.training import fit_pair
-  cfg=copy.deepcopy(DEFAULT);cfg['model'].update(width=4,layers=1)
-  cfg['runtime'].update(device='cpu',compile_derivatives=False,compile_endpoints=False)
-  cfg['training'].update(batch_size=16,steps=1)
-  cfg['objective'].update(weight=0.)
-  cfg['objective']['registration'].update(weight=0.,compile_velocity=False)
-  image=torch.rand(9,9,9)
-  def bad_loss(pair,*args,**kwargs):
-   return {'total':next(pair.parameters()).sum()*float('nan')}
-  with patch('medical.registration.training.endpoint_loss',side_effect=bad_loss),patch('torch.optim.Adam.step') as step:
-   with self.assertRaisesRegex(RuntimeError,'Nonfinite loss at step 1'):
-    fit_pair(image,image,cfg,affine=torch.eye(4))
-   step.assert_not_called()
 
 
  def test_singular_solve_dispatch(self):

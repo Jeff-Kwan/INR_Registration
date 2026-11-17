@@ -1,33 +1,224 @@
-# Paired-SIREN registration
+# SIRENPath — canonical method
 
-Each image pair gets its own fit. Two coordinate networks represent the moving and fixed intensities. Linear interpolation of their **parameters** defines a continuous intensity function in space and time. Its analytical derivatives supply the motion estimates used in training and recovery.
+The canonical recipe is [medical/configs/default.json](../medical/configs/default.json).
+This document describes its maintained training and recovery implementation.
+[DATASETS.md](DATASETS.md) defines frozen cohorts, prepared inputs, pair directions
+and evaluation protocols; [CASE_RUNNER.md](CASE_RUNNER.md) defines execution.
 
-## From images to maps
+## Representation and initialization
 
-1. **Prepare the endpoints.** Keep both images on their prepared native voxel grid and independently min–max scale each to [0, 1]. Initialize two identical SIRENs, then optimize their parameters separately in one joint objective. Moving is time 0 and fixed is time 1. At time `t` the network uses weights and biases `(1 − t) θ_moving + t θ_fixed`.
-2. **Sample one crop per update.** Both recipes below use half the image length along each axis. OASIS and AbdomenCTCT sample an origin uniformly among fitting boxes. DIR-Lab chooses the T00 or T50 mask with equal probability, samples one foreground voxel, centers the box there and shifts it to fit. Both endpoint losses use the same 32,768 sampled voxel indices. Independently draw 32,768 continuous particle starts **per direction** from the central 80% of the crop along each axis. Evaluation labels and landmarks stay out of fitting.
-3. **Fit endpoint intensities.** Sum the two endpoint Pearson NCC losses against their respective observed images. NCC leaves output offset and scale underdetermined. A Gaussian moment penalty with weight 0.01 anchors each network output toward mean zero and variance one on the minibatch.
-4. **Estimate local motion.** Evaluate the interpolated SIREN at one early and one late time, one from each half of the interval. At each time, every cell of an 8³ crop grid uses four sites arranged as two symmetric pairs. Write `g = ∇I`, `q = ∂I/∂t`, `H = ∇²I` and `m = ∇q`, with spatial derivatives in voxel units. Solve one three-component velocity per cell by minimizing the site average of `(q + g·v)² + 4 ‖m + Hv‖²` plus `10⁻⁶ ‖v‖²`. The minimized energy, averaged over cells and times, gives the PD-LK loss. The brightness term asks which motion explains the intensity change. The differential term also asks whether that motion explains how the local gradient changes.
-5. **Train against alignment.** Smooth each velocity grid with a separable three-tap Gaussian (σ = 0.75 cells). Use the two fields in order for moving→fixed and in reverse order with negative time steps for fixed→moving. Each half-step uses spatial midpoint RK2. Compare the actual source intensities at the starts with target intensities at the transported positions. Average the two directional similarity losses and full-image boundary penalties. Every trajectory counts, including crop exits, with border extension for both velocity and image interpolation. The total is **endpoint loss + 0.1 × PD-LK + 0.01 × registration**. Gradients flow back through the analytical derivatives, cell solves, smoothing and trajectories to both networks.
-6. **Recover dense maps from the frozen pair.** At evenly spaced interval midpoints, evaluate the spatial gradient and time derivative across the volume. Solve global brightness flow with spatial smoothness 0.01 and ridge 10⁻⁶ by preconditioned conjugate gradients (PCG), warm-starting each interval from the previous velocity. Midpoint RK2 integrates the fields in both directions. Recovery scratch is temporary. The evaluator consumes both map coordinates and spacing in the original image geometry.
-7. **Score each pair.** DIR-Lab reports T00→T50 and T50→T00 landmark TRE separately in mm, including continuous and IDIR-rounded values. The primary T00→T50 point map is the inverse of the model's moving→fixed trajectory. OASIS and AbdomenCTCT use the fixed→moving pullback for official Dice, voxel HD95 and shifted SDlogJ. Report the unshifted nonpositive-Jacobian fraction separately to expose folding. The full single-seed cohorts contain 10, 19 and 45 pairs respectively. [Dataset protocols](DATASETS.md)
+Fit a fresh pair of coordinate SIRENs for each image pair. The moving SIREN
+represents time 0 and the fixed SIREN time 1. Each network has **four sine hidden
+layers of width 512**, scalar frequency **30** in every sine layer, and one scalar
+linear output. Initialize the moving network and copy it exactly to the fixed
+network before joint optimization.
 
-## Which configuration reproduces which pipeline?
+First-layer weights and biases are uniform in ±1/input_dimension. Subsequent sine
+layers use weights and biases uniform in ±sqrt(6/fan_in)/30. The output weights
+use the latter bound multiplied by **30**; the 3D output bias is zero.
 
-| Setting | Repository default | Leading shared accuracy candidate |
-| --- | --- | --- |
-| SIREN per endpoint | Four sine layers, width 256, ω = 30 | Four sine layers, width 512, ω = 30, output layer initialization ×30 |
-| Per-pair fit | 5,000 steps, Adam, exponential LR decay from 2 × 10⁻⁴ toward 5 × 10⁻⁵ | 5,000 steps, AdamW, decay 0.001, OneCycle peak 10⁻⁴ after 10% warmup |
-| Cell query directions | Two independently drawn directions | Two orthogonal directions |
-| Early/late time draws | Independent uniform draws | Scrambled 2D Sobol draws mapped to the same half-intervals |
-| Registration similarity | One Pearson NCC over the box | Equal mix of global and Gaussian-window NCC |
-| CUDA execution | Ordinary training loop with compiled kernels | Captured full-gradient training step |
-| Frozen recovery | Full native grid, 16 time evaluations × 4 RK2 substeps | At most 256 samples per axis, 8 evaluations × 8 substeps, returned maps on the original grid |
+Interpolate all corresponding parameters linearly:
 
-Omitting the config selects the repository default. To reproduce the latest full-cohort accuracy run, select the candidate explicitly. The earlier width-512 OneCycle preset is the comparison reference for that report. The 4k speed run is a separate research operating point. [Default](../medical/configs/default.json) · [Accuracy candidate](../medical/configs/native_siren_gw_orthogonal_sobol_5k.json) · [Original shared reference](../medical/configs/native_siren_onecycle_5k.json) · [Full results and folding audit](LONG_RESEARCH_REPORT.md)
+`theta(t) = (1-t) theta_moving + t theta_fixed`.
 
-## Supported experiments
+Analytical differentiation of the resulting intensity field gives spatial gradient
+`g = grad_x I`, temporal derivative `q = dI/dt`, spatial Hessian `H` and mixed
+derivative `m = grad_x q`. Network coordinates are normalized internally, with
+chain-rule conversion so derivatives and velocities use **native voxel units**.
 
-Endpoint MSE, endpoint GW-NCC and explicit window LNCC are independent of the choice of registration similarity. PD-LK and registration weights can independently be zero. Other documented experiments include inverse-metric velocity agreement, structure sampling and physical units. The physical-grid protocol specifies the checkpoint geometry required for recovery. [Inverse metric](INVERSE_METRIC.md) · [Structure sampling](STRUCTURE_SAMPLING.md) · [Working grid and window objectives](PHYSICAL_WORKING_GRID.md) · [Native physical units](NATIVE_PHYSICAL_UNITS.md)
+Intensity handling follows the frozen dataset adapters:
 
-Sampler locations are XYZ, while PyTorch volume axes are ZYX. Normalized-coordinate derivatives use the scale `2/(axis_size−1)` per spatial axis. Dataset adapters convert maps to landmark or label geometry for scoring. [Case runner](CASE_RUNNER.md) · [Captured training and capped recovery](CAPTURED_TRAINING.md)
+- DIR-Lab and Learn2Reg OASIS/AbdomenCTCT: independent in-memory min–max scaling
+  to [0,1], without percentile clipping.
+- IXI and LPBA40: preserve protocol-prepared intensities.
+- Neurite-OASIS: preserve released prepared intensities.
+- ACDC: preserve its prepared arrays, which already include the protocol's
+  independent min–max normalization before cropping.
+
+## Endpoint fitting
+
+Each update samples one shared crop with half the image length along each axis.
+For DIR-Lab, choose T00 or T50 equally, sample one voxel from that endpoint's
+R231 mask, center the crop there and shift it to fit. For the other connected
+datasets, sample a fitting crop origin uniformly. Masks do not gate any loss.
+
+Draw **32,768 voxel indices with replacement** inside the crop and use the same
+indices for the two endpoint reconstruction losses. Endpoint NCC is the sum of
+`1 - PearsonCorrelation(prediction, image)` for moving and fixed, computed over
+these sampled voxels. It is not a dense whole-volume training loss. Correlations
+use epsilon **1e-8**.
+
+A Gaussian-moment penalty, weighted **0.005**, anchors each predicted sample
+mean and variance toward 0 and 1:
+
+`moment_loss = 0.5 * sum_endpoints[mean² + (variance+epsilon) - log(variance+epsilon) - 1]`.
+
+Variances are population variances. Inter-SIREN parameter agreement is the mean
+squared difference over all corresponding weights and biases, weighted **0.01**.
+This objective term is separate from AdamW weight decay **0.001**.
+
+## Local transport and registration
+
+Draw one scrambled **2D Sobol** point per update. Its coordinates give field
+times in `[0,0.5)` and `[0.5,1)`. Crop/reconstruction, particle and query-direction
+sampling use separate seeded native CUDA random generators with replayed offsets.
+Temporal quadrature uses the scrambled Sobol sequence.
+
+An **8³ cell-centered velocity grid** covers the shared crop. Each cell has two
+orthogonal directions, with a symmetric query pair on each direction: four query
+sites per cell. Directions are orthogonal in the spacing-aware offset frame.
+The physical query radius is **0.2 times the smallest physical cell width**;
+convert these offsets back to native voxel offsets for querying the SIRENs.
+This use of image spacing does not change the native training grid or units.
+
+Pool the four sites equally and solve one velocity per cell by minimizing
+
+`mean_sites[b (q + g·v)² + c ||m + Hv||²] + eta ||v||²`,
+
+with **b=1**, **c=4**, **eta=1e-6**. Average the minimized energies over cells and
+both sampled times to obtain the PD-LK transport loss, weighted **0.1**. The ridge
+is applied once per pooled cell solve. Smooth each resulting velocity field with
+a separable, reflected three-tap Gaussian, **sigma 0.5 grid cells** per axis.
+
+Registration starts are separate from reconstruction samples: **65,536 independently
+drawn continuous particles per direction**, sampled from the central **80%** of
+the crop along each axis. Advance with two spatial midpoint-RK2 half-steps of
+size **0.5**, using the first field then the second. Reverse trajectories use the
+fields in reverse order with half-step size **−0.5**. The two fixed half-step sizes
+do not depend on the gap between sampled temporal quadrature points.
+
+Compare observed image intensities at trajectory starts and transported positions.
+GW-NCC is a **50/50 mixture of global and local Pearson NCC losses**. The local
+term bins six particle sufficient statistics into **8³ bins** over the particle
+sampling region, applies a three-tap Gaussian with **sigma 0.75 cells**, and
+weights local losses by smoothed particle mass. This is separate from the
+sigma-0.5 velocity smoothing.
+
+Average the two directional similarity losses and their live full-image boundary
+penalties. Every sampled particle contributes, including crop exits. Image and
+velocity interpolation use border extension. The boundary penalty is the mean
+squared distance outside the full image in extent-normalized coordinates; crop
+exits do not reject particles or gate their losses.
+
+The registration coefficient follows cosine decay from **0.03 at update1** to
+**0.01 at update5000**, with `r=(step-1)/4999`:
+
+`registration_weight(step) = 0.01 + 0.5 (0.03-0.01) (1 + cos(pi r))`.
+
+The original default was restored by user instruction on17 November2026;
+the constant0.02 trial is retained only as a historical experiment.
+
+## Joint objective and optimization
+
+The objective is
+
+`endpoint_weight * endpoint_NCC + moment_weight * moment_loss`
+`+ PD_LK_weight * PD_LK + registration_weight(step) * registration`
+`+ parameter_l2 * mean_parameter_difference_squared`.
+
+All gradients through network derivatives, pooled solves, smoothing and
+trajectories remain live. Only logging values detach during training.
+
+Use **one seed-42 fit per pair**, **5,000 updates**, AdamW with betas **(0.9,0.999)**,
+weight decay **0.001** and gradient-norm clipping at **1**. The learning rate is
+cosine decay **1e-4 → 2e-5**, with **no warmup**:
+
+With `r=(step-1)/4999`:
+
+`lr(step) = 2e-5 + 0.5 (1e-4-2e-5) (1 + cos(pi r))`.
+
+Model and optimizer state are fresh per case. Training uses **CUDA FP32**, highest
+float32 matmul precision, and CUDA graphs capturing the loss, backward pass,
+clipping and fused AdamW step. Spatial samples and temporal choices refresh each
+update. Compilation warmup and graph setup are included in training time.
+Numerical eager helpers validate the same equations on synthetic inputs.
+
+## Explicit tuning option: historical OneCycle LR
+
+The canonical default remains cosine1e-4→2e-5 without warmup. The requested
+[OneCycle tuning candidate](TUNING_COHORT.md#restored-onecycle-candidate) uses the
+same captured CUDA FP32 training equations and AdamW, with LR-only cosine rise
+2.5e-5→1e-4 over10% of updates and cosine fall to2.5e-5 over the remaining90%.
+AdamW betas stay fixed. No other historical implementation is restored.
+
+## Frozen stage-3 recovery
+
+After fitting, hold the endpoint networks fixed and recover maps without training
+gradients. At **8 evenly spaced interval midpoints**, evaluate the full-domain
+brightness derivatives `g,q`. Solve the global brightness-flow system
+
+`(g g^T + lambda L + ridge Id) v = -g q`,
+
+where `L` is the native-voxel grid Laplacian, with sampling-spacing corrections
+when recovery is capped. Use **lambda=0.01**, **ridge=1e-6**,
+maximum **500 PCG iterations** and tolerance **2e-5**. Warm-start each interval's
+solve from the preceding velocity. This global brightness-flow solve is separate
+from the local training PD-LK solve.
+
+Integrate the forward map with **8 midpoint-RK2 substeps per interval**. Integrate
+the inverse using the stored interval velocities in reverse order and negative
+time steps. Both integrations use border-extended velocity sampling.
+
+Cap each recovery sampling axis at **256**. Training and prepared image grids
+remain unchanged. If capped, spacing ratios enter derivative conversion, PCG
+stencils and integration; returned maps are interpolated onto the original grid
+in native voxel units. The cap does not reduce any axis in the four official
+comparison cohorts. Derivative inference chunks contain **65,536 queries**.
+Reject checkpoints requiring unsupported physical/working-grid geometry.
+
+Map names follow model time: forward is moving→fixed; inverse is fixed→moving.
+Pulling the moving image onto the fixed grid uses the inverse map. DIR-Lab's
+primary T00→T50 landmark map is therefore the inverse map; score the reverse
+landmark direction separately.
+
+Recover and evaluate in memory. Retain network checkpoints, resolved settings,
+provenance, metrics and timings. Dense maps and warped/reconstructed image volumes
+are not persistent artifacts. Remove recovery scratch on success and exceptions.
+
+## Adjustable loss weights
+
+These coefficients may be zero in a copied configuration:
+
+| Component | Configuration key | Canonical value |
+|---|---|---:|
+| Endpoint NCC | `objective.endpoint_weight` | 1 |
+| Gaussian moments | `objective.ncc.moment_weight` | 0.005 |
+| PD-LK transport loss | `objective.weight` | 0.1 |
+| Brightness residual in the local solve/PD-LK | `objective.brightness_weight` | 1 |
+| Differential residual in the local solve/PD-LK | `objective.c` | 4 |
+| Registration loss | `objective.registration.weight` | 0.01 final |
+| Inter-SIREN parameter L2 | `objective.parameter_l2` | 0.01 |
+| AdamW weight decay | `training.optimizer.weight_decay` | 0.001 |
+| Recovery PCG smoothness | `recovery.smoothness` | 0.01 |
+
+Zero registration weight disables the entire registration schedule. Zero PD-LK
+loss weight still allows the velocity solves required by registration. If both
+losses are off, training omits their derivatives and trajectories. Brightness and
+differential residual weights may independently be zero; with both zero, the
+ridge solve gives zero local velocity. Endpoint NCC, moments and parameter L2 are
+independent terms. Positive numerical ridges and NCC epsilon remain required.
+
+## Evaluation and internal ablations
+
+Official comparisons use **Neurite-OASIS, ACDC, LPBA40 and IXI**, with the shared
+`standardized_v1` Dice, HD95, NPJ (%) and unshifted SDlogJ evaluator. Labels are
+evaluation-only; they do not select crops, losses or checkpoints. Other dataset
+runners retain their documented author-protocol scoring. Metric definitions,
+geometry, label sets and valid-score denominators are specified in
+[DATASETS.md](DATASETS.md) and [CASE_RUNNER.md](CASE_RUNNER.md).
+
+The separate [seven-run L2R-OASIS study](SIRENPATH_ABLATIONS.md) uses the same
+training/recovery implementation. Runs 1–4 explicitly permit MSE endpoints with
+the NCC-specific moment term disabled, varying transport/registration weights.
+Run 5 matches the restored canonical recipe (registration cosine0.03→0.01). Run 6 crossfades raw normalized intensities;
+run 7 reuses run-5 checkpoints and crossfades their decoded endpoint intensities
+without clipping, renormalizing or retraining. Both controls supply finite-difference
+image gradients and exact crossfade temporal derivatives to the same stage-3
+PCG/RK2 recovery; trained weight-path SIRENs use analytical derivatives.
+
+The ablation report includes endpoint PSNR/Patch NCC, DSC, HD95, NPJ, SDlogJ and
+runtime. Endpoint PSNR uses peak 1 without fitted intensity calibration; NCC-trained
+outputs need not match the input scale/offset. Raw-identity endpoints have infinite
+PSNR and Patch NCC 1 by construction. The reconstructed crossfade shares run 5's
+endpoint diagnostics. Its incremental runtime excludes the reused training cost,
+which is also recorded separately. [Aggregate ablation results](ABLATIONS_REPORT.md).

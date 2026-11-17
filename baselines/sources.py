@@ -1,6 +1,7 @@
 """Pinned upstream imports. No optimizer/model construction at import time."""
 from contextlib import contextmanager
 import importlib
+import importlib.metadata
 import json
 from pathlib import Path
 import subprocess
@@ -16,6 +17,11 @@ def git(path, *args):
 
 def verify_source(name):
     spec = SOURCES[name]
+    if 'package' in spec:
+        actual = importlib.metadata.version(spec['package'])
+        if actual != spec['revision']:
+            raise RuntimeError(f"Expected {spec['package']}=={spec['revision']}; found {actual}")
+        return ROOT
     path = ROOT / 'upstream' / name
     if not (path / '.git').is_dir():
         raise RuntimeError(f'Missing {name} source; run /venv/main/bin/python -m baselines.setup')
@@ -42,6 +48,9 @@ def upstream_imports(name):
     separate processes; concurrently importing different methods is unsupported.
     """
     path = verify_source(name)
+    if 'package' in SOURCES[name] or name == 'niftyreg':
+        yield path
+        return
     search = [path, path / 'src'] if (path / 'src').is_dir() else [path]
     roots = {p.stem for base in search for p in base.iterdir()
              if p.suffix == '.py' or p.is_dir() and p.name != '.git'}
@@ -64,9 +73,25 @@ def upstream_imports(name):
         sys.modules.update(previous_modules)
 
 
+def niftyreg_binary(name):
+    path = ROOT.parent / '.local/niftyreg-build/reg-apps' / name
+    if not path.is_file():
+        raise RuntimeError('Build NiftyReg with python -m baselines.setup --methods niftyreg')
+    return path
+
+
 def native_modules(name):
     """Import only; do not instantiate a model or execute a registration."""
+    if name == 'demons':
+        return [importlib.import_module('SimpleITK')]
+    if name == 'niftyreg':
+        binaries = [niftyreg_binary(n) for n in ('reg_f3d', 'reg_transform')]
+        for binary in binaries:
+            subprocess.run([str(binary), '--version'], check=True, capture_output=True)
+        return binaries
     imports = {
+        'nodeo': ['Registration', 'Network', 'Utils'],
+        'dnvf': ['models.dnvf.networks.siren', 'data.datasets', 'utils.utils'],
         'fireants': ['fireants.io.image', 'fireants.registration.syn'],
         'convexadam': ['convexAdam.convex_adam_MIND'],
         'ccidir': ['models.models', 'utils.general'],

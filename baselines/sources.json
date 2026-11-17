@@ -2,26 +2,105 @@
   "fireants": {
     "url": "https://github.com/rohitrango/FireANTs.git",
     "revision": "f8a9cc259ab9113fc43bd99797000fa8fc34eb59",
-    "paths": ["fireants", "fused_ops", "scripts", "docs", "pyproject.toml", "README.md", "LICENSE", "CHANGELOG.md"],
+    "paths": [
+      "fireants",
+      "fused_ops",
+      "scripts",
+      "docs",
+      "pyproject.toml",
+      "README.md",
+      "LICENSE",
+      "CHANGELOG.md"
+    ],
     "entry": "fireants.registration.syn.SyNRegistration"
   },
   "convexadam": {
     "url": "https://github.com/multimodallearning/convexAdam.git",
     "revision": "b229e52e44b114e2040a503334c92269750c16b2",
-    "paths": ["src", "self_configuring", "README.md", "LICENSE", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt"],
+    "paths": [
+      "src",
+      "self_configuring",
+      "README.md",
+      "LICENSE",
+      "pyproject.toml",
+      "setup.py",
+      "setup.cfg",
+      "requirements.txt"
+    ],
     "entry": "convexAdam.convex_adam_MIND.convex_adam_pt"
   },
   "ccidir": {
     "url": "https://github.com/Louisvh/cycle_consistent_INR.git",
     "revision": "f6a624c1f2347fd44eb7d212e950ec12041baa61",
-    "paths": ["models", "networks", "objectives", "utils", "README.md", "requirements.txt", "run_dirlab_cycle_consistent.py", "cycle_inference_script.py"],
+    "paths": [
+      "models",
+      "networks",
+      "objectives",
+      "utils",
+      "README.md",
+      "requirements.txt",
+      "run_dirlab_cycle_consistent.py",
+      "cycle_inference_script.py"
+    ],
     "entry": "models.models.ImplicitRegistrator"
   },
   "nir": {
     "url": "https://github.com/uci-cbcl/NIR.git",
     "revision": "45c0d5ccbe22c72603e4782560f487ff1e20bcfd",
-    "paths": ["src", "scripts", "configs", "README.md", "PARAMETERS.md", "LICENSE", "environment.yml"],
-    "patch": "patches/nir-imports.patch",
+    "paths": [
+      "src",
+      "scripts",
+      "configs",
+      "README.md",
+      "PARAMETERS.md",
+      "LICENSE",
+      "environment.yml"
+    ],
+    "patch": "patches/nir-mri.patch",
     "entry": "training.train_efficient_pairwise"
+  },
+  "demons": {
+    "url": "https://github.com/SimpleITK/SimpleITK",
+    "revision": "2.5.7",
+    "package": "SimpleITK",
+    "device": "cpu",
+    "entry": "SimpleITK.DemonsRegistrationFilter"
+  },
+  "niftyreg": {
+    "url": "https://github.com/KCL-BMEIS/niftyreg.git",
+    "revision": "662fa999ea89a9ed3610b9183d8af9325b6e984c",
+    "paths": [
+      "*"
+    ],
+    "device": "cpu",
+    "entry": "reg_f3d v2.1.1",
+    "tag": "v2.1.1"
+  },
+  "nodeo": {
+    "url": "https://github.com/yifannnwu/NODEO-DIR.git",
+    "revision": "fb010664d02ca6c6bca01c0f50f2de17f61d23ed",
+    "paths": [
+      "Registration.py",
+      "Network.py",
+      "NeuralODE.py",
+      "Utils.py",
+      "Loss.py",
+      "README.md"
+    ],
+    "entry": "Registration.registration",
+    "patch": "patches/nodeo-shapes.patch"
+  },
+  "dnvf": {
+    "url": "https://github.com/uci-cbcl/DNVF.git",
+    "revision": "27cf2f6e6bffc7b00f8c2721cc48553e415bf8f9",
+    "paths": [
+      "models",
+      "utils",
+      "data",
+      "opt_nf_diff.py",
+      "run_diff.sh",
+      "README.md"
+    ],
+    "entry": "opt_nf_diff.main"
   }
 }

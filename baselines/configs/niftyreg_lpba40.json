@@ -1,0 +1,6 @@
+{
+  "method": "niftyreg",
+  "seed": 42,
+  "evaluation": "lpba40",
+  "native": {}
+}

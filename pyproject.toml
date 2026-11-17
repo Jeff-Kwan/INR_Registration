@@ -14,12 +14,12 @@ dependencies = [
   "Pillow>=10",
   "tqdm>=4.66",
   "nibabel>=5.2",
-  "monai>=1.3",
   "surface-distance @ git+https://github.com/google-deepmind/surface-distance.git@1f805cea446805e559badc80dd27f34175e4173d",
 ]
 
 [project.optional-dependencies]
-classical = ["SimpleITK>=2.3", "itk-elastix>=0.20", "antspyx>=0.5"]
+acdc = ["scikit-image>=0.22", "MedPy>=0.5", "SimpleITK>=2.3"]
+brain-protocols = ["composable-mapping==0.1.2", "deformation-inversion-layer==1.1.2"]
 
 [tool.setuptools]
 include-package-data = true
@@ -31,5 +31,5 @@ namespaces = false
 exclude = ["medical.results*", "medical.tests*", "baselines.upstream*", "baselines.tests*", "baselines.results*"]
 
 [tool.setuptools.package-data]
-medical = ["configs/*.json", "configs/full_suite/*.json", "configs/ablations/*.json", "protocols/*.json"]
+medical = ["configs/*.json", "protocols/*.json", "protocols/LICENSE.*.txt"]
 baselines = ["sources.json", "audit.json", "AUDIT.md", "configs/*.json", "patches/*.patch", "requirements.txt", "README.md"]

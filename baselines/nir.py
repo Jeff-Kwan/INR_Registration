@@ -1,6 +1,7 @@
-"""NIR's released network, sampler, objective and AMP training loop."""
+"""NIR MRI recipe through the released loop, with stable IEEE FP32 NCC."""
 from tempfile import TemporaryDirectory
 import time
+import math
 
 import numpy as np
 import torch
@@ -8,6 +9,7 @@ from torch.utils.data import DataLoader
 
 from .common import predict_for_case, cpu_state, execution, finish, landmark_inputs, preflight
 from .sources import native_modules, upstream_imports
+from .precision import ieee_fp32
 
 
 class ArrayDataset:
@@ -26,6 +28,8 @@ class ArrayDataset:
 
 
 def prepare_array(array, preprocessing):
+    if preprocessing == 'preserve_prepared':
+        return array
     if preprocessing == 'prepared_0_1':
         if array.min() < 0 or array.max() > 1:
             raise ValueError('NIR prepared_0_1 inputs must already lie in [0,1]')
@@ -65,16 +69,16 @@ def run_case(case, config, device):
     preprocessing = config['preprocessing']
     arrays = {key: prepare_array(case[key]['data'], preprocessing) for key in ('fixed', 'moving')}
     started = time.monotonic()
-    with upstream_imports('nir'), execution(device, config.get('seed', 42), cuda_required=True):
+    with upstream_imports('nir'), execution(device, config.get('seed', 42), cuda_required=True), ieee_fp32():
         dataio, modules, efficient, deform, training = native_modules('nir')
         dataset = ArrayDataset(arrays['fixed'])
         sampled = dataio.Implicit3DWrapper(dataset, sample_method=native['sample_mtd'], sample_exp=native['sample_exp'])
         dataset.maxlen = sampled.maxlen
         loader = DataLoader(sampled, shuffle=True, batch_size=native['batch_size'], pin_memory=True, num_workers=0)
-        # The released loop stops only between complete DataLoader passes. Reject
-        # counts it would overshoot instead of changing that training loop.
-        if native['num_epochs'] <= 0 or native['num_epochs'] % len(loader):
-            raise ValueError(f'NIR num_epochs must be positive and divisible by {len(loader)} for exact step counts')
+        # Preserve the source loop's complete DataLoader passes. Its requested
+        # iteration limit can be exceeded by the final pass; record both counts.
+        requested_steps = native['num_epochs']
+        native_steps = math.ceil(requested_steps / len(loader)) * len(loader)
         moving = torch.from_numpy(arrays['moving']).float().cuda()
         fixed = torch.from_numpy(arrays['fixed']).float().cuda()
         moving_model = dataio.Single_CT_Brain_Model(moving, dataset.shape, sampled.maxlen)
@@ -114,4 +118,9 @@ def run_case(case, config, device):
         return finish('nir', case, config, predicted, checkpoint, started, variant=native['model_type'],
                       sampler=native['sample_mtd'], preprocessing=preprocessing,
                       output_coordinates='native util.warp_3d_volume maxlen scale',
-                      optimization_roi='whole_image', protocol='released single-field implementation; dataset adaptation')
+                      optimization_roi='whole_image', protocol='NIR-D MRI LNCC recipe; paper spectral settings; released native loop with IEEE FP32 localization',
+                      precision='FP32; autocast/GradScaler/TF32 convolution and matmul disabled',
+                      gaussian_encoding='128 Gaussian vectors, sigma3; cos/sin(2*pi*p*omega)',
+                      sine_frequency=30,
+                      requested_steps=requested_steps, native_loop_steps=native_steps,
+                      learning_rate_schedule='native linear decay to 0.1*lr over 2000 steps, updated per loader pass')

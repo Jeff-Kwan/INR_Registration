@@ -72,7 +72,7 @@ def main(argv=None):
     parser.add_argument('--config', required=True, help='JSON configuration passed to the method')
     parser.add_argument('--output', required=True, help='New case output directory')
     parser.add_argument('--method', default='medical.paired_method', help='Importable module exposing run_case')
-    parser.add_argument('--device', default='cpu', help='PyTorch device, e.g. cuda:0')
+    parser.add_argument('--device', default='cuda:0', help='PyTorch device, e.g. cuda:0')
     args = parser.parse_args(argv)
     config = json.loads(Path(args.config).read_text())
     method = importlib.import_module(args.method).run_case

@@ -1,0 +1,112 @@
+diff --git a/src/dataio.py b/src/dataio.py
+index 58410b7..b8f0df0 100644
+--- a/src/dataio.py
++++ b/src/dataio.py
+@@ -7,7 +7,7 @@ import matplotlib.colors as colors
+ import numpy as np
+ import nrrd
+ import nibabel as nib
+-from numpy.lib.arraysetops import isin
++from numpy import isin
+ import scipy.io.wavfile as wavfile
+ import scipy.ndimage
+ import scipy.special
+diff --git a/src/efficient_modules.py b/src/efficient_modules.py
+index df427f1..32e475e 100644
+--- a/src/efficient_modules.py
++++ b/src/efficient_modules.py
+@@ -1,4 +1,7 @@
+-import tinycudann as tcnn
++try:
++    import tinycudann as tcnn
++except ImportError:
++    tcnn = None
+ import torch
+ from torch import nn
+ from torch.nn import Module, Sequential, Linear
+@@ -71,6 +74,8 @@ class HashEncoding(nn.Module):
+         super().__init__()
+ 
+         growth_factor = np.exp((np.log(max_res) - np.log(min_res)) / (num_levels - 1)) if num_levels > 1 else 1
++        if tcnn is None:
++            raise ImportError("Hash encoding requires the optional tinycudann CUDA extension")
+         encoding_config = {
+             "otype": "Grid",          
+             "type": "Hash",  
+@@ -104,7 +109,7 @@ class PosEncodingFourier(nn.Module):
+     def forward(self, coords):
+         self.avals = self.avals.to(coords)
+         self.bvals = self.bvals.to(coords)
+-        sins = self.avals * torch.sin(torch.matmul(np.pi * coords, self.bvals.T))
+-        coss = self.avals * torch.cos(torch.matmul(np.pi * coords, self.bvals.T))
++        sins = self.avals * torch.sin(torch.matmul(2 * np.pi * coords, self.bvals.T))
++        coss = self.avals * torch.cos(torch.matmul(2 * np.pi * coords, self.bvals.T))
+         return torch.cat([sins, coss], axis=-1)
+ 
+diff --git a/src/loss_functions.py b/src/loss_functions.py
+index deea6e9..345593e 100644
+--- a/src/loss_functions.py
++++ b/src/loss_functions.py
+@@ -42,14 +42,16 @@ def ncc(model_output, gt):
+     y_pred = y_pred.permute((0,4,1,2,3))
+     y_true = y_true.permute((0,4,1,2,3))
+ 
+-    sum_filt = torch.ones([channel, 1, win_size, win_size, win_size]).to(y_true)
++    # Thin-volume localization: largest available odd extent up to the native window.
++    window = tuple(min(win_size, n if n % 2 else n - 1) for n in y_pred.shape[2:])
++    sum_filt = torch.ones([channel, 1, *window]).to(y_true)
+     y_pred_sum = F.conv3d(y_pred, sum_filt, stride=1, padding=0, groups=channel)
+     y_true_sum = F.conv3d(y_true, sum_filt, stride=1, padding=0, groups=channel)
+ 
+     ############################################  Key Design, otherwise, gradient will explode.  #########################################################################################################################################################
+     # for the zero part, use mse loss as the auxiliary loss, otherwise, the gradient will explode.
+     y_zero_flag = y_pred_sum.le(0) + y_true_sum.le(0)
+-    zero_weight = torch.ones([channel, 1, win_size, win_size, win_size]).to(y_true)
++    zero_weight = torch.ones([channel, 1, *window]).to(y_true)
+     y_zero_flag = F.conv_transpose3d(y_zero_flag.float(), zero_weight, stride=1, padding=0).gt(0)
+     if y_zero_flag.sum() == 0:
+         auxiliary_mse_loss = 0
+@@ -66,7 +68,7 @@ def ncc(model_output, gt):
+     y_true_2_sum = F.conv3d(y_true_2, sum_filt, stride=1, padding=0, groups=channel)
+     y_pred_true_sum = F.conv3d(y_pred_true, sum_filt, stride=1, padding=0, groups=channel)
+ 
+-    win_size = win_size**3
++    win_size = window[0] * window[1] * window[2]
+     u_y_pred = y_pred_sum / win_size
+     u_y_true = y_true_sum / win_size
+ 
+diff --git a/src/modules.py b/src/modules.py
+index 1d0e154..c61b43c 100644
+--- a/src/modules.py
++++ b/src/modules.py
+@@ -14,7 +14,7 @@ class Sine(nn.Module):
+     def forward(self, input):
+         # See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of factor 30
+         # return torch.sin(30 * input)
+-        return torch.sin(10 * input)
++        return torch.sin(30 * input)
+ 
+ 
+ class FCBlock(Module):
+diff --git a/src/training.py b/src/training.py
+index 1f64191..904ccf9 100644
+--- a/src/training.py
++++ b/src/training.py
+@@ -135,7 +135,7 @@ def train_efficient_pairwise(deform_model, moving_model, fixed_model,
+                    val_dataloader=None, loss_schedules=None, loss_types=['image_mse'], 
+                    loss_weight=10,  maxlen=[256, 256, 256]):
+ 
+-    scaler = torch.cuda.amp.GradScaler()
++    scaler = torch.cuda.amp.GradScaler(enabled=False)
+ 
+     optim = torch.optim.Adam(lr=lr, params=deform_model.deform_model.parameters())
+     # lr_scheduler = torch.optim.lr_scheduler.OneCycleLR(optim, max_lr=lr, steps_per_epoch=len(train_dataloader), epochs=epochs)
+@@ -178,7 +178,7 @@ def train_efficient_pairwise(deform_model, moving_model, fixed_model,
+                 #TODO
+                 # gt['img'] = fixed_model(model_input)['model_out'] 
+ 
+-                with torch.cuda.amp.autocast(enabled=True):
++                with torch.cuda.amp.autocast(enabled=False):
+                     reg_output = deform_model(model_input, moving_model)
+ 
+                     losses = {}

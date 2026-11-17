@@ -1,26 +1,43 @@
 # Development
 
-Use /venv/main on Vast; read /workspace/AGENTS.md first. The dataset-independent case runner is described in CASE_RUNNER.md. It currently accepts a method plugin; the default adapter supports DIR-Lab landmarks.
+Read [METHOD.md](METHOD.md) and [DATASETS.md](DATASETS.md). Use
+`/venv/main/bin/python` on this instance after reading `/workspace/AGENTS.md`.
+The sole maintained settings are [default.json](../medical/configs/default.json).
+Training enters through `medical.registration.training.fit_pair`, which exposes
+the captured CUDA trainer directly. There is no alternate eager training loop.
 
-The training entry point is `medical.registration.training.fit_pair`. It dispatches to ordinary training or the captured CUDA path using the resolved configuration. Endpoint and registration similarity are separate choices. The default and the explicit full-cohort accuracy preset are specified side by side in the [method](METHOD.md). Captured execution has narrower supported combinations. [Captured training](CAPTURED_TRAINING.md)
+The objective is endpoint NCC with Gaussian moments, full-gradient shared-grid
+PD-LK, bidirectional GW-NCC and paired-parameter L2. `captured_objective.joint_loss`
+is the tensor-only implementation used by compilation/capture. Eager tensor
+functions and the shared-grid reference class verify the same values and VJPs.
+Prepared parameter bundles are short-lived live graphs: never cache them across
+optimizer updates. Keep all coordinate, derivative, solve, smoothing and trajectory
+gradients live; detach reporting scalars only.
 
-Training uses one summed backward pass and optional global clipping. Derivative coordinates, shared solves, filtered fields and trajectories retain gradients. Detached scalars are used only for reporting. Inference runs on fixed checkpoints.
+Loss coefficients remain adjustable, including zero and an endpoint coefficient
+independent of moment matching and parameter agreement. Brightness and
+differential LK residual coefficients can also be disabled independently. A zero registration coefficient overrides its
+cosine schedule. The positive numerical ridge and NCC epsilon are required.
+Retired configuration keys are rejected; do not reintroduce compatibility branches.
 
-See [SIREN execution](SIREN_EXECUTION.md) for the functional parameter bundles,
-compiled endpoint/derivative/solve boundaries and opt-in synthetic profiling.
-Parameter bundles are evaluation-local live graphs and must never be cached
-across optimizer updates. CUDA compiled defaults and the 65536-point inference
-chunk were selected from correctness and performance checks; CPU remains eager.
+The test suite checks analytical derivatives against independent autograd,
+loss/gradient parity, orthogonal spatial queries, exact CUDA spatial RNG replay,
+Sobol timing, RK2 transport, mask crop placement, evaluator parity, protocol
+manifests and mocked case/queue execution. Inspect tests before running them:
+training, optimizer steps, benchmarks and saved-model recovery require explicit
+user authorization. Synthetic checks can run after auditing their side effects.
 
-Endpoint fitting uses one functional kernel for eager and compiled execution.
-Training batches contain only endpoint coordinates and intensities. Gradient,
-chunking, ablation and phase-mask checks share the SIREN/registration test module;
-CUDA parity checks remain separately opt-in.
+```bash
+/venv/main/bin/python -m unittest discover -s medical/tests -t .
+```
 
-Retired dataset orchestration, pointwise losses, experimental branches, old presets and their dedicated tests have been removed. Historical specifications and reports live in archived_reports and must not be treated as supported commands. Audit synthetic checks before running them; do not run optimizer steps or real-image smoke tests without explicit research authorization.
+CUDA compilation parity checks use `INR_TEST_CUDA=1`; they validate synthetic
+values/gradients and do not optimize a model. Full graph capture with an optimizer
+step is training, even if it uses a tiny example, and needs separate authorization.
 
-DIR-Lab uses one randomly selected phase mask to place the shared crop. All cells contribute to PD-LK and both directions use all their particles. Report T00→T50 and T50→T00 TRE separately. Use the single configured seed. [Dataset protocols](DATASETS.md)
-
-Recovery uses true-residual-verified PCG and compiled CUDA iterations by default
-for all datasets. CPU stays eager; recover(..., compile_solver=False) selects the
-corrected eager solver. See [measured PCG optimization](OASIS_RECOVERY_PROFILE.md).
+The [case runner](CASE_RUNNER.md) saves compact checkpoints, configs, provenance,
+metrics and timings. Recovery uses frozen checkpoints and temporary scratch,
+with CUDA kernels and eager numerical references for the same PCG/RK2 equations.
+No dense deformation or warped-image outputs may persist. Preserve existing Data
+and results. Dataset acquisition/preparation code remains separate from training.
+Historical descriptions/reports under archived_reports do not define current code.

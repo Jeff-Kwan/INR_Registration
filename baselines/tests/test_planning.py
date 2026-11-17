@@ -22,7 +22,7 @@ class PlanningTests(unittest.TestCase):
             self.assertFalse(output.exists())
             plan = json.loads(text.getvalue())
             self.assertFalse(plan['execution'])
-            self.assertEqual(len(plan['jobs']), 53)
+            self.assertEqual(len(plan['jobs']), 50 + len(SOURCES) - 1)
             self.assertTrue(all(job['missing_inputs'] for job in plan['jobs']))
 
     def test_presets_match_native_option_names(self):
@@ -41,7 +41,7 @@ class PlanningTests(unittest.TestCase):
                     dummy = SimpleNamespace()
                     modules[0].ImplicitRegistrator.set_default_arguments(dummy)
                     self.assertLessEqual(set(native), set(dummy.args))
-                else:
+                elif name == 'nir':
                     parameters = inspect.signature(modules[-1].train_efficient_pairwise).parameters
                     self.assertIn('loss_weight', parameters)
                     # Check native normalization round-trips without loading images.
@@ -49,6 +49,11 @@ class PlanningTests(unittest.TestCase):
                     points = np.array([[1.2, 2.3, 3.4]], dtype=np.float32)
                     normalized = modules[0].normalize_coords(points.copy(), (5, 7, 9), (5, 7, 9))
                     np.testing.assert_allclose(modules[0].unnormalize_coords(normalized, (5, 7, 9), (5, 7, 9)), points, atol=1e-6)
+
+                elif name == 'demons':
+                    self.assertTrue(callable(modules[0].DemonsRegistrationFilter))
+                elif name == 'niftyreg':
+                    self.assertTrue(all(path.is_file() for path in modules))
 
 
 if __name__ == '__main__':

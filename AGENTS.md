@@ -1,120 +1,90 @@
 # Agent guide
 
-Read README.md and relevant current documents before editing. On this Vast instance read the complete `/workspace/AGENTS.md` and use `/venv/main/bin/python`.
+Read README.md, docs/METHOD.md and relevant current documentation before editing.
+On this Vast instance read the complete /workspace/AGENTS.md and use
+/venv/main/bin/python. Inspect Git status, jobs and symlink boundaries first.
 
-The retained method consists of configurable paired SIRENs; separate MSE or global endpoint NCC with moment matching; full-gradient shared-grid PD-LK; box or GW-NCC registration; and global brightness-flow PCG with midpoint RK2 recovery. The default is native voxel units, endpoint NCC with moment weight 0.01 + PD-LK 0.1 + box registration NCC 0.01, with 32768 separate registration particles, RK2 training trajectories and sigma 0.75-cell velocity smoothing. Zero loss weights remain available for ablations. All training gradients through derivatives, the solve, smoothing and trajectories stay live. Inference uses frozen checkpoints. Detaching logging values is permitted.
+## Canonical method
 
-No pointwise PD-LK, rho relaxation, covariant alternatives, brightness-patch/differential-patch objectives, or enhanced/adaptive recovery remain supported. Remove obsolete implementations and interfaces rather than preserving compatibility. Historical documentation stays archived; historical source/configurations are not maintained.
+The method is called **SIRENPath**. The user's finalized recipe is medical/configs/default.json, specified in
+**docs/METHOD.md**. It supersedes earlier defaults and all research presets:
+paired SIRENs, width 512/four sine layers/omega 30/output initialization ×30;
+5,000 updates; AdamW decay 0.001; cosine LR decay 1e-4→2e-5 without warmup;
+endpoint NCC and moment weight 0.005; PD-LK weight 0.1, c=4, ridge1e-6;
+GW-NCC registration cosine0.03→0.01; inter-SIREN parameter L2 weight 0.01;
+32,768 reconstruction samples and 65,536 separate particles per direction;
+shared half-size crop; two orthogonal query pairs per cell;8³ shared velocity
+grid; sigma 0.5-cell three-tap smoothing; two spatial midpoint RK2 half-steps
+with scrambled 2D Sobol temporal draws. Native voxel units and captured CUDA
+FP32 training are the sole maintained training path. Frozen recovery uses
+brightness-flow PCG and midpoint RK2,8 intervals × 8 substeps, axis cap 256.
 
-Preserve current Data inputs and prepared data. Never stage data, archives, masks, generated volumes, checkpoints, results, credentials or machine-local configuration. No persistent deformation-map or warped-image writers. Recovery scratch must be cleaned, including exceptions.
+Keep all gradients through derivatives, pooled solves, smoothing and trajectories
+live. Only logging values may detach. Inference freezes checkpoints. Endpoint,
+moment, PD-LK, brightness, differential, registration, parameter-L2, AdamW decay and PCG
+smoothness coefficients may be zero for ablations; see the exact key table in
+docs/METHOD.md. Zero registration weight must override the entire schedule.
+Zero PD-LK loss weight still allows velocity estimation for registration.
 
-Do not run training, optimizer steps, benchmarks or saved-model recovery without an explicit user request. Synthetic validation is permitted after auditing its side effects. Use `/venv/main`, inspect Git status/jobs/symlink boundaries before edits, and audit checks before running them. Do not commit or push without explicit authorization. No Cameraman development.
+Do not retain experimental method implementations or presets as compatibility
+branches. No particle/cycle objective, Euler training, inverse-metric objective,
+physical working grids, physical-unit training, structure samplers, alternative
+endpoint objectives or experimental optimizers remain outside the explicitly
+requested [L2R-OASIS ablation study](docs/SIRENPATH_ABLATIONS.md). That study alone
+permits MSE endpoint fitting in runs 1–4 and a no-training raw crossfade control;
+the canonical recipe remains NCC. Scalar ablations use
+copies of the one canonical configuration. Numerical eager helpers remain for
+validation of the same equations. Superseded documentation belongs in
+**docs/archived_reports/** and is not current instruction or runnable guidance.
 
-Current dataset protocols are in docs/DATASETS.md; the new runner is documented in docs/CASE_RUNNER.md. Historical documents are not current instructions.
+## Execution and artifacts
 
-DIR-Lab retains ccIDIR data preparation and separately reported forward/reverse TRE. Training uses T00/T50 masks only to sample crop centers: choose an endpoint equally, draw a mask voxel, center the box and shift it to fit the image. No mask occupancy rejection or mask-based loss gating. Endpoint reconstruction and registration share that crop; direction samples remain independent. PD-LK uses all grid cells. Every particle contributes to NCC, including trajectories leaving the crop; velocity/image interpolation uses border extension and a live full-image boundary penalty. Masks may still define evaluation-only lung metrics. Training remains single-seed; do not add or run multiseed validation unless explicitly requested.
+Do not run training, optimizer steps, benchmarks or saved-model recovery without
+an explicit user request. Synthetic validation is permitted after auditing side
+effects. Remain single-seed; no multiseed validation without explicit request.
+Preparation and plan inspection do not authorize registration experiments.
+Do not commit, push or stage artifacts without explicit authorization.
 
-AbdomenCTCT uses the unchanged official release and exactly 45 public-validation directed pairs. Use medical.abdomen_method or the baseline *_abdomenctct.json configs. Evaluation labels are never training masks. Official metric details (including voxel HD95 and shifted SDlogJ) are in docs/ABDOMENCTCT.md. The abdomen launcher is plan-only by default; single-seed only.
+Preserve Data inputs and prepared data, checkpoints and results. Never stage
+data, archives, masks, generated volumes, checkpoints, results, credentials or
+machine-local configuration. Do not persist deformation maps or warped images.
+Clean recovery scratch on success and exceptions. Reject unsupported physical
+checkpoint geometry rather than recovering it silently in voxel units.
+No Cameraman development. Keep external baselines isolated and follow their
+own pinned protocols; their author seed policies do not change our method.
 
-OASIS uses the unchanged official Learn2Reg release, 19 directed public-validation pairs and labels 1–35. Use medical.oasis_method or baseline *_oasis.json configs; the shared evaluator retains official conventions. See docs/OASIS.md. Labels remain evaluation-only; launcher is plan-only and single-seed.
+## Dataset protocols
 
-External baseline seed policies may follow their published protocols: ccIDIR DIR-Lab plans 50 seeds and evaluates both directions. This exception does not change our method’s single-seed restriction or authorize launching experiments. Baseline implementation/recipe audit: baselines/AUDIT.md.
+**docs/DATASETS.md** is the sole authority for cohorts, preparation, directions,
+label handling and evaluation. **docs/CASE_RUNNER.md** specifies execution.
+Labels/landmarks remain evaluation-only. Preserve original evaluation grids.
 
-The optional inverse-metric velocity-agreement training alternative is documented
-in docs/INVERSE_METRIC.md. It retains the same shared-grid velocity estimator and
-PCG+RK2 inference. Its initial preset uses fixed metric weight 1 and box NCC 0.05;
-step-500 calibration is deferred. The default PD-LK preset remains unchanged.
+DIR-Lab: ccIDIR/IDIR native preparation,10 cases,300 landmarks each; report
+T00→T50 and reverse TRE separately. Choose T00/T50 masks equally to place the
+shared crop by sampling a mask voxel and shifting the centered box to fit.
+No occupancy rejection, loss gating or mask filtering. Every PD-LK cell and NCC
+particle contributes, including crop exits. Border extension and a live full-image
+boundary penalty apply. Masks may define evaluation-only lung metrics.
 
-For quick OASIS prototyping, reuse the frozen --subset quick4 selection (official
-pairs 1,4,8,9; selection seed 42), documented in docs/OASIS_QUICK4.md. Do not redraw
-it or select cases based on scores. This does not authorize launching experiments.
+Learn2Reg OASIS:19 official directed public-validation pairs, labels1–35.
+AbdomenCTCT:45 official directed public-validation pairs,13 labels. Both retain
+official voxel HD95 and shifted SDlogJ conventions; labels are never crop masks.
+Their launchers are plan-only by default. DIR-Lab executes by default: use
+--plan-only for inspection. Frozen quick4 selections are DIR-Lab01,03,04,05;
+OASIS1,4,8,9; abdomen2,8,18,41. Never redraw them or choose using scores.
 
-AbdomenCTCT quick prototyping likewise uses its frozen `--subset quick4` selection
-(official pairs 2,8,18,41; selection seed 42), documented in
-docs/ABDOMENCTCT_QUICK4.md. Do not redraw it. No experiment is authorized by this selection.
+IXI/TransMorph:115 atlas-to-subject test pairs. LPBA40/SITReg:45 frozen test
+combinations; one fit returns both maps, qualified against the author swapped
+model-call convention. Preserve their prepared intensities and dataset-specific
+label warps/Jacobians. Their launcher is plan-only by default.
 
-The experimental physical-working-grid branch adds optional 1 mm preprocessing;
-see docs/PHYSICAL_WORKING_GRID.md. Preserve original evaluation grids and reuse
-frozen reference geometry across resampling comparisons. Experiments remain opt-in.
+ACDC uses KAN-IDIR only: official testing patients101–150,100 directed ED/ES
+fits, frame IDs from Info.cfg; ES header spacing for both phases; array rescale
+to1.5×1.5×3.15mm; cubic/edge MRI, nearest/edge labels; independent minmax before
+center crop128×128×min(Z,32); no explicit padding. Preparation/runner readiness
+and scoring caveats are in docs/ACDC.md and docs/ACDC_KAN_IDIR_PROTOCOL.md.
 
-Physical-grid training remains at 1 mm; `working_grid.recovery_spacing_mm`
-independently selects recovery sampling (default 1 mm). Recovery uses physical
-units and spacing-weighted PCG. Returned maps use the recorded recovery geometry;
-convert through that geometry for original-grid evaluation. See the physical-grid doc.
-
-DIR-Lab quick prototyping uses frozen `--subset quick4`: cases 01,03,04,05,
-the four smallest prepared native pairs by voxel count (no random selection).
-See docs/DIRLAB_QUICK4.md. Preview the DIR-Lab launcher with `--plan-only`;
-it executes by default. Subset preparation does not authorize experiments.
-
-Default endpoint reconstruction again samples within the current registration
-crop, including DIR-Lab. Masks only select crop centers. Training trajectories
-use two spatial midpoint RK2 half-steps, reusing the two existing fields. Inference remains
-PCG with midpoint RK2.
-
-Optional structure-weighted endpoint MSE sampling is documented in
-`docs/STRUCTURE_SAMPLING.md`. It remains global and independent of registration
-crops. If retained in the published method, cite INSPIRE and the documented
-sampling precedents; the 2 mm endpoint adaptation is our experimental choice.
-
-Deferred idea: evaluate whole-volume endpoint reconstruction ignoring endpoint
-masks; not enabled now. See docs/STRUCTURE_SAMPLING.md.
-
-Optional `training.tie_registration_points` reuses one shared continuous set for
-both endpoint reconstructions and both registration directions. It requires equal
-reconstruction/registration counts and no structure sampler; crop-center masks are supported.
-Default remains separate samples. See docs/PHYSICAL_WORKING_GRID.md for the
-32k tied-points experiment and its central-region sampling convention.
-
-Optional endpoint `gw_ncc` reuses our global/window 50/50 GW-NCC with unchanged
-Gaussian moments (default 0.01). Reconstruction bins cover the full crop (8³,
-sigma 0.75 cells, three-tap kernel); registration NCC remains separately selected.
-Use physical_working_grid_endpoint_gwncc_32k.json for the separate-32k experiment.
-
-`objective.endpoint_gw_grid_size` independently sets endpoint GW-NCC moment bins
-(default 8); it does not change the velocity-estimation grid. Sigma stays 0.75
-cells, so changing this grid also changes the physical window scale.
-
-Physical-grid recovery defaults to the frozen original reference spacing (`recovery_spacing_mm: "original"`), including anisotropic axes. Training remains at 1 mm. Explicit numeric recovery overrides remain supported; preserve recorded checkpoint geometry when restoring.
-
-Optional native-grid `spatial_units: "mm"` standardizes training derivatives and
-velocities without image resampling; recovery uses native spacing-weighted PCG.
-See docs/NATIVE_PHYSICAL_UNITS.md. Preserve physical_units checkpoint geometry and
-restore with medical.physical_units.restore_checkpoint; never silently recover
-such checkpoints in voxel units. Cannot combine with working_grid. Experiments
-remain opt-in.
-
-Optional objective.registration.sigma_mm sets local velocity smoothing bandwidth
-in mm (overriding sigma_cells), converted per crop using ZYX cell-center spacing.
-See docs/NATIVE_PHYSICAL_UNITS.md; the sigma7p5mm preset is an opt-in ablation,
-not authorization to launch. PCG regularization is separate.
-
-Current DIR-Lab development selection (2026-11-13): return to native voxel units
-with `medical/configs/full_suite/06_native_grid.json`, NCC endpoint fitting,
-32k separate registration particles, RK2 training trajectories, and velocity
-smoothing sigma 0.75 grid cells. Keep the lung-mask crop-center-only policy.
-Physical-unit and metric-smoothing presets remain opt-in ablations; do not select
-them for subsequent runs unless requested. This selection does not authorize runs.
-
-`medical/configs/default.json` now matches `full_suite/06_native_grid.json`. Both losses are restored; temporary single-loss presets were removed (resolved configs remain in ignored experiment outputs).
-
-The original shared 5k quick4 reference preset is
-`medical/configs/native_siren_onecycle_5k.json` (width 512, uniform omega 30,
-output initialization ×30, OneCycle peak 1e-4, AdamW decay 0.001).
-See docs/SIREN_CONVERGENCE.md for the comparison with the native reference and
-the DIR-Lab-specific recipe. Experimental ablation presets are grouped in
-`medical/configs/ablations/`.
-
-When proposing research ideas in discussion or documentation, start from a
-conceptual explanation of the observed behavior. Explain how the proposed
-change acts on that mechanism and what observation would distinguish it from
-a competing explanation. Motivate a combination by how its components interact.
-
-The ten-hour research comparison is recorded in `docs/LONG_RESEARCH_REPORT.md`.
-Its explicit shared accuracy candidate is
-`medical/configs/native_siren_gw_orthogonal_sobol_5k.json`: captured full-gradient
-native training, GW-NCC, two orthogonal query pairs, scrambled Sobol time sampling,
-and fixed cap-256/eight-time PCG+RK2 recovery. Default execution and sampling remain
-unchanged. Per-case folding regressions remain a qualification; see the report.
-The execution interface and guards are in `docs/CAPTURED_TRAINING.md`.
-These presets do not authorize new runs.
+Neurite-OASIS/GaussianDIR is separate from Learn2Reg OASIS: final50 of414
+lexicographically sorted subjects,49 consecutive earlier-fixed/next-moving pairs.
+Preserve released aligned_norm/aligned_seg35 bytes. Labels1–35 are evaluation-only;
+cohort agreement does not establish author metric parity.

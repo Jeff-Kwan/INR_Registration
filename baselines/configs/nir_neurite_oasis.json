@@ -1,0 +1,20 @@
+{
+  "method": "nir",
+  "seed": 42,
+  "evaluation": "neurite_oasis",
+  "preprocessing": "preserve_prepared",
+  "native": {
+    "model_type": "gaussian_sine",
+    "gaussian_scale": 3,
+    "num_hidden_layers": 3,
+    "sample_mtd": "downsize_unified_random",
+    "sample_exp": 18,
+    "batch_size": 1,
+    "num_epochs": 900,
+    "lr": 0.0001,
+    "loss_type": "ncc+discrete_jacobian",
+    "loss_weight": 1000,
+    "steps_til_summary": 100,
+    "epochs_til_ckpt": 100
+  }
+}

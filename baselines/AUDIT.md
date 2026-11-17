@@ -1,3 +1,5 @@
+> Current classified cross-method findings: [baseline protocol review](../docs/BASELINE_PROTOCOL_REVIEW.md). This review corrects earlier claims of best-map selection for NODEO and separates ambiguous NIR localization, deliberate ccIDIR spacing choices, and confirmed numerical/source/reporting errors.
+
 # Comparison implementation audit
 
 The adapters invoke pinned native implementations. That establishes source
@@ -70,8 +72,10 @@ paper's DIR-Lab robustness study. Baseline repetition policies are in
 **FireANTs:** its [official SyN documentation](https://github.com/rohitrango/FireANTs/blob/f8a9cc259ab9113fc43bd99797000fa8fc34eb59/docs/docs/reference/syn.md)
 supports the selected symmetric compositive optimizer. Native composition and
 numerical inversion are used. The selected [constructor](https://github.com/rohitrango/FireANTs/blob/f8a9cc259ab9113fc43bd99797000fa8fc34eb59/fireants/registration/syn.py)
-defaults match our explicit options; the scale/iteration schedule is our declared
-generic schedule. No extra affine stage is silently added. The official PyTorch
+defaults define the API; our values now follow its author OASIS SyN test
+branch: scales [4,2,1], iterations [200,100,50], Adam LR 0.1, CC width 5,
+gradient sigma 0.5 and warp sigma 0.25. Its OASIS cohort differs from official
+Learn2Reg validation. These settings are transferred to DIR-Lab and abdomen. No extra affine stage is silently added. The official PyTorch
 fallback is used because fused operations are unavailable; published speed claims
 are not applicable to an unmeasured fallback run.
 
@@ -90,16 +94,21 @@ Gaussian/SIREN and downsize paths are explicitly selected. Width/layer structure
 sine frequency, sampling, AMP, loss and learning-rate scheduling are native.
 Only import compatibility is patched, with the exact diff recorded.
 
-Our preset remains MSE + Jacobian weight 10, LR 2e-4 and 3000 steps. The
-[MedIA manuscript, §IV-B](https://arxiv.org/html/2206.03111v3#S4.SS2), describes a
-different single-field optimization recipe (LR 1e-4, 900 iterations and displacement
-regularization 1000), and a two-phase hybrid recipe. Its OASIS cohort, crop and
-evaluation labels also differ from Learn2Reg public validation. We therefore
-label the current comparison **NIR single-field, released-code adaptation**;
-its settings cannot be presented as a reproduction of the paper's headline
-numbers. The native loop completes eight-batch passes; our 3000-step configuration
-is divisible by eight. We do not rewrite that loop to pretend other budgets have
-exact native step counts.
+**Corrected audit:** the completed preset combines some paper numbers (Adam LR
+1e-4, Jacobian penalty1000, 900 requested iterations) with the released CT-example
+MSE objective, Gaussian scale1 and native sine frequency10. The [paper MRI
+recipe](https://arxiv.org/html/2206.03111v3#S3.SS4.SSS2) uses local NCC, Gaussian
+scale3 and sine frequency30. This is not a paper-faithful MRI recipe. Original
+scores remain recorded as released-MSE adaptation results, pending correction.
+See [the diagnostic audit](../docs/NEURAL_BASELINE_DIAGNOSTICS.md). Native LR
+scheduling and whole-loader passes are retained.
+The native loop completes eight-batch passes and thus makes 904 optimizer-step
+attempts for the 900 request at batch size 1. AMP may skip nonfinite steps.
+Requested and native-loop counts are stored in metrics. The downsize sampler's
+three-voxel stride sets sample count; sample_exp=18 is unused by that branch.
+Its OASIS cohort, crop and evaluation labels differ from Learn2Reg validation.
+The connected variant is single-field NIR-D. The paper's hybrid model requires
+its separate two-phase, two-field protocol.
 
 ## Verification scope
 
@@ -133,3 +142,50 @@ artifacts are preserved; the retry directory records its own plan and summary,
 and combined_summary.json selects successful retries in the original 222-job
 cohort. No saved weights survived the original evaluation errors, requiring
 repeat fitting rather than evaluation-only recovery.
+
+## Classical baseline source recipes
+
+`demons` uses the official SimpleITK DemonsRegistration1 example with 50 iterations,
+sigma 1.0 and MRI histogram matching. CT presets preserve native intensities.
+
+`niftyreg` uses the pinned v2.1.1 reg_f3d and reg_transform tools with their public
+optimization defaults. The build uses Release CPU/OpenMP. A synthetic native
+reg_transform check verified the physical coordinate convention on an oblique,
+anisotropic image. Mocked tests cover optimization entry points and scratch cleanup.
+
+An authorized OASIS pair-1 profile used four CPU threads per process. Demons
+registration took 11.50 seconds, with 18.09 seconds total process time. NiftyReg
+registration took 26.99 seconds, with 36.90 seconds total process time. The two
+jobs ran concurrently with a third profiling process. These are rough single-case
+measurements. Detailed settings and metrics are in the ignored profile results.
+
+
+## Finalized neural-field implementations
+
+The selected neural-field methods are ccIDIR, NIR, NODEO and DNVF. Additional
+methods are deferred until the first draft. The source revisions and native
+entry points are pinned in sources.json. The dedicated neural launcher selects
+these four methods on all four official cohorts with standardized_v1 scoring.
+
+NODEO uses Registration.registration without rewriting its fitting loop or ODE
+solver. The two changes recorded in nodeo-shapes.patch derive the encoder linear
+input dimension from the image shape and fit the final decoder output to that
+shape. An exact comparison with unmodified source on its original supported
+160×192×144 grid verified both parameter initialization and forward output.
+Meta-device checks cover every prepared ACDC depth and both brain shapes. Native
+CUDA forward/adjoint gradients passed on a small synthetic odd-depth grid.
+Its native final-50-iteration unsupervised map-selection criterion is preserved.
+
+DNVF uses opt_nf_diff.main, including native Adam AMSGrad, learning-rate decay,
+NCC/gradient/Jacobian losses and seven-step scaling and squaring. Its source
+run_diff.sh single-scale recipe defines all fitting hyperparameters. The loader
+is replaced with a single in-memory pair on the prepared grid. Native validation
+segmentation logging receives placeholder labels; real labels enter only the
+shared post-fit evaluator. Captured weights match the final pre-update field
+used by native validation. A small synthetic CUDA backward pass through the
+source SIREN and integrator passed. Full optimizer executions remain pending.
+
+ccIDIR uses the existing source adapter with a whole-image ROI for the four
+selected cohorts and native second-order cycle consensus. NIR retains its
+recorded single-field source/paper adaptation and pass-rounded step count.
+Both retain their existing optimizer implementations and gradient paths.

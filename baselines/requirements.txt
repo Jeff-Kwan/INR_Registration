@@ -1,5 +1,5 @@
 # Install into /venv/main. Retain its CUDA-enabled torch and torchvision.
-SimpleITK>=2.3
+SimpleITK==2.5.7
 nibabel>=5.2
 scipy>=1.10
 scikit-image
@@ -14,3 +14,9 @@ configargparse
 tensorboard
 opencv-python-headless
 scikit-learn
+
+# Classical baseline public API pins
+
+# Released DNVF utility dependencies
+pystrum==0.4
+natsort==8.4.0

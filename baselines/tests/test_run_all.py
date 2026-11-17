@@ -14,10 +14,10 @@ from baselines.run_all import METHODS,REPO,ROOT,make_jobs,main,execute
 
 
 class RunAllTests(unittest.TestCase):
-    def test_exact_three_method_cohorts(self):
+    def test_exact_method_cohorts(self):
         jobs=make_jobs(list(METHODS),['dirlab','abdomenctct','oasis'],REPO/'Data',ROOT/'results'/'test_plan')
-        self.assertEqual(len(jobs),222)
-        self.assertEqual(len({j['output'] for j in jobs}),222)
+        self.assertEqual(len(jobs),74*len(METHODS))
+        self.assertEqual(len({j['output'] for j in jobs}),74*len(METHODS))
         self.assertEqual(Counter(j['method'] for j in jobs),{name:74 for name in METHODS})
         for method in METHODS:
             self.assertEqual(Counter(j['dataset'] for j in jobs if j['method']==method),{'dirlab':10,'abdomenctct':45,'oasis':19})

@@ -1,6 +1,6 @@
-"""Cell-centred paired queries and bidirectional spatial midpoint RK2 trajectories.
+"""Cell-centred paired queries and differentiable bidirectional trajectories.
 
-Two shared differentiable fields per active minibatch; no optimizer or inference
+Two RK2 fields per active minibatch; no optimizer or inference
 recovery here. Spatial derivatives and velocities retain native-voxel units.
 """
 from functools import lru_cache, partial
@@ -17,6 +17,7 @@ from medical.registration.shared_grid import (
 from medical.registration.geometry import identity_grid, normalized_grid, sample
 from medical.registration.image_sampling import sample_points
 from medical.registration.ncc import correlation
+from medical.registration.training_integrators import DEFAULT_INTEGRATOR, time_strata, sample_times
 
 GW_NCC_GRID_SIZE = 8
 
@@ -94,11 +95,11 @@ def source_grid_indices(starts, origin, extent, fraction, grid_size=GW_NCC_GRID_
             .clamp(0, grid_size - 1))
 
 
-def shared_pair_velocity(g, q, hessian, mixed, c, eta, *, defer_errors=False):
+def shared_pair_velocity(g, q, hessian, mixed, c, eta, *, defer_errors=False, brightness_weight=1.):
     """Equal-weight pooled normal equations, one ridge per cell (not per sample)."""
-    matrix = (g[..., :, None] * g[..., None, :]
+    matrix = (brightness_weight * (g[..., :, None] * g[..., None, :])
               + c * (hessian.transpose(-1, -2) @ hessian)).mean(-3)
-    rhs = -(g * q[..., None]
+    rhs = -(brightness_weight * (g * q[..., None])
             + c * (hessian.transpose(-1, -2) @ mixed[..., None]).squeeze(-1)).mean(-2)
     system = matrix + eta * torch.eye(3, device=g.device, dtype=g.dtype)
     if defer_errors:
@@ -112,23 +113,12 @@ def shared_pair_velocity(g, q, hessian, mixed, c, eta, *, defer_errors=False):
 _deferred_pair_velocity = partial(shared_pair_velocity, defer_errors=True)
 
 
-def shared_pair_energy(g, q, hessian, mixed, velocity, c, eta):
+def shared_pair_energy(g, q, hessian, mixed, velocity, c, eta, *, brightness_weight=1.):
     """Pooled PD-LK residual with gradients through the shared solve."""
     brightness = q + (g * velocity[:, None]).sum(-1)
     differential = mixed + (hessian @ velocity[:, None, :, None]).squeeze(-1)
-    return ((brightness.square() + c * differential.square().sum(-1)).mean(-1)
+    return ((brightness_weight * brightness.square() + c * differential.square().sum(-1)).mean(-1)
             + eta * velocity.square().sum(-1))
-
-
-def shared_pair_inverse_metric(g, q, hessian, mixed, velocity, c, eta):
-    """Centered probe forces in the pooled inverse-information metric."""
-    information = g[..., :, None]*g[..., None, :] + c*(hessian.transpose(-1,-2)@hessian)
-    force = g*q[..., None] + c*(hessian.transpose(-1,-2)@mixed[..., None]).squeeze(-1)
-    matrix = information.mean(-3) + eta*torch.eye(g.shape[-1],device=g.device,dtype=g.dtype)
-    forces = (information@velocity[:,None,:,None]).squeeze(-1) + force
-    centered = forces-forces.mean(-2,keepdim=True)
-    response = torch.linalg.solve(matrix,centered.transpose(-1,-2)).transpose(-1,-2)
-    return (centered*response).sum(-1).mean(-1)
 
 
 def gaussian_weighted_ncc(original, warped, cell_indices, *, grid_size=8, sigma_cells=.75,
@@ -173,16 +163,15 @@ def gaussian_weighted_ncc(original, warped, cell_indices, *, grid_size=8, sigma_
 
 
 def _pair_velocity_chunk(parameters, direction, omegas, coordinates, scale, c, eta,
-                         return_energy=False, derivative_function=_differential_chain, regularizer="pdlk",
-                         velocity_function=shared_pair_velocity):
+                         return_energy=False, derivative_function=_differential_chain,
+                         velocity_function=shared_pair_velocity, brightness_weight=1.):
     pairs = coordinates.shape[1]
     g, q, h, m = derivative_function(parameters, direction, omegas, coordinates.flatten(0, 2), scale)
     g, q = g.reshape(-1, pairs * 2, 3), q.reshape(-1, pairs * 2)
     h, m = h.reshape(-1, pairs * 2, 3, 3), m.reshape(-1, pairs * 2, 3)
-    velocity = velocity_function(g, q, h, m, c, eta)
+    velocity = velocity_function(g, q, h, m, c, eta, brightness_weight=brightness_weight)
     if return_energy:
-        penalty = shared_pair_inverse_metric if regularizer == "inverse_metric" else shared_pair_energy
-        return velocity, penalty(g, q, h, m, velocity, c, eta)
+        return velocity, shared_pair_energy(g, q, h, m, velocity, c, eta, brightness_weight=brightness_weight)
     return velocity
 
 
@@ -194,15 +183,14 @@ def _compiled_pair_velocity_chunk():
 class SymmetricPairRegistration(SharedGridGeometry):
     def __init__(self, moving, fixed, affine, *, crop_fraction=None,
                  particle_sampling_fraction=.8, random_timesteps=False, pair_offset_fraction=.2,
-                 pairs_per_cell=1, seed=42, query_geometry='independent',
-                 registration_similarity='ncc',
+                 pairs_per_cell=2, seed=42, query_geometry='orthogonal',
+                 registration_similarity='gw_ncc',
                  gw_ncc_sigma_cells=.75, gw_ncc_kernel='three_tap',
-                 compile_derivatives=True, regularizer="pdlk", compile_decoder=False, spatial_units="voxel",
+                 compile_derivatives=True, compile_decoder=False,
+                 training_integrator=DEFAULT_INTEGRATOR,
                  **options):
         super().__init__(moving, fixed, affine, **options)
-        if regularizer not in ("pdlk", "inverse_metric"): raise ValueError("Unsupported regularizer")
         self.compile_decoder = compile_decoder
-        self.regularizer = regularizer
         self.compile_derivatives = compile_derivatives
         self.spatial_scale = coordinate_scale(tuple(moving.shape), moving)
         if crop_fraction is not None and (not math.isfinite(crop_fraction) or not 0 < crop_fraction <= 1):
@@ -217,23 +205,20 @@ class SymmetricPairRegistration(SharedGridGeometry):
         if not 0 < self.particle_sampling_fraction <= 1:
             raise ValueError('particle_sampling_fraction must be in (0,1]')
         self.random_timesteps = random_timesteps
+        self.training_integrator = training_integrator
+        self.time_strata = time_strata(training_integrator)
         self.pair_offset_fraction = pair_offset_fraction
         self.crop_shape = (tuple(max(2, math.ceil(n * crop_fraction)) for n in moving.shape)
                            if crop_fraction is not None else tuple(moving.shape))
         spacing = torch.as_tensor(affine, dtype=moving.dtype, device=moving.device)[:3, :3].norm(dim=0)
         self.spacing_xyz = spacing.flip(0)
-        if spatial_units not in ('voxel','mm'):
-            raise ValueError('spatial_units must be voxel or mm')
-        self.spatial_units=spatial_units
-        if spatial_units=='mm':
-            self.spatial_scale=self.spatial_scale/self.spacing_xyz
         if type(pairs_per_cell) is not int or pairs_per_cell < 1:
             raise ValueError('pairs_per_cell must be a positive integer')
         self.pairs_per_cell = pairs_per_cell
         from medical.registration.query_geometry import normal_count
         normal_count(pairs_per_cell, query_geometry)
         self.query_geometry = query_geometry
-        if registration_similarity not in ('ncc', 'gw_ncc'):
+        if registration_similarity != 'gw_ncc':
             raise ValueError('Invalid registration similarity')
         self.registration_similarity = registration_similarity
         if not math.isfinite(gw_ncc_sigma_cells) or gw_ncc_sigma_cells <= 0:
@@ -241,13 +226,16 @@ class SymmetricPairRegistration(SharedGridGeometry):
         self.gw_ncc_sigma_cells = gw_ncc_sigma_cells
         self.gw_ncc_kernel = gw_ncc_kernel
         self.local_grid = identity_grid((self.grid_size,) * 3, moving.device).reshape(-1, 3)
-        self._training_decoder = None
         self.grid_extent = moving.new_full((3,), self.grid_size - 1)
         self.offset_generator = torch.Generator(device=moving.device).manual_seed(seed + 4000047)
         self.particle_generator = torch.Generator(device=moving.device).manual_seed(seed + 4000037)
         self.time_generator = torch.Generator(device=moving.device).manual_seed(seed + 4000057)
-        self.sampled_times = (moving.new_tensor(.25), moving.new_tensor(.75))
+        self.sampled_times = sample_times(moving, self.time_strata, False, None)
         self.set_box(moving.new_zeros(3), self.crop_shape)
+
+    def _smooth_field(self, field):
+        return smooth_velocity(field, self.sigma, kernel=self.gaussian_kernel,
+                               compile_smoothing=self.compile_velocity)
 
     def set_origin(self, origin):
         self.origin = origin
@@ -267,8 +255,7 @@ class SymmetricPairRegistration(SharedGridGeometry):
         # equal to one local field-grid sample along each axis. Its footprint
         # therefore follows the crop, image spacing and grid sampling rate.
         # Smoothing tensor axes are ZYX; field vector components are XYZ.
-        self.sigma = ((self.sigma_mm / cell_width_mm.flip(0)).tolist()
-                      if self.sigma_mm is not None else [self.sigma_cells] * 3)
+        self.sigma = [self.sigma_cells] * 3
         self.local_centres = (self.local_grid + .5) / self.grid_size * self.domain_extent
         self.set_origin(origin)
 
@@ -300,7 +287,7 @@ class SymmetricPairRegistration(SharedGridGeometry):
         def solve(coords, parameters, direction):
             return function(parameters, direction, omegas, coords, self.spatial_scale,
                 self.c, self.eta, return_energy, derivative_function=derivative_function,
-                regularizer=self.regularizer, velocity_function=velocity_function)
+                velocity_function=velocity_function, brightness_weight=self.brightness_weight)
         centres_per_chunk = self.chunk // (2 * self.pairs_per_cell)
         pieces = [checkpoint(solve, coords, prepared.parameters, prepared.direction, use_reentrant=False)
                   if self.recompute else solve(coords, prepared.parameters, prepared.direction)
@@ -310,10 +297,8 @@ class SymmetricPairRegistration(SharedGridGeometry):
         if return_energy:
             energies = torch.cat([piece[1] for piece in pieces])
             energy = energies.mean()
-        if self.spatial_units=='mm':
-            velocities=[velocity/self.spacing_xyz for velocity in velocities]
-        field = (smooth_velocity(torch.cat(velocities).reshape(self.grid_size, self.grid_size, self.grid_size, 3),
-                                 self.sigma, kernel=self.gaussian_kernel, compile_smoothing=self.compile_velocity) if need_field else None)
+        field = (self._smooth_field(torch.cat(velocities).reshape(
+            self.grid_size, self.grid_size, self.grid_size, 3)) if need_field else None)
         return field, energy
 
 
@@ -322,8 +307,10 @@ class SymmetricPairRegistration(SharedGridGeometry):
                 & (positions <= self.origin + self.domain_extent)).all(-1)
 
     def _trajectory(self, positions, fields, reverse, *, diagnostics=True, origin=None, finite_checks=None):
-        # One spatial midpoint step per frozen half-interval field. Random field
-        # times are retained; this is not a second-order temporal approximation.
+        # Sampled field times represent equal strata, so dt is fixed even when
+        # their within-stratum locations are stochastic.
+        if len(fields) != self.time_strata:
+            raise ValueError('One velocity field is required per training time stratum')
         origin = self.origin if origin is None else origin
         valid = self.supported(positions) if diagnostics else None
 
@@ -333,37 +320,35 @@ class SymmetricPairRegistration(SharedGridGeometry):
                 finite_checks.append(finite)
             elif not bool(finite):
                 raise RuntimeError(message)
-        dt = -.5 if reverse else .5
+        dt = (-1 if reverse else 1) / self.time_strata
         def velocity_at(field, query):
             local = (query - origin) / self.domain_extent * self.grid_size - .5
             return sample(field, local.reshape(-1, 1, 1, 3), padding_mode='border', extent=self.grid_extent).reshape(-1, 3)
         for field in reversed(fields) if reverse else fields:
-            midpoint = positions + .5 * dt * velocity_at(field, positions)
+            velocity = velocity_at(field, positions)
+            midpoint = positions + .5 * dt * velocity
             check(midpoint, 'Nonfinite bidirectional particle midpoint')
             if diagnostics:
                 valid = valid & self.supported(midpoint)
-            positions = positions + dt * velocity_at(field, midpoint)
+            velocity = velocity_at(field, midpoint)
+            positions = positions + dt * velocity
             check(positions, 'Nonfinite bidirectional particle trajectory')
             if diagnostics:
                 valid = valid & self.supported(positions)
         return positions, valid
 
     def _sample_times(self, time_generator=None):
-        if self.random_timesteps:
-            generator = self.time_generator if time_generator is None else time_generator
-            early = .5 * torch.rand((), device=self.moving.device, dtype=self.moving.dtype,
-                                    generator=generator)
-            late = .5 + .5 * torch.rand((), device=self.moving.device, dtype=self.moving.dtype,
-                                        generator=generator)
-        else:
-            early, late = self.moving.new_tensor(.25), self.moving.new_tensor(.75)
-        self.sampled_times = (early, late)
-        return early, late
+        generator = self.time_generator if time_generator is None else time_generator
+        self.sampled_times = sample_times(self.moving, self.time_strata, self.random_timesteps, generator)
+        return self.sampled_times
+
+    def _time_diagnostics(self):
+        return {'t_early': self.sampled_times[0], 't_late': self.sampled_times[1]}
 
     def _fields(self, pair, time_generator=None):
-        early, late = self._sample_times(time_generator)
+        times = self._sample_times(time_generator)
         endpoints = pair.prepare(compile_parameters=self.compile_derivatives or self.compile_velocity)
-        return tuple(self._field_terms(pair, t, endpoints=endpoints)[0] for t in (early, late))
+        return tuple(self._field_terms(pair, t, endpoints=endpoints)[0] for t in times)
 
     def integrate(self, pair, positions, *, reverse=False):
         self.resample_queries()
@@ -371,10 +356,13 @@ class SymmetricPairRegistration(SharedGridGeometry):
 
     def _direction_loss(self, starts, fields, reverse, *, diagnostics=True, origin=None, finite_checks=None):
         source, target = (self.fixed, self.moving) if reverse else (self.moving, self.fixed)
-        if self.registration_similarity == 'ncc' and self.compile_decoder and starts.is_cuda:
+        if self.compile_decoder and starts.is_cuda:
             from medical.registration.compiled_decoder import compiled_box_decoder
             terms, finite = compiled_box_decoder()(starts, fields, source, target,
-                self.origin, self.domain_extent, self.extent, self.grid_size, reverse)
+                self.origin, self.domain_extent, self.extent, self.grid_size, reverse,
+                integrator=self.training_integrator,
+                particle_sampling_fraction=self.particle_sampling_fraction,
+                gw_ncc_sigma_cells=self.gw_ncc_sigma_cells, gw_ncc_kernel=self.gw_ncc_kernel)
             if finite_checks is not None:
                 finite_checks.append(finite)
             elif not bool(finite):
@@ -382,22 +370,20 @@ class SymmetricPairRegistration(SharedGridGeometry):
             return terms
         endpoints, supported = self._trajectory(
             starts, fields, reverse, diagnostics=diagnostics, origin=origin, finite_checks=finite_checks)
+        return self._score_direction(starts, endpoints, reverse, supported, diagnostics=diagnostics)
+
+    def _score_direction(self, starts, endpoints, reverse, supported=None, *, diagnostics=True):
+        """Score every transported particle against the observed endpoint images."""
+        source, target = (self.fixed, self.moving) if reverse else (self.moving, self.fixed)
         original = sample_points(source, starts, extent=self.extent)
         warped = sample_points(target, endpoints, extent=self.extent)
         zero = original.new_zeros(())
-        local_ncc_loss = zero
-        if self.registration_similarity == 'ncc':
-            from medical.registration.compiled_decoder import compiled_box_statistics, box_statistics
-            function = compiled_box_statistics() if self.compile_velocity and starts.is_cuda else box_statistics
-            mse, global_ncc_loss = function(original, warped)
-            similarity = global_ncc_loss
-        else:
-            mse = (original-warped).square().mean()
-            cell_indices = source_grid_indices(starts, self.origin, self.domain_extent,
-                                               self.particle_sampling_fraction)
-            similarity, global_ncc_loss, local_ncc_loss = gaussian_weighted_ncc(
-                original, warped, cell_indices, sigma_cells=self.gw_ncc_sigma_cells,
-                gaussian_kernel=self.gw_ncc_kernel)
+        mse = (original-warped).square().mean()
+        cell_indices = source_grid_indices(starts, self.origin, self.domain_extent,
+                                           self.particle_sampling_fraction)
+        similarity, global_ncc_loss, local_ncc_loss = gaussian_weighted_ncc(
+            original, warped, cell_indices, sigma_cells=self.gw_ncc_sigma_cells,
+            gaussian_kernel=self.gw_ncc_kernel)
         # Image-border interpolation has zero outward coordinate derivative;
         # retain a live full-image boundary penalty for escaping trajectories.
         unit = endpoints / self.extent
@@ -409,30 +395,6 @@ class SymmetricPairRegistration(SharedGridGeometry):
                     outside=(~supported).float().mean(),
                     valid_particles=mse.new_tensor(len(starts)), skipped=zero)
 
-    def enable_training_decoder_graph(self):
-        """Capture only native box-NCC particle transport and its first-order VJP.
-
-        The case owns the graphs, including its fixed images and crop size.
-        Replay copies fresh independent starts, field values and crop origin
-        on the current stream. Each fit does one backward before its next replay.
-        """
-        def decode(early, late, forward_starts, reverse_starts, origin):
-            checks = []
-            fields = (early, late)
-            forward = self._direction_loss(forward_starts, fields, False, diagnostics=False,
-                                           origin=origin, finite_checks=checks)
-            reverse = self._direction_loss(reverse_starts, fields, True, diagnostics=False,
-                                           origin=origin, finite_checks=checks)
-            similarity = .5 * (forward['similarity'] + reverse['similarity'])
-            boundary = .5 * (forward['boundary'] + reverse['boundary'])
-            return similarity + boundary, torch.stack(checks).all()
-
-        fields = tuple(self.moving.new_zeros((self.grid_size,) * 3 + (3,), requires_grad=True)
-                       for _ in range(2))
-        starts = tuple(self.moving.new_zeros((self.particles, 3)) for _ in range(2))
-        with torch.cuda.device(self.moving.device):
-            self._training_decoder = torch.cuda.make_graphed_callables(
-                decode, (*fields, *starts, self.origin.clone()))
 
     def sample_positions(self, generator=None):
         generator = self.particle_generator if generator is None else generator
@@ -444,7 +406,7 @@ class SymmetricPairRegistration(SharedGridGeometry):
 
     def loss(self, pair, *, positions=None, generator=None, time_generator=None,
              need_pdlk=True, need_registration=True, diagnostics=True, deferred_checks=None):
-        key='inverse_metric' if self.regularizer=='inverse_metric' else 'grid_pdlk'
+        key='grid_pdlk'
         if not need_pdlk and not need_registration:
             zero = self.moving.new_zeros(())
             return {key:zero, 'registration':zero}
@@ -459,7 +421,7 @@ class SymmetricPairRegistration(SharedGridGeometry):
         # The ordinary CUDA trainer supplies its pre-update status collector.
         # Deferral requires the full PD-LK energy, which observes every solve.
         defer_solve = (deferred_checks is not None and not diagnostics and need_pdlk
-                       and need_registration and self.regularizer == 'pdlk')
+                       and need_registration)
         velocity_function = _deferred_pair_velocity if defer_solve else shared_pair_velocity
         paired_terms = [self._field_terms(pair, t, return_energy=need_pdlk,
                         endpoints=endpoints, need_field=need_registration, velocity_function=velocity_function) for t in times]
@@ -468,14 +430,7 @@ class SymmetricPairRegistration(SharedGridGeometry):
                      if need_pdlk else self.moving.new_zeros(()))
         if not need_registration:
             return {key:regularizer_loss,'registration':regularizer_loss.new_zeros(()),
-                        't_early':times[0], 't_late':times[1]}
-        if self._training_decoder is not None and not diagnostics:
-            total, finite = self._training_decoder(*fields, *positions, self.origin)
-            if deferred_checks is not None:
-                deferred_checks.append(finite)
-            elif not bool(finite):
-                raise RuntimeError('Nonfinite bidirectional particle trajectory')
-            return {key: regularizer_loss, 'registration': total}
+                    **self._time_diagnostics()}
         forward = self._direction_loss(positions[0], fields, False, diagnostics=diagnostics, finite_checks=deferred_checks)
         reverse = self._direction_loss(positions[1], fields, True, diagnostics=diagnostics, finite_checks=deferred_checks)
         skipped = False
@@ -497,7 +452,7 @@ class SymmetricPairRegistration(SharedGridGeometry):
                       crop_y=self.origin[1], crop_z=self.origin[2],
                       box_fraction_x=box_fraction[0], box_fraction_y=box_fraction[1],
                       box_fraction_z=box_fraction[2],
-                      t_early=self.sampled_times[0], t_late=self.sampled_times[1])
+                      **self._time_diagnostics())
         result.update({f'{direction}_{key}': value for direction, values in
                        (('forward', forward), ('reverse', reverse)) for key, value in values.items()})
         result[key] = regularizer_loss

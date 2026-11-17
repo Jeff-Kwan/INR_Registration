@@ -1,4 +1,4 @@
-"""Plan FireANTs, ConvexAdam–MIND and NIR on all prepared datasets; --run executes."""
+"""Plan native external baselines on connected datasets; --run executes."""
 import argparse
 from collections import Counter
 import concurrent.futures
@@ -18,14 +18,14 @@ from .run_dirlab import make_jobs as dirlab_jobs, summarize as dirlab_summary
 from medical.abdomen_experiments import make_jobs as label_jobs
 from medical.abdomen_evaluation import PROTOCOLS
 
-METHODS=('fireants','convexadam','nir')
+METHODS=('fireants','convexadam','nir','demons','niftyreg')
 DATASETS=('dirlab','abdomenctct','oasis')
 REPO=ROOT.parent
 
 
 def make_jobs(methods,datasets,data,output):
     if not methods or len(set(methods))!=len(methods) or set(methods)-set(METHODS):
-        raise ValueError('Select distinct methods from fireants, convexadam, nir')
+        raise ValueError('Select distinct supported external methods')
     if not datasets or len(set(datasets))!=len(datasets) or set(datasets)-set(DATASETS):
         raise ValueError('Select distinct supported datasets')
     for method in methods:
@@ -40,6 +40,7 @@ def make_jobs(methods,datasets,data,output):
         for job in selected:
             config_path=Path(job['command'][job['command'].index('--config')+1])
             validate_config(json.loads(config_path.read_text()),job['method'])
+            job['device'] = job['command'][job['command'].index('--device') + 1]
             job.update(dataset=dataset,job_id=f"{dataset}/{job['method']}/{Path(job['output']).name}")
             jobs.append(job)
     if len({j['output'] for j in jobs})!=len(jobs):
@@ -112,7 +113,8 @@ def execute(jobs,gpus,output):
             record={k:job[k] for k in ('method','dataset','job_id','seed','output')}
             for key in ('case','pair_index'):
                 if key in job: record[key]=job[key]
-            record['gpu']=gpu
+            record['gpu']=None if job.get('device') == 'cpu' else gpu
+            record['device']=job.get('device', 'cuda:0')
             try:
                 with target.with_suffix('.log').open('x') as log:
                     completed=subprocess.run(job['command'],cwd=REPO,
@@ -125,7 +127,8 @@ def execute(jobs,gpus,output):
             with lock:
                 results.append(record)
                 write_json(output/'progress.json',{'finished':len(results),'intended':len(jobs),'jobs':results})
-                print(f"[{len(results)}/{len(jobs)}] GPU {gpu}: {job['job_id']} exit={record['returncode']}",flush=True)
+                slot = "CPU" if job.get("device") == "cpu" else f"GPU {gpu}"
+                print(f"[{len(results)}/{len(jobs)}] {slot}: {job['job_id']} exit={record['returncode']}",flush=True)
             pending.task_done()
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(gpus)) as pool:
         futures=[pool.submit(worker,gpu) for gpu in gpus]

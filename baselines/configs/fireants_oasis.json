@@ -18,9 +18,9 @@
     "optimizer": "Adam",
     "optimizer_lr": 0.1,
     "cc_kernel_type": "rectangular",
-    "cc_kernel_size": 7,
-    "smooth_warp_sigma": 0.5,
-    "smooth_grad_sigma": 1.0,
+    "cc_kernel_size": 5,
+    "smooth_warp_sigma": 0.25,
+    "smooth_grad_sigma": 0.5,
     "reduction": "mean",
     "tolerance": 1e-06,
     "max_tolerance_iters": 10

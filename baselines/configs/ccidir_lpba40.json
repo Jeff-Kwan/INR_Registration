@@ -1,0 +1,36 @@
+{
+  "method": "ccidir",
+  "seed": 42,
+  "evaluation": "lpba40",
+  "native": {
+    "verbose": true,
+    "hyper_regularization": false,
+    "raw_jacobian_regularization": false,
+    "jacobian_regularization": true,
+    "bending_regularization": false,
+    "network_type": "SIREN",
+    "cycle_alpha": 0.001,
+    "optimizer": "adam",
+    "lr": 0.0001,
+    "batch_size": 10000,
+    "cycle_loss_schedule": false,
+    "epochs": 2500,
+    "cycle_loss_delay": 0,
+    "layers": [
+      3,
+      256,
+      256,
+      256,
+      3
+    ],
+    "loss_function": "ncc",
+    "alpha_jacobian": 0.05,
+    "omega": 32,
+    "voxel_size": [
+      1,
+      1,
+      1
+    ]
+  },
+  "inference_order": 2
+}

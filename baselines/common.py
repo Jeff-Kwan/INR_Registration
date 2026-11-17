@@ -24,7 +24,7 @@ def validate_config(config, name):
         raise ValueError(f'Expected config sections {sorted(reference)}')
     if set(config['native']) != set(reference['native']):
         raise ValueError(f'Expected native options {sorted(reference["native"])}')
-    if config['evaluation'] not in ('dirlab','abdomenctct','oasis'):
+    if config['evaluation'] not in ('dirlab','abdomenctct','oasis','neurite_oasis','acdc','lpba40','ixi'):
         raise ValueError('Unknown evaluation protocol')
     native = config['native']
     if name == 'fireants':
@@ -42,6 +42,15 @@ def validate_config(config, name):
             raise ValueError('ccIDIR inference_order must be 1 or 2')
         if native['epochs'] <= 0 or native['batch_size'] <= 0:
             raise ValueError('ccIDIR epoch count and batch size must be positive')
+    elif name == 'demons':
+        if native['iterations'] <= 0 or native['standard_deviations'] <= 0:
+            raise ValueError('Demons iterations and smoothing must be positive')
+    elif name == 'nodeo':
+        if native['epoches'] < 2 or native['ds'] < 0:
+            raise ValueError('NODEO requires at least two epochs and nonnegative decoder levels')
+    elif name == 'dnvf':
+        if native['optimization_epoch'] < 1 or native['downsample_factor'] < 1:
+            raise ValueError('DNVF requires positive iteration count and downsample factor')
     elif name == 'nir':
         if native['model_type'] not in {'gaussian_sine', 'ode_gaussian_sine'}:
             raise ValueError('Connected NIR variants: gaussian_sine or ode_gaussian_sine')
@@ -85,7 +94,10 @@ def landmark_inputs(case):
 
 def preflight(case, config, name):
     validate_config(config, name)
-    if config['evaluation'] in ('abdomenctct','oasis'):
+    if config['evaluation'] in ('neurite_oasis','acdc','lpba40','ixi'):
+        from medical.comparison_metrics import validate_case
+        validate_case(case, config['evaluation'])
+    elif config['evaluation'] in ('abdomenctct','oasis'):
         from medical.abdomen_evaluation import validate_case
         validate_case(case,config["evaluation"])
     else:
@@ -124,7 +136,10 @@ def normalized_grid_predictions(grid, points, shape):
 
 
 def finish(name, case, config, predicted, checkpoint, started, **details):
-    if config['evaluation'] in ('abdomenctct','oasis'):
+    if config['evaluation'] in ('neurite_oasis','acdc','lpba40','ixi'):
+        from medical.comparison_metrics import evaluate
+        metrics=evaluate(case,predicted,config['evaluation'])
+    elif config['evaluation'] in ('abdomenctct','oasis'):
         from medical.abdomen_evaluation import evaluate
         metrics=evaluate(case,predicted,config["evaluation"])
     else:
@@ -144,7 +159,7 @@ def cpu_state(module):
 
 
 def predict_for_case(case,config,predict):
-    if config['evaluation'] in ('abdomenctct','oasis'):
+    if config['evaluation'] != 'dirlab':
         return predict
     points,_=landmark_inputs(case)
     return predict(points)

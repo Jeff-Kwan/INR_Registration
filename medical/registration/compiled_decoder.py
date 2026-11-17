@@ -1,18 +1,7 @@
-"""Compiled smoothing, all-particle statistics and spatial RK2 registration decoding."""
+"""Compiled smoothing, all-particle statistics and registration trajectories."""
 from functools import lru_cache
 import torch
-
-
-def box_statistics(original, warped):
-    da = original-original.mean()
-    db = warped-warped.mean()
-    correlation = (da*db).mean()/((da.square().mean()+1e-8)*(db.square().mean()+1e-8)).sqrt()
-    return (original-warped).square().mean(), 1-correlation
-
-
-@lru_cache(maxsize=1)
-def compiled_box_statistics():
-    return torch.compile(box_statistics,fullgraph=True)
+from medical.registration.training_integrators import DEFAULT_INTEGRATOR
 
 
 def three_tap_smoothing(field,sigma):
@@ -32,11 +21,15 @@ def compiled_three_tap_smoothing():
 
 
 def box_decoder(starts,fields,source,target,origin,domain,extent,grid_size,
-                reverse, *, similarity='ncc', particle_sampling_fraction=.8,
-                gw_ncc_sigma_cells=.75, gw_ncc_kernel='three_tap'):
-    """Integrate one direction with spatial midpoint RK2 and score all particles."""
+                reverse, *, similarity='gw_ncc', particle_sampling_fraction=.8,
+                gw_ncc_sigma_cells=.75, gw_ncc_kernel='three_tap', integrator=DEFAULT_INTEGRATOR):
+    """Integrate one direction with two midpoint RK2 half-steps and score it."""
     from medical.registration.geometry import sample
     from medical.registration.image_sampling import sample_points
+    from medical.registration.training_integrators import time_strata
+    count = time_strata(integrator)
+    if len(fields) != count:
+        raise ValueError('One velocity field is required per training time stratum')
     def supported(p):
         return ((p>=origin)&(p<=origin+domain)).all(-1)
     def velocity(field,p):
@@ -44,22 +37,22 @@ def box_decoder(starts,fields,source,target,origin,domain,extent,grid_size,
         return sample(field,local.reshape(-1,1,1,3)).reshape(-1,3)
     p=starts;valid=supported(p)
     finite=torch.ones((),dtype=torch.bool,device=p.device)
-    dt=-.5 if reverse else .5
+    dt=(-1 if reverse else 1)/count
     for field in reversed(fields) if reverse else fields:
-        middle=p+.5*dt*velocity(field,p)
+        v=velocity(field,p)
+        middle=p+.5*dt*v
         finite=finite&torch.isfinite(middle).all();valid=valid&supported(middle)
-        p=p+dt*velocity(field,middle)
+        v=velocity(field,middle)
+        p=p+dt*v
         finite=finite&torch.isfinite(p).all();valid=valid&supported(p)
     a=sample_points(source,starts);b=sample_points(target,p)
-    mse,ncc=box_statistics(a,b)
-    global_ncc,local_ncc=ncc,mse.new_zeros(())
-    if similarity == 'gw_ncc':
-        from medical.registration.symmetric_registration import source_grid_indices,gaussian_weighted_ncc
-        bins=source_grid_indices(starts,origin,domain,particle_sampling_fraction)
-        ncc,global_ncc,local_ncc=gaussian_weighted_ncc(a,b,bins,
-            sigma_cells=gw_ncc_sigma_cells,gaussian_kernel=gw_ncc_kernel)
-    elif similarity != 'ncc':
+    if similarity != 'gw_ncc':
         raise ValueError('Unsupported captured registration similarity')
+    mse=(a-b).square().mean()
+    from medical.registration.symmetric_registration import source_grid_indices,gaussian_weighted_ncc
+    bins=source_grid_indices(starts,origin,domain,particle_sampling_fraction)
+    ncc,global_ncc,local_ncc=gaussian_weighted_ncc(a,b,bins,
+        sigma_cells=gw_ncc_sigma_cells,gaussian_kernel=gw_ncc_kernel)
     zero=mse.new_zeros(())
     unit=p/extent
     boundary=((-unit).clamp_min(0)+(unit-1).clamp_min(0)).square().sum(-1).mean()

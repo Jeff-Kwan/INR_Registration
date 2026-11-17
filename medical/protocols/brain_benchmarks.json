@@ -1,0 +1,1889 @@
+{
+  "audit_date_hong_kong": "2026-11-16",
+  "scope": "IXI/TransMorph and LPBA40/SITReg preparation and our method; training remains opt-in",
+  "source_pins": {
+    "transmorph": {
+      "repo": "junyuchen245/TransMorph_Transformer_for_Medical_Image_Registration",
+      "commit": "6357a1d7fc44c36db9b1d1ccaa372409253142cf"
+    },
+    "sitreg": {
+      "repo": "honkamj/SITReg",
+      "commit": "a665a46a3553b26ade6ff5f57815e5e8ec43a948"
+    }
+  },
+  "ixi_transmorph": {
+    "counts": {
+      "train": 403,
+      "validation": 58,
+      "test": 115,
+      "additional_atlases": 1
+    },
+    "split_membership": {
+      "Train": [
+        "subject_0.pkl",
+        "subject_10.pkl",
+        "subject_100.pkl",
+        "subject_101.pkl",
+        "subject_102.pkl",
+        "subject_103.pkl",
+        "subject_104.pkl",
+        "subject_106.pkl",
+        "subject_107.pkl",
+        "subject_109.pkl",
+        "subject_111.pkl",
+        "subject_113.pkl",
+        "subject_116.pkl",
+        "subject_117.pkl",
+        "subject_118.pkl",
+        "subject_12.pkl",
+        "subject_120.pkl",
+        "subject_121.pkl",
+        "subject_122.pkl",
+        "subject_123.pkl",
+        "subject_124.pkl",
+        "subject_125.pkl",
+        "subject_127.pkl",
+        "subject_128.pkl",
+        "subject_129.pkl",
+        "subject_130.pkl",
+        "subject_132.pkl",
+        "subject_133.pkl",
+        "subject_134.pkl",
+        "subject_137.pkl",
+        "subject_138.pkl",
+        "subject_140.pkl",
+        "subject_141.pkl",
+        "subject_142.pkl",
+        "subject_143.pkl",
+        "subject_145.pkl",
+        "subject_146.pkl",
+        "subject_147.pkl",
+        "subject_148.pkl",
+        "subject_149.pkl",
+        "subject_15.pkl",
+        "subject_150.pkl",
+        "subject_152.pkl",
+        "subject_154.pkl",
+        "subject_157.pkl",
+        "subject_159.pkl",
+        "subject_16.pkl",
+        "subject_160.pkl",
+        "subject_161.pkl",
+        "subject_162.pkl",
+        "subject_163.pkl",
+        "subject_164.pkl",
+        "subject_168.pkl",
+        "subject_169.pkl",
+        "subject_17.pkl",
+        "subject_170.pkl",
+        "subject_171.pkl",
+        "subject_173.pkl",
+        "subject_174.pkl",
+        "subject_175.pkl",
+        "subject_176.pkl",
+        "subject_178.pkl",
+        "subject_179.pkl",
+        "subject_18.pkl",
+        "subject_180.pkl",
+        "subject_181.pkl",
+        "subject_187.pkl",
+        "subject_189.pkl",
+        "subject_190.pkl",
+        "subject_192.pkl",
+        "subject_193.pkl",
+        "subject_194.pkl",
+        "subject_196.pkl",
+        "subject_197.pkl",
+        "subject_20.pkl",
+        "subject_200.pkl",
+        "subject_201.pkl",
+        "subject_202.pkl",
+        "subject_203.pkl",
+        "subject_204.pkl",
+        "subject_205.pkl",
+        "subject_207.pkl",
+        "subject_208.pkl",
+        "subject_209.pkl",
+        "subject_210.pkl",
+        "subject_211.pkl",
+        "subject_213.pkl",
+        "subject_214.pkl",
+        "subject_215.pkl",
+        "subject_216.pkl",
+        "subject_217.pkl",
+        "subject_219.pkl",
+        "subject_22.pkl",
+        "subject_220.pkl",
+        "subject_221.pkl",
+        "subject_223.pkl",
+        "subject_228.pkl",
+        "subject_23.pkl",
+        "subject_230.pkl",
+        "subject_231.pkl",
+        "subject_232.pkl",
+        "subject_234.pkl",
+        "subject_235.pkl",
+        "subject_236.pkl",
+        "subject_237.pkl",
+        "subject_238.pkl",
+        "subject_239.pkl",
+        "subject_24.pkl",
+        "subject_240.pkl",
+        "subject_241.pkl",
+        "subject_242.pkl",
+        "subject_243.pkl",
+        "subject_244.pkl",
+        "subject_245.pkl",
+        "subject_246.pkl",
+        "subject_247.pkl",
+        "subject_249.pkl",
+        "subject_25.pkl",
+        "subject_250.pkl",
+        "subject_253.pkl",
+        "subject_254.pkl",
+        "subject_255.pkl",
+        "subject_256.pkl",
+        "subject_257.pkl",
+        "subject_258.pkl",
+        "subject_259.pkl",
+        "subject_26.pkl",
+        "subject_260.pkl",
+        "subject_261.pkl",
+        "subject_263.pkl",
+        "subject_264.pkl",
+        "subject_265.pkl",
+        "subject_266.pkl",
+        "subject_267.pkl",
+        "subject_268.pkl",
+        "subject_270.pkl",
+        "subject_271.pkl",
+        "subject_272.pkl",
+        "subject_273.pkl",
+        "subject_275.pkl",
+        "subject_276.pkl",
+        "subject_277.pkl",
+        "subject_278.pkl",
+        "subject_28.pkl",
+        "subject_280.pkl",
+        "subject_281.pkl",
+        "subject_282.pkl",
+        "subject_283.pkl",
+        "subject_284.pkl",
+        "subject_285.pkl",
+        "subject_288.pkl",
+        "subject_289.pkl",
+        "subject_29.pkl",
+        "subject_290.pkl",
+        "subject_292.pkl",
+        "subject_293.pkl",
+        "subject_294.pkl",
+        "subject_296.pkl",
+        "subject_297.pkl",
+        "subject_298.pkl",
+        "subject_299.pkl",
+        "subject_30.pkl",
+        "subject_300.pkl",
+        "subject_301.pkl",
+        "subject_303.pkl",
+        "subject_304.pkl",
+        "subject_306.pkl",
+        "subject_307.pkl",
+        "subject_308.pkl",
+        "subject_309.pkl",
+        "subject_31.pkl",
+        "subject_310.pkl",
+        "subject_311.pkl",
+        "subject_312.pkl",
+        "subject_313.pkl",
+        "subject_314.pkl",
+        "subject_315.pkl",
+        "subject_316.pkl",
+        "subject_32.pkl",
+        "subject_321.pkl",
+        "subject_323.pkl",
+        "subject_324.pkl",
+        "subject_326.pkl",
+        "subject_327.pkl",
+        "subject_328.pkl",
+        "subject_33.pkl",
+        "subject_330.pkl",
+        "subject_331.pkl",
+        "subject_332.pkl",
+        "subject_333.pkl",
+        "subject_334.pkl",
+        "subject_335.pkl",
+        "subject_336.pkl",
+        "subject_340.pkl",
+        "subject_341.pkl",
+        "subject_342.pkl",
+        "subject_343.pkl",
+        "subject_345.pkl",
+        "subject_346.pkl",
+        "subject_348.pkl",
+        "subject_349.pkl",
+        "subject_35.pkl",
+        "subject_350.pkl",
+        "subject_351.pkl",
+        "subject_352.pkl",
+        "subject_353.pkl",
+        "subject_354.pkl",
+        "subject_355.pkl",
+        "subject_356.pkl",
+        "subject_357.pkl",
+        "subject_359.pkl",
+        "subject_36.pkl",
+        "subject_360.pkl",
+        "subject_361.pkl",
+        "subject_364.pkl",
+        "subject_368.pkl",
+        "subject_370.pkl",
+        "subject_371.pkl",
+        "subject_372.pkl",
+        "subject_373.pkl",
+        "subject_374.pkl",
+        "subject_375.pkl",
+        "subject_377.pkl",
+        "subject_379.pkl",
+        "subject_38.pkl",
+        "subject_381.pkl",
+        "subject_382.pkl",
+        "subject_383.pkl",
+        "subject_385.pkl",
+        "subject_386.pkl",
+        "subject_387.pkl",
+        "subject_388.pkl",
+        "subject_392.pkl",
+        "subject_395.pkl",
+        "subject_396.pkl",
+        "subject_397.pkl",
+        "subject_398.pkl",
+        "subject_4.pkl",
+        "subject_40.pkl",
+        "subject_401.pkl",
+        "subject_403.pkl",
+        "subject_406.pkl",
+        "subject_407.pkl",
+        "subject_408.pkl",
+        "subject_409.pkl",
+        "subject_41.pkl",
+        "subject_413.pkl",
+        "subject_414.pkl",
+        "subject_415.pkl",
+        "subject_416.pkl",
+        "subject_417.pkl",
+        "subject_418.pkl",
+        "subject_419.pkl",
+        "subject_421.pkl",
+        "subject_422.pkl",
+        "subject_425.pkl",
+        "subject_426.pkl",
+        "subject_427.pkl",
+        "subject_43.pkl",
+        "subject_430.pkl",
+        "subject_431.pkl",
+        "subject_432.pkl",
+        "subject_433.pkl",
+        "subject_434.pkl",
+        "subject_436.pkl",
+        "subject_437.pkl",
+        "subject_438.pkl",
+        "subject_439.pkl",
+        "subject_44.pkl",
+        "subject_440.pkl",
+        "subject_441.pkl",
+        "subject_442.pkl",
+        "subject_443.pkl",
+        "subject_444.pkl",
+        "subject_445.pkl",
+        "subject_446.pkl",
+        "subject_448.pkl",
+        "subject_449.pkl",
+        "subject_45.pkl",
+        "subject_450.pkl",
+        "subject_451.pkl",
+        "subject_452.pkl",
+        "subject_454.pkl",
+        "subject_455.pkl",
+        "subject_456.pkl",
+        "subject_457.pkl",
+        "subject_458.pkl",
+        "subject_46.pkl",
+        "subject_460.pkl",
+        "subject_461.pkl",
+        "subject_462.pkl",
+        "subject_463.pkl",
+        "subject_465.pkl",
+        "subject_467.pkl",
+        "subject_468.pkl",
+        "subject_469.pkl",
+        "subject_47.pkl",
+        "subject_470.pkl",
+        "subject_473.pkl",
+        "subject_476.pkl",
+        "subject_48.pkl",
+        "subject_481.pkl",
+        "subject_482.pkl",
+        "subject_483.pkl",
+        "subject_489.pkl",
+        "subject_490.pkl",
+        "subject_491.pkl",
+        "subject_492.pkl",
+        "subject_493.pkl",
+        "subject_494.pkl",
+        "subject_495.pkl",
+        "subject_496.pkl",
+        "subject_497.pkl",
+        "subject_50.pkl",
+        "subject_500.pkl",
+        "subject_502.pkl",
+        "subject_503.pkl",
+        "subject_504.pkl",
+        "subject_505.pkl",
+        "subject_507.pkl",
+        "subject_51.pkl",
+        "subject_512.pkl",
+        "subject_514.pkl",
+        "subject_515.pkl",
+        "subject_516.pkl",
+        "subject_517.pkl",
+        "subject_518.pkl",
+        "subject_519.pkl",
+        "subject_52.pkl",
+        "subject_520.pkl",
+        "subject_521.pkl",
+        "subject_522.pkl",
+        "subject_524.pkl",
+        "subject_525.pkl",
+        "subject_526.pkl",
+        "subject_527.pkl",
+        "subject_528.pkl",
+        "subject_529.pkl",
+        "subject_53.pkl",
+        "subject_530.pkl",
+        "subject_532.pkl",
+        "subject_534.pkl",
+        "subject_535.pkl",
+        "subject_536.pkl",
+        "subject_537.pkl",
+        "subject_539.pkl",
+        "subject_54.pkl",
+        "subject_540.pkl",
+        "subject_541.pkl",
+        "subject_543.pkl",
+        "subject_544.pkl",
+        "subject_545.pkl",
+        "subject_548.pkl",
+        "subject_549.pkl",
+        "subject_551.pkl",
+        "subject_552.pkl",
+        "subject_554.pkl",
+        "subject_555.pkl",
+        "subject_556.pkl",
+        "subject_559.pkl",
+        "subject_56.pkl",
+        "subject_561.pkl",
+        "subject_562.pkl",
+        "subject_565.pkl",
+        "subject_566.pkl",
+        "subject_568.pkl",
+        "subject_570.pkl",
+        "subject_571.pkl",
+        "subject_572.pkl",
+        "subject_573.pkl",
+        "subject_576.pkl",
+        "subject_58.pkl",
+        "subject_59.pkl",
+        "subject_60.pkl",
+        "subject_61.pkl",
+        "subject_63.pkl",
+        "subject_65.pkl",
+        "subject_66.pkl",
+        "subject_68.pkl",
+        "subject_7.pkl",
+        "subject_71.pkl",
+        "subject_73.pkl",
+        "subject_74.pkl",
+        "subject_75.pkl",
+        "subject_76.pkl",
+        "subject_77.pkl",
+        "subject_8.pkl",
+        "subject_80.pkl",
+        "subject_81.pkl",
+        "subject_82.pkl",
+        "subject_83.pkl",
+        "subject_84.pkl",
+        "subject_86.pkl",
+        "subject_87.pkl",
+        "subject_88.pkl",
+        "subject_89.pkl",
+        "subject_9.pkl",
+        "subject_90.pkl",
+        "subject_93.pkl",
+        "subject_94.pkl",
+        "subject_95.pkl",
+        "subject_96.pkl",
+        "subject_98.pkl"
+      ],
+      "Val": [
+        "subject_105.pkl",
+        "subject_108.pkl",
+        "subject_11.pkl",
+        "subject_114.pkl",
+        "subject_119.pkl",
+        "subject_126.pkl",
+        "subject_131.pkl",
+        "subject_136.pkl",
+        "subject_14.pkl",
+        "subject_144.pkl",
+        "subject_151.pkl",
+        "subject_153.pkl",
+        "subject_165.pkl",
+        "subject_177.pkl",
+        "subject_188.pkl",
+        "subject_195.pkl",
+        "subject_2.pkl",
+        "subject_21.pkl",
+        "subject_222.pkl",
+        "subject_248.pkl",
+        "subject_251.pkl",
+        "subject_252.pkl",
+        "subject_262.pkl",
+        "subject_269.pkl",
+        "subject_27.pkl",
+        "subject_295.pkl",
+        "subject_319.pkl",
+        "subject_344.pkl",
+        "subject_362.pkl",
+        "subject_369.pkl",
+        "subject_389.pkl",
+        "subject_391.pkl",
+        "subject_411.pkl",
+        "subject_42.pkl",
+        "subject_429.pkl",
+        "subject_435.pkl",
+        "subject_459.pkl",
+        "subject_474.pkl",
+        "subject_475.pkl",
+        "subject_478.pkl",
+        "subject_485.pkl",
+        "subject_488.pkl",
+        "subject_498.pkl",
+        "subject_5.pkl",
+        "subject_509.pkl",
+        "subject_513.pkl",
+        "subject_531.pkl",
+        "subject_557.pkl",
+        "subject_558.pkl",
+        "subject_560.pkl",
+        "subject_564.pkl",
+        "subject_569.pkl",
+        "subject_62.pkl",
+        "subject_64.pkl",
+        "subject_69.pkl",
+        "subject_78.pkl",
+        "subject_85.pkl",
+        "subject_92.pkl"
+      ],
+      "Test": [
+        "subject_1.pkl",
+        "subject_110.pkl",
+        "subject_112.pkl",
+        "subject_115.pkl",
+        "subject_13.pkl",
+        "subject_135.pkl",
+        "subject_139.pkl",
+        "subject_155.pkl",
+        "subject_156.pkl",
+        "subject_158.pkl",
+        "subject_166.pkl",
+        "subject_167.pkl",
+        "subject_172.pkl",
+        "subject_182.pkl",
+        "subject_183.pkl",
+        "subject_184.pkl",
+        "subject_185.pkl",
+        "subject_186.pkl",
+        "subject_19.pkl",
+        "subject_191.pkl",
+        "subject_198.pkl",
+        "subject_199.pkl",
+        "subject_206.pkl",
+        "subject_212.pkl",
+        "subject_218.pkl",
+        "subject_224.pkl",
+        "subject_225.pkl",
+        "subject_226.pkl",
+        "subject_227.pkl",
+        "subject_229.pkl",
+        "subject_233.pkl",
+        "subject_274.pkl",
+        "subject_279.pkl",
+        "subject_286.pkl",
+        "subject_287.pkl",
+        "subject_291.pkl",
+        "subject_3.pkl",
+        "subject_302.pkl",
+        "subject_305.pkl",
+        "subject_317.pkl",
+        "subject_318.pkl",
+        "subject_320.pkl",
+        "subject_322.pkl",
+        "subject_325.pkl",
+        "subject_329.pkl",
+        "subject_337.pkl",
+        "subject_338.pkl",
+        "subject_339.pkl",
+        "subject_34.pkl",
+        "subject_347.pkl",
+        "subject_358.pkl",
+        "subject_363.pkl",
+        "subject_365.pkl",
+        "subject_366.pkl",
+        "subject_367.pkl",
+        "subject_37.pkl",
+        "subject_378.pkl",
+        "subject_380.pkl",
+        "subject_384.pkl",
+        "subject_39.pkl",
+        "subject_390.pkl",
+        "subject_393.pkl",
+        "subject_394.pkl",
+        "subject_399.pkl",
+        "subject_400.pkl",
+        "subject_402.pkl",
+        "subject_404.pkl",
+        "subject_405.pkl",
+        "subject_410.pkl",
+        "subject_412.pkl",
+        "subject_420.pkl",
+        "subject_423.pkl",
+        "subject_424.pkl",
+        "subject_428.pkl",
+        "subject_447.pkl",
+        "subject_453.pkl",
+        "subject_464.pkl",
+        "subject_466.pkl",
+        "subject_471.pkl",
+        "subject_472.pkl",
+        "subject_477.pkl",
+        "subject_479.pkl",
+        "subject_480.pkl",
+        "subject_484.pkl",
+        "subject_486.pkl",
+        "subject_487.pkl",
+        "subject_49.pkl",
+        "subject_499.pkl",
+        "subject_501.pkl",
+        "subject_506.pkl",
+        "subject_508.pkl",
+        "subject_510.pkl",
+        "subject_511.pkl",
+        "subject_523.pkl",
+        "subject_533.pkl",
+        "subject_538.pkl",
+        "subject_542.pkl",
+        "subject_546.pkl",
+        "subject_547.pkl",
+        "subject_55.pkl",
+        "subject_550.pkl",
+        "subject_553.pkl",
+        "subject_563.pkl",
+        "subject_567.pkl",
+        "subject_57.pkl",
+        "subject_574.pkl",
+        "subject_575.pkl",
+        "subject_6.pkl",
+        "subject_67.pkl",
+        "subject_70.pkl",
+        "subject_72.pkl",
+        "subject_79.pkl",
+        "subject_91.pkl",
+        "subject_97.pkl",
+        "subject_99.pkl"
+      ]
+    },
+    "test_pairs": [
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_1.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_110.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_112.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_115.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_13.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_135.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_139.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_155.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_156.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_158.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_166.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_167.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_172.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_182.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_183.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_184.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_185.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_186.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_19.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_191.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_198.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_199.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_206.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_212.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_218.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_224.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_225.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_226.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_227.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_229.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_233.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_274.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_279.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_286.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_287.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_291.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_3.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_302.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_305.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_317.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_318.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_320.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_322.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_325.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_329.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_337.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_338.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_339.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_34.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_347.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_358.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_363.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_365.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_366.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_367.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_37.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_378.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_380.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_384.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_39.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_390.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_393.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_394.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_399.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_400.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_402.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_404.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_405.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_410.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_412.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_420.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_423.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_424.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_428.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_447.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_453.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_464.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_466.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_471.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_472.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_477.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_479.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_480.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_484.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_486.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_487.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_49.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_499.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_501.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_506.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_508.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_510.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_511.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_523.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_533.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_538.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_542.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_546.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_547.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_55.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_550.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_553.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_563.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_567.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_57.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_574.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_575.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_6.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_67.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_70.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_72.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_79.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_91.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_97.pkl"
+      },
+      {
+        "moving": "atlas.pkl",
+        "fixed": "Test/subject_99.pkl"
+      }
+    ],
+    "shape": [
+      160,
+      192,
+      224
+    ],
+    "freesurfer_id_to_consecutive_id": {
+      "0": 0,
+      "2": 1,
+      "3": 2,
+      "4": 3,
+      "5": 4,
+      "7": 5,
+      "8": 6,
+      "10": 7,
+      "11": 8,
+      "12": 9,
+      "13": 10,
+      "14": 11,
+      "15": 12,
+      "16": 13,
+      "17": 14,
+      "18": 15,
+      "24": 16,
+      "26": 17,
+      "28": 18,
+      "30": 19,
+      "31": 20,
+      "41": 21,
+      "42": 22,
+      "43": 23,
+      "44": 24,
+      "46": 25,
+      "47": 26,
+      "49": 27,
+      "50": 28,
+      "51": 29,
+      "52": 30,
+      "53": 31,
+      "54": 32,
+      "58": 33,
+      "60": 34,
+      "62": 35,
+      "63": 36,
+      "72": 37,
+      "77": 38,
+      "80": 39,
+      "85": 40,
+      "251": 41,
+      "252": 42,
+      "253": 43,
+      "254": 44,
+      "255": 45
+    },
+    "label_warp": "46-class one-hot, trilinear, align_corners=True, zero padding, argmax",
+    "score_groups": {
+      "Brain-Stem": [
+        {
+          "name": "Brain-Stem",
+          "remapped_id": 13,
+          "freesurfer_id": 16
+        }
+      ],
+      "Thalamus": [
+        {
+          "name": "Left-Thalamus-Proper*",
+          "remapped_id": 7,
+          "freesurfer_id": 10
+        },
+        {
+          "name": "Right-Thalamus-Proper*",
+          "remapped_id": 27,
+          "freesurfer_id": 49
+        }
+      ],
+      "Cerebellum-Cortex": [
+        {
+          "name": "Left-Cerebellum-Cortex",
+          "remapped_id": 6,
+          "freesurfer_id": 8
+        },
+        {
+          "name": "Right-Cerebellum-Cortex",
+          "remapped_id": 26,
+          "freesurfer_id": 47
+        }
+      ],
+      "Cerebral-White-Matter": [
+        {
+          "name": "Left-Cerebral-White-Matter",
+          "remapped_id": 1,
+          "freesurfer_id": 2
+        },
+        {
+          "name": "Right-Cerebral-White-Matter",
+          "remapped_id": 21,
+          "freesurfer_id": 41
+        }
+      ],
+      "Cerebellum-White-Matter": [
+        {
+          "name": "Left-Cerebellum-White-Matter",
+          "remapped_id": 5,
+          "freesurfer_id": 7
+        },
+        {
+          "name": "Right-Cerebellum-White-Matter",
+          "remapped_id": 25,
+          "freesurfer_id": 46
+        }
+      ],
+      "Putamen": [
+        {
+          "name": "Left-Putamen",
+          "remapped_id": 9,
+          "freesurfer_id": 12
+        },
+        {
+          "name": "Right-Putamen",
+          "remapped_id": 29,
+          "freesurfer_id": 51
+        }
+      ],
+      "VentralDC": [
+        {
+          "name": "Left-VentralDC",
+          "remapped_id": 18,
+          "freesurfer_id": 28
+        },
+        {
+          "name": "Right-VentralDC",
+          "remapped_id": 34,
+          "freesurfer_id": 60
+        }
+      ],
+      "Pallidum": [
+        {
+          "name": "Left-Pallidum",
+          "remapped_id": 10,
+          "freesurfer_id": 13
+        },
+        {
+          "name": "Right-Pallidum",
+          "remapped_id": 30,
+          "freesurfer_id": 52
+        }
+      ],
+      "Caudate": [
+        {
+          "name": "Left-Caudate",
+          "remapped_id": 8,
+          "freesurfer_id": 11
+        },
+        {
+          "name": "Right-Caudate",
+          "remapped_id": 28,
+          "freesurfer_id": 50
+        }
+      ],
+      "Lateral-Ventricle": [
+        {
+          "name": "Left-Lateral-Ventricle",
+          "remapped_id": 3,
+          "freesurfer_id": 4
+        },
+        {
+          "name": "Right-Lateral-Ventricle",
+          "remapped_id": 23,
+          "freesurfer_id": 43
+        }
+      ],
+      "Hippocampus": [
+        {
+          "name": "Left-Hippocampus",
+          "remapped_id": 14,
+          "freesurfer_id": 17
+        },
+        {
+          "name": "Right-Hippocampus",
+          "remapped_id": 31,
+          "freesurfer_id": 53
+        }
+      ],
+      "3rd-Ventricle": [
+        {
+          "name": "3rd-Ventricle",
+          "remapped_id": 11,
+          "freesurfer_id": 14
+        }
+      ],
+      "4th-Ventricle": [
+        {
+          "name": "4th-Ventricle",
+          "remapped_id": 12,
+          "freesurfer_id": 15
+        }
+      ],
+      "Amygdala": [
+        {
+          "name": "Left-Amygdala",
+          "remapped_id": 15,
+          "freesurfer_id": 18
+        },
+        {
+          "name": "Right-Amygdala",
+          "remapped_id": 32,
+          "freesurfer_id": 54
+        }
+      ],
+      "Cerebral-Cortex": [
+        {
+          "name": "Left-Cerebral-Cortex",
+          "remapped_id": 2,
+          "freesurfer_id": 3
+        },
+        {
+          "name": "Right-Cerebral-Cortex",
+          "remapped_id": 22,
+          "freesurfer_id": 42
+        }
+      ],
+      "CSF": [
+        {
+          "name": "CSF",
+          "remapped_id": 16,
+          "freesurfer_id": 24
+        }
+      ],
+      "choroid-plexus": [
+        {
+          "name": "Left-choroid-plexus",
+          "remapped_id": 20,
+          "freesurfer_id": 31
+        },
+        {
+          "name": "Right-choroid-plexus",
+          "remapped_id": 36,
+          "freesurfer_id": 63
+        }
+      ]
+    },
+    "aggregation": "mean within each bilateral group, then equal mean of 17 groups and 115 subjects",
+    "reported_std": "population standard deviation over 17*115 group/subject values",
+    "folding": "whole-grid determinant <= 0 using NumPy spatial gradients"
+  },
+  "lpba40_sitreg": {
+    "train_subjects": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S17",
+      "S18",
+      "S20",
+      "S21",
+      "S22",
+      "S23",
+      "S25",
+      "S27",
+      "S30",
+      "S31",
+      "S33",
+      "S35",
+      "S36",
+      "S37",
+      "S40"
+    ],
+    "validation_subjects": [
+      "S14",
+      "S16",
+      "S19",
+      "S26",
+      "S39"
+    ],
+    "test_subjects": [
+      "S11",
+      "S12",
+      "S13",
+      "S15",
+      "S24",
+      "S28",
+      "S29",
+      "S32",
+      "S34",
+      "S38"
+    ],
+    "validation_pairs": [
+      {
+        "image_1": "S14",
+        "image_2": "S16"
+      },
+      {
+        "image_1": "S14",
+        "image_2": "S19"
+      },
+      {
+        "image_1": "S14",
+        "image_2": "S26"
+      },
+      {
+        "image_1": "S14",
+        "image_2": "S39"
+      },
+      {
+        "image_1": "S16",
+        "image_2": "S19"
+      },
+      {
+        "image_1": "S16",
+        "image_2": "S26"
+      },
+      {
+        "image_1": "S16",
+        "image_2": "S39"
+      },
+      {
+        "image_1": "S19",
+        "image_2": "S26"
+      },
+      {
+        "image_1": "S19",
+        "image_2": "S39"
+      },
+      {
+        "image_1": "S26",
+        "image_2": "S39"
+      }
+    ],
+    "test_pairs": [
+      {
+        "image_1": "S11",
+        "image_2": "S12"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S13"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S15"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S24"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S28"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S29"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S11",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S13"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S15"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S24"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S28"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S29"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S12",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S15"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S24"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S28"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S29"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S13",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S15",
+        "image_2": "S24"
+      },
+      {
+        "image_1": "S15",
+        "image_2": "S28"
+      },
+      {
+        "image_1": "S15",
+        "image_2": "S29"
+      },
+      {
+        "image_1": "S15",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S15",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S15",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S24",
+        "image_2": "S28"
+      },
+      {
+        "image_1": "S24",
+        "image_2": "S29"
+      },
+      {
+        "image_1": "S24",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S24",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S24",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S28",
+        "image_2": "S29"
+      },
+      {
+        "image_1": "S28",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S28",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S28",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S29",
+        "image_2": "S32"
+      },
+      {
+        "image_1": "S29",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S29",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S32",
+        "image_2": "S34"
+      },
+      {
+        "image_1": "S32",
+        "image_2": "S38"
+      },
+      {
+        "image_1": "S34",
+        "image_2": "S38"
+      }
+    ],
+    "pair_order": "itertools.combinations in listed subject order; image_1 warped toward image_2 for forward score",
+    "selected_config": "src/scripts/configs/sitreg/lpba40/cc_grad_1.0_very_very_deep.json",
+    "data_config": {
+      "included_segmentation_class_indices": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        101,
+        102,
+        121,
+        122,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        181,
+        182
+      ],
+      "batch_size": 1,
+      "iterate_inference_pairs_in_both_directions": false,
+      "downsampling_factor": [
+        1,
+        1,
+        1
+      ],
+      "crop": [
+        [
+          11,
+          10
+        ],
+        [
+          20,
+          5
+        ],
+        [
+          0,
+          21
+        ]
+      ],
+      "normalize": false,
+      "shift_and_normalize": null,
+      "seed": 123456789,
+      "file_type": "delineation.brain.bfc",
+      "segmentation_file_type": "delineation.structure.label",
+      "training_pairs_per_epoch": 5000,
+      "n_training_cases": null,
+      "metrics": {
+        "validate": [
+          "dice",
+          "hd95",
+          "sampled_determinant",
+          "inverse_consistency"
+        ],
+        "test": [
+          "dice",
+          "hd95",
+          "sampled_determinant",
+          "inverse_consistency"
+        ]
+      },
+      "n_jacobian_samples_in_evaluation": 1000000,
+      "jacobian_sampling_base_seed": 8524561973
+    },
+    "labels": {
+      "L superior frontal gyrus": [
+        21
+      ],
+      "R superior frontal gyrus": [
+        22
+      ],
+      "L middle frontal gyrus": [
+        23
+      ],
+      "R middle frontal gyrus": [
+        24
+      ],
+      "L inferior frontal gyrus": [
+        25
+      ],
+      "R inferior frontal gyrus": [
+        26
+      ],
+      "L precentral gyrus": [
+        27
+      ],
+      "R precentral gyrus": [
+        28
+      ],
+      "L middle orbitofrontal gyrus": [
+        29
+      ],
+      "R middle orbitofrontal gyrus": [
+        30
+      ],
+      "L lateral orbitofrontal gyrus": [
+        31
+      ],
+      "R lateral orbitofrontal gyrus": [
+        32
+      ],
+      "L gyrus rectus": [
+        33
+      ],
+      "R gyrus rectus": [
+        34
+      ],
+      "L postcentral gyrus": [
+        41
+      ],
+      "R postcentral gyrus": [
+        42
+      ],
+      "L superior parietal gyrus": [
+        43
+      ],
+      "R superior parietal gyrus": [
+        44
+      ],
+      "L supramarginal gyrus": [
+        45
+      ],
+      "R supramarginal gyrus": [
+        46
+      ],
+      "L angular gyrus": [
+        47
+      ],
+      "R angular gyrus": [
+        48
+      ],
+      "L precuneus": [
+        49
+      ],
+      "R precuneus": [
+        50
+      ],
+      "L superior occipital gyrus": [
+        61
+      ],
+      "R superior occipital gyrus": [
+        62
+      ],
+      "L middle occipital gyrus": [
+        63
+      ],
+      "R middle occipital gyrus": [
+        64
+      ],
+      "L inferior occipital gyrus": [
+        65
+      ],
+      "R inferior occipital gyrus": [
+        66
+      ],
+      "L cuneus": [
+        67
+      ],
+      "R cuneus": [
+        68
+      ],
+      "L superior temporal gyrus": [
+        81
+      ],
+      "R superior temporal gyrus": [
+        82
+      ],
+      "L middle temporal gyrus": [
+        83
+      ],
+      "R middle temporal gyrus": [
+        84
+      ],
+      "L inferior temporal gyrus": [
+        85
+      ],
+      "R inferior temporal gyrus": [
+        86
+      ],
+      "L parahippocampal gyrus": [
+        87
+      ],
+      "R parahippocampal gyrus": [
+        88
+      ],
+      "L lingual gyrus": [
+        89
+      ],
+      "R lingual gyrus": [
+        90
+      ],
+      "L fusiform gyrus": [
+        91
+      ],
+      "R fusiform gyrus": [
+        92
+      ],
+      "L insular cortex": [
+        101
+      ],
+      "R insular cortex": [
+        102
+      ],
+      "L cingulate gyrus": [
+        121
+      ],
+      "R cingulate gyrus": [
+        122
+      ],
+      "L caudate": [
+        161
+      ],
+      "R caudate": [
+        162
+      ],
+      "L putamen": [
+        163
+      ],
+      "R putamen": [
+        164
+      ],
+      "L hippocampus": [
+        165
+      ],
+      "R hippocampus": [
+        166
+      ],
+      "cerebellum": [
+        181
+      ],
+      "brainstem": [
+        182
+      ]
+    },
+    "label_warp": "nearest-neighbor and invalid-sample masking",
+    "metrics": "per-label Dice and voxel HD95, masked-invalid averages; retain direction and input-order keys",
+    "inference_config": {
+      "save_intermediate_mappings_for_levels": null,
+      "do_reverse_inference": true,
+      "save_as_composable_mapping": true,
+      "resample_when_composing": true
+    },
+    "preparation": "inverse AIR native brain.bfc and tissue into delineation space, white-matter mean normalization, tissue foreground masking of intensity, exact crop; labels converted separately"
+  },
+  "sitreg_reference": {
+    "revision": "a665a46a3553b26ade6ff5f57815e5e8ec43a948",
+    "license_file": "LICENSE.SITReg.txt",
+    "vendored_air_sha256": "f5df6eecd8987d8b985dfee7328c289344de1ae2ec8586c57fa1aeebdf163394",
+    "reference_metrics_sha256": "e3659eb2e571b60b8b5112fad780a6de633508969943d36836fbfc41af1faeca",
+    "upstream_sha256": {
+      "src/data/lpba40/air.py": "f5df6eecd8987d8b985dfee7328c289344de1ae2ec8586c57fa1aeebdf163394",
+      "src/data/base.py": "f903ac43704bac37bd50ae346251b87f008b81a3e7c388e927672adf979f5915",
+      "src/algorithm/spatial_derivatives.py": "437fd66f2cc090c31d390eebeba5990b48c079c1ad33f7d4dd5a7e4a03280ecc",
+      "src/algorithm/everywhere_differentiable_determinant.py": "db1810923cee085cf31d922d32f47c829b7b27c639ad6bef6d91ecfe49a8adc6",
+      "LICENCE": "460d46802ff0797a461db8bc1366566a913ed850b9529ca9d2a1e5796b29a893"
+    },
+    "selected_metric_methods": [
+      "_compute_inverse_consistency_metrics",
+      "_compute_sampled_determinant_metrics",
+      "_compute_segmentation_metrics",
+      "_transform_mask",
+      "_organ_segmentation_metrics",
+      "_dice"
+    ]
+  }
+}

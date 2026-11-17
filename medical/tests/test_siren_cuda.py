@@ -57,7 +57,7 @@ class TestSirenCUDA(unittest.TestCase):
         target_coordinates = torch.rand(11, 3, device='cuda', requires_grad=True)
         batch = TrainingBatch(source_coordinates, torch.rand(11, device='cuda'),
             torch.rand(11, device='cuda'), target_coordinates=target_coordinates)
-        for mode in ('mse', 'ncc'):
+        for mode in ('ncc',):
             with self.subTest(mode=mode):
                 eager = endpoint_loss(pair, batch, {'endpoint':mode})
                 compiled = endpoint_loss(pair, batch, {'endpoint':mode}, compile_endpoints=True)

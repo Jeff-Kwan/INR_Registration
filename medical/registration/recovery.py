@@ -73,10 +73,14 @@ def _velocity_history(scratch, shape, intervals, device):
 
 @torch.no_grad()
 def recover(pair, shape, settings, scratch_root, *, chunk=65536, compile_derivatives=True, compile_solver=True,
-            velocity_solver=estimate_velocity_from_derivatives, integrator=integrate_interval, working_grid_metadata=None, physical_units_metadata=None, max_axis=None):
+            velocity_solver=estimate_velocity_from_derivatives, integrator=integrate_interval, max_axis=None):
+    if (getattr(pair, 'requires_working_grid_metadata', False)
+            or getattr(pair, 'requires_physical_units_metadata', False)
+            or getattr(pair, 'working_grid_metadata', None) is not None
+            or getattr(pair, 'physical_units_metadata', None) is not None):
+        raise ValueError('Recovery supports native-voxel models only')
     if max_axis is not None:
-        if (velocity_solver is not estimate_velocity_from_derivatives or integrator is not integrate_interval
-                or working_grid_metadata is not None or physical_units_metadata is not None):
+        if velocity_solver is not estimate_velocity_from_derivatives or integrator is not integrate_interval:
             raise ValueError('Capped recovery supports the ordinary native brightness-flow solver')
         from medical.registration.recovery_sampling import recover_capped
         return recover_capped(pair, shape, settings, scratch_root, max_axis=max_axis,
@@ -84,28 +88,6 @@ def recover(pair, shape, settings, scratch_root, *, chunk=65536, compile_derivat
                               compile_solver=compile_solver)
     if set(settings) != {'intervals','smoothness','ridge','iterations','tolerance','substeps'}:
         raise ValueError('Expected only PCG+RK2 recovery settings')
-    metadata = working_grid_metadata if working_grid_metadata is not None else getattr(pair, 'working_grid_metadata', None)
-    if getattr(pair, 'requires_working_grid_metadata', False) and metadata is None:
-        raise ValueError('Experimental recovery requires working-grid metadata')
-    if metadata is not None:
-        from medical.working_grid import validate_metadata
-        validate_metadata(metadata, shape)
-    native_metadata = (physical_units_metadata if physical_units_metadata is not None
-                       else getattr(pair,'physical_units_metadata',None))
-    if getattr(pair,'requires_physical_units_metadata',False) and native_metadata is None:
-        raise ValueError('Native physical-units recovery requires checkpoint geometry')
-    if native_metadata is not None:
-        from medical.physical_units import validate_metadata
-        validate_metadata(native_metadata,shape)
-        if metadata is not None:raise ValueError('Cannot combine working-grid and native physical-units geometry')
-    recovery_grid = None
-    if metadata is not None:
-        recovery_grid=metadata.get('recovery_geometry',metadata['working_geometry'])
-        shape=tuple(reversed(recovery_grid['shape']))
-    spacing_xyz = (np.linalg.norm(np.asarray(recovery_grid['affine'])[:3,:3],axis=0)
-                   if recovery_grid is not None else np.asarray(native_metadata['spacing_xyz_mm'])
-                   if native_metadata is not None else np.ones(len(shape)))
-    physical = recovery_grid is not None or native_metadata is not None
     device = next(pair.parameters()).device
     pair.zero_grad(set_to_none=True)
     if device.type == 'cuda':
@@ -122,22 +104,17 @@ def recover(pair, shape, settings, scratch_root, *, chunk=65536, compile_derivat
                 extra = ({"compile_solver": compile_solver}
                          if velocity_solver is estimate_velocity_from_derivatives else {})
                 gradient, temporal = derivative_grid(pair, shape, (index + .5) * dt, chunk, compile_derivatives)
-                if physical:
-                    gradient=gradient/gradient.new_tensor(spacing_xyz)
-                    extra['spacing']=tuple(float(h) for h in spacing_xyz[::-1])
                 if velocity_solver is estimate_velocity_from_derivatives and previous_velocity is not None:
                     extra['initial_velocity'] = previous_velocity
                 velocity, diagnostic = velocity_solver(gradient, temporal, **extra, **{
                     k: settings[k] for k in ('smoothness', 'ridge', 'iterations', 'tolerance')})
                 diagnostics.append({'interval': index, 'time_a': index * dt,
                                     'time_b': (index + 1) * dt,
-                                    **({'recovery_shape_zyx':list(shape),'recovery_spacing_xyz_mm':spacing_xyz.tolist()} if physical else {}), **diagnostic})
+                                    **diagnostic})
                 if velocity_solver is estimate_velocity_from_derivatives:
                     previous_velocity = velocity
-                integration_velocity=velocity/velocity.new_tensor(spacing_xyz) if physical else velocity
-                velocities[index].copy_(integration_velocity)
-                forward = integrator(forward, integration_velocity, dt, settings['substeps'])
-                del integration_velocity
+                velocities[index].copy_(velocity)
+                forward = integrator(forward, velocity, dt, settings['substeps'])
                 del gradient, temporal, velocity
             previous_velocity = None
             inverse = grid.clone()

@@ -31,7 +31,7 @@ def make_jobs(methods, cases, data, output, config_dir):
                     target=target/f'seed_{seed:04d}'
                 command = [sys.executable, '-m', 'baselines.case_runner', '--method', name,
                            '--moving', str(case / 'T50.nii.gz'), '--fixed', str(case / 'T00.nii.gz'),
-                           '--config', str(config), '--device', 'cuda:0', '--output', str(target),'--seed',str(seed)]
+                           '--config', str(config), '--device', SOURCES[name].get('device', 'cuda:0'), '--output', str(target),'--seed',str(seed)]
                 jobs.append({'method': name, 'case': number, 'seed':seed, 'output': str(target), 'command': command,
                              'missing_inputs': [str(p) for p in inputs if not p.is_file()]})
     return jobs
@@ -103,8 +103,8 @@ def main(argv=None):
             env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu))
             with target.with_suffix('.log').open('x') as log:
                 result = subprocess.run(job['command'], env=env, stdout=log, stderr=subprocess.STDOUT, check=False)
-            results.append({'method': job['method'], 'case': job['case'], 'gpu': gpu,'seed':job['seed'],
-                            'output':job['output'],'returncode': result.returncode})
+            results.append({'method': job['method'], 'case': job['case'], 'gpu': None if SOURCES[job['method']].get('device') == 'cpu' else gpu,'seed':job['seed'],
+                            'output':job['output'],'device':SOURCES[job['method']].get('device','cuda:0'),'returncode': result.returncode})
         return results
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(args.gpus)) as pool:
         futures = [pool.submit(worker, gpu, jobs[i::len(args.gpus)]) for i, gpu in enumerate(args.gpus)]

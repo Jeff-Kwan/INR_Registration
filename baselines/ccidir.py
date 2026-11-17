@@ -12,7 +12,7 @@ from .sources import native_modules, upstream_imports
 
 def run_case(case, config, device):
     preflight(case, config, 'ccidir')
-    label_evaluation=config['evaluation'] in ('abdomenctct','oasis')
+    label_evaluation=config['evaluation'] != 'dirlab'
     fixed_mask, moving_mask = ((np.ones_like(case[key]['data']) if label_evaluation else load_mask(case[key])).transpose(2,1,0).copy() for key in ('fixed','moving'))
     started = time.monotonic()
     with upstream_imports('ccidir'), execution(device, config.get('seed', 42), cuda_required=True):

@@ -1,13 +1,14 @@
 {
   "fireants": {
     "implementation": "pinned native SyNRegistration and native warp composition",
-    "recipe": "native SyN defaults with an explicit generic multiresolution schedule",
+    "recipe": "Author OASIS SyN test recipe: scales 4/2/1, iterations 200/100/50, Adam lr 0.1, CC width 5, gradient sigma 0.5, warp sigma 0.25",
     "paper_recipe_reproduction": false,
     "limitations": [
-      "not the quickstart affine-plus-Greedy pipeline",
-      "no dataset-specific tuning claimed",
-      "published speed reproduction is unverified; actual fused/fallback backend is recorded per run"
-    ]
+      "Author OASIS is a different cohort from Learn2Reg OASIS; settings transferred across the three connected cohorts",
+      "Dataset-specific CT tuning is unverified",
+      "Published speed reproduction requires the fused backend and matching timing scope"
+    ],
+    "recipe_source": "fireants/scripts/pairwise/oasis.py at the pinned revision, algo=syn test branch"
   },
   "convexadam": {
     "implementation": "pinned native convex_adam_pt MIND-SSC path",
@@ -31,13 +32,59 @@
   },
   "nir": {
     "implementation": "pinned native single-field Gaussian/SIREN and train_efficient_pairwise",
-    "recipe": "released-code adaptation: MSE plus Jacobian 10, learning rate 0.0002, 3000 steps",
+    "recipe": "Corrected NIR-D MRI: native LNCC9 + Jacobian1000, Adam1e-4, 900 requested iterations, Gaussian sigma3 with 2*pi encoding, sine30; native loop in IEEE FP32",
     "paper_recipe_reproduction": false,
     "limitations": [
-      "not the paper's hybrid two-field recipe",
-      "paper single-field budget, learning rate and regularization differ",
-      "native inference maxlen conversion is preserved even though dataio's inverse helper differs",
-      "independent input minmax is an explicit adaptation"
+      "Frozen cohorts/preparations/evaluation are benchmark adaptations, not identical author cohorts",
+      "Native loop completes eight-batch passes: 900 requested gives904 steps",
+      "Native2000-step LR decay retained; paper does not specify it",
+      "Source patch corrects MRI spectral settings and disables AMP; IEEE FP32 disables TF32",
+      "Prepared intensities are preserved, including LPBA white-matter normalization",
+      "Thin-volume localization uses largest available odd NCC kernel extent up to9 per sampled axis; ACDC thin cases use9x9x7 without input padding or sampler changes"
+    ],
+    "recipe_source": "https://arxiv.org/html/2206.03111v3#S4.SS2"
+  },
+  "demons": {
+    "implementation": "SimpleITK 2.5.7 native classic Demons",
+    "recipe": "Official DemonsRegistration1 example: 50 iterations, displacement sigma 1.0; MRI histogram matching with 1024 levels and 7 match points",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "Single-resolution classic Demons example; diffeomorphic and multiscale variants are separate methods",
+      "MRI histogram matching enabled for OASIS; CT intensities preserved",
+      "CPU execution"
+    ]
+  },
+  "niftyreg": {
+    "implementation": "Pinned NiftyReg v2.1.1 reg_f3d and reg_transform",
+    "recipe": "Public reg_f3d defaults, including native NMI, conjugate-gradient optimization, pyramid, control spacing and regularization",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "CPU OpenMP build",
+      "B-spline reg_f3d variant; affine and stationary-velocity variants are separate protocols",
+      "Native physical deformation sampled on fixed evaluation grid; border extension for outside-grid point queries"
+    ]
+  },
+  "nodeo": {
+    "implementation": "Pinned native Registration.registration, custom adjoint and BrainNet",
+    "recipe": "CLI defaults: 300 epochs, Adam AMSGrad lr 0.005; Euler STEP_SIZE 0.001, time_steps 2; AK smoothing window 15; ds 2, bs 16; NCC 21; lambda_J 2.5, lambda_df 0.05, lambda_v 0.00005",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "Encoder input-size and decoder final-shape patch recorded; exact numerical parity checked on the original supported shape",
+      "Native solver step interpretation and final-50 similarity/Jacobian map selection preserved",
+      "Selected native result is a dense map; checkpoint records provenance only",
+      "Four selected cohorts use their preserved prepared arrays and common evaluation"
+    ]
+  },
+  "dnvf": {
+    "implementation": "Pinned opt_nf_diff.main training loop, SIREN and seven-step scaling-and-squaring VecInt",
+    "recipe": "Released run_diff.sh single-scale: 200 epochs, Adam AMSGrad lr 1e-4 and native power-0.9 schedule, five hidden layers width 512, downsample factor 2, Jacobian weight 50, native NCC and gradient regularizers",
+    "paper_recipe_reproduction": false,
+    "limitations": [
+      "Repository OptReg release presets serve as source reference; exact WACV paper-score reproduction is unverified",
+      "Machine-local loader replaced with one prepared pair; no spatial resampling or label-derived masks",
+      "Native segmentation validation logging receives dummy labels and zero diagnostic score; scientific evaluation uses real labels through standardized_v1 after fitting",
+      "Checkpoint captures the final native pre-update validation map network state; the native final optimizer update still executes",
+      "Corrected reruns disable TF32 convolution and matmul; original TF32-enabled results invalidated after controlled IXI case66 test"
     ]
   }
 }

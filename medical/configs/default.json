@@ -4,20 +4,37 @@
     "seed": 42,
     "inference_chunk": 65536,
     "compile_derivatives": true,
-    "compile_endpoints": true
+    "compile_endpoints": true,
+    "training_execution": "captured",
+    "recovery_max_axis": 256
   },
   "model": {
-    "width": 256,
+    "width": 512,
     "layers": 4,
-    "omega": 30.0
+    "omega": 30.0,
+    "output_init_scale": 30.0
   },
   "training": {
     "steps": 5000,
     "batch_size": 32768,
-    "lr": 0.0002,
-    "lr_final_factor": 0.25,
+    "lr": 0.0001,
+    "lr_final_factor": 0.2,
     "log_every": 20,
-    "grad_clip": 1.0
+    "grad_clip": 1.0,
+    "optimizer": {
+      "name": "adamw",
+      "weight_decay": 0.001
+    },
+    "lr_schedule": {
+      "name": "cosine"
+    },
+    "integrator": "rk2",
+    "temporal_sampling": "sobol",
+    "registration_weight_schedule": {
+      "name": "cosine",
+      "start_weight": 0.03,
+      "decay_steps": 5000
+    }
   },
   "objective": {
     "weight": 0.1,
@@ -27,13 +44,13 @@
     "endpoint": "ncc",
     "registration": {
       "weight": 0.01,
-      "registration_similarity": "ncc",
+      "registration_similarity": "gw_ncc",
       "grid_size": 8,
-      "particles": 32768,
+      "particles": 65536,
       "pairs_per_cell": 2,
       "pair_offset_fraction": 0.2,
       "crop_fraction": 0.5,
-      "sigma_cells": 0.75,
+      "sigma_cells": 0.5,
       "gaussian_kernel": "three_tap",
       "random_timesteps": true,
       "particle_sampling_fraction": 0.8,
@@ -42,19 +59,23 @@
       "compile_velocity": true,
       "gw_ncc_sigma_cells": 0.75,
       "gw_ncc_kernel": "three_tap",
-      "compile_decoder": false
+      "compile_decoder": true,
+      "query_geometry": "orthogonal"
     },
     "ncc": {
-      "moment_weight": 0.01,
+      "moment_weight": 0.005,
       "epsilon": 1e-08
-    }
+    },
+    "parameter_l2": 0.01,
+    "endpoint_weight": 1.0,
+    "brightness_weight": 1.0
   },
   "recovery": {
-    "intervals": 16,
+    "intervals": 8,
     "smoothness": 0.01,
     "ridge": 1e-06,
     "iterations": 500,
     "tolerance": 2e-05,
-    "substeps": 4
+    "substeps": 8
   }
 }
