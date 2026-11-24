@@ -34,7 +34,7 @@ subject-disjoint candidate pool. A tuning split must separate subjects, with
 all pairs restricted to the chosen development subjects. Splitting pair indices
 alone is insufficient if endpoints recur between development and evaluation.
 
-[Exact50-subject mapping and audit metadata](../results/data_audit_20261117/oasis_subject_overlap.json).
+[Exact 50-subject mapping used by tuning preparation](../medical/protocols/oasis_subject_overlap.json).
 Original Data files, manifests, cohort definitions and scores were not changed.
 
 ## Other local data

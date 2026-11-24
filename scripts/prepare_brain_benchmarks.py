@@ -26,8 +26,7 @@ def save_volume(path, values, affine):
 
 def convert_ixi(root, output, workers):
     raw = root / 'raw/IXI_data'
-    verified = json.loads((root / 'verification.json').read_text())
-    hashes = {row['path']: row['sha256'] for row in verified['files']}
+    hashes = json.loads(PROTOCOL_PATH.with_name('ixi_source_sha256.json').read_text())
     spec = protocols()['ixi_transmorph']
     members = [(folder, name) for folder in ('Train', 'Val', 'Test')
                for name in spec['split_membership'][folder]] + [('atlas', 'atlas.pkl')]

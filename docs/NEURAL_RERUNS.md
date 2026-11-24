@@ -1,15 +1,9 @@
 # Corrected NIR and DNVF replacements
 
-**Launched at23:21 HKT on16 November2026; both full reruns are running.** All four frozen cohorts are included:
-Neurite-OASIS49, ACDC100, LPBA40 45 and IXI115, totaling **309 fits per method,
-618 fits combined**, seed42. Dataset preparation is unchanged.
-
-The invalid NIR and TF32-enabled DNVF outputs have been deleted from
-`baselines/results/official_neural_20261116/<dataset>/{nir,dnvf}`. Their old scores
-have been removed from machine-readable aggregates and the concise comparison
-report; their configuration snapshots have been overwritten. There is no backup
-or archived competitive result set. ccIDIR, NODEO, classical baselines and SIRENPath
-outputs are preserved. NIR/DNVF remain explicitly pending until replacements finish.
+Both corrected reruns completed all 309 cases per method (618 fits, seed 42)
+across Neurite-OASIS (49), ACDC (100), LPBA40 (45) and IXI (115).
+The corrected results replaced the original NIR and DNVF scores in the
+[benchmark report](BASELINES_REPORT.md#corrected-nir-and-dnvf-reruns).
 
 ## Corrected settings
 
@@ -48,7 +42,7 @@ one case. [Test metrics](../baselines/results/dnvf_tf32_off_20261116/ixi/dnvf/pa
 [Test plan and precision flags](../baselines/results/dnvf_tf32_off_20261116/plan.json).
 The single-case diagnostic does not substitute for the requested full rerun.
 
-## ETA
+## Pre-launch estimate
 
 Requested heuristic: **sum(old case runtimes) ×1.10 ÷8 GPUs**.
 
@@ -71,7 +65,7 @@ Inspect the replacement jobs without launching or modifying outputs:
 bash scripts/rerun_neural_baselines.sh --plan-only
 ```
 
-Launch later, only when requested:
+The original launch command was:
 
 ```bash
 bash scripts/rerun_neural_baselines.sh --run --gpus 0 1 2 3 4 5 6 7
@@ -93,19 +87,6 @@ Preparation checks:19 CPU-only tests passed, including finite native NCC gradien
 exact spectral settings, precision restoration, source verification and deletion
 boundaries. The combined618-job plan has zero missing frozen inputs. No NIR optimizer
 step or full NIR/DNVF replacement run was executed during preparation.
-
-## Launched — 23:21 HKT, 16 November
-
-Both corrected full reruns are **running** in tmux session
-`inr-neural-replacements`, using all eight RTX5090 GPUs. Total618 fits,
-309 per method. Initial heuristic ETA59.5minutes: approximately **00:22 HKT on
-17 November**, subject to the corrected NIR recipe's actual speed.
-
-Attach with `tmux attach -t inr-neural-replacements`.
-[Live aggregates](BASELINES_REPORT.md) and
-[progress](../baselines/results/official_neural_20261116/progress.json) update
-after completed cases. The618 previously completed ccIDIR/NODEO results remain
-in that progress file; replacement progress is finished minus618.
 
 ## Thin-volume NIR completion
 

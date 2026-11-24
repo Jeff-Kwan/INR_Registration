@@ -24,7 +24,7 @@ and line omissions in `sources.json`.
 ## Setup and checks
 
 ```bash
-uv pip install --python /venv/main/bin/python -r baselines/requirements.txt
+uv pip install --python /venv/main/bin/python . -r baselines/requirements.txt
 /venv/main/bin/python -m baselines.setup
 /venv/main/bin/python -m baselines.setup --check
 /venv/main/bin/python -m unittest baselines.tests.test_adapters baselines.tests.test_planning -v
@@ -111,8 +111,9 @@ run. The four neural adapters preserve prepared image values.
 
 ## Corrected MRI replacements
 
-The invalid official NIR/DNVF results have been removed for in-place replacement.
-The corrected NIR MRI recipe uses native LNCC, Gaussian sigma3 with2π features,
-sine30 and IEEE FP32; prepared intensities are preserved. DNVF keeps the native
-recipe with TF32 disabled. Both full reruns are prepared, not launched.
-[Replacement commands and ETA](../docs/NEURAL_RERUNS.md).
+The corrected NIR MRI recipe uses native LNCC, Gaussian features with sigma 3
+and a 2π factor, sine frequency 30, and IEEE FP32. It preserves prepared
+intensities. DNVF uses the native recipe with TF32 disabled. Both reruns finished
+all 309 cases per method, including the four thin-volume ACDC retries for NIR.
+[Corrected results](../docs/BASELINES_REPORT.md#corrected-nir-and-dnvf-reruns) ·
+[Rerun protocol](../docs/NEURAL_RERUNS.md).

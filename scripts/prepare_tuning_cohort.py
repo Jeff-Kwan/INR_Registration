@@ -18,6 +18,7 @@ from scripts.prepare_acdc import preprocess,SPACING,REVISION
 ROOT=Path(__file__).resolve().parents[1]
 ACDC_PREP=ROOT/'Data/ACDC/prepared_training_tuning32'
 OUTPUT=ROOT/'Data/Tuning32'
+OASIS_OVERLAP = Path('medical/protocols/oasis_subject_overlap.json')
 
 
 def select(seed=42):
@@ -146,7 +147,9 @@ def verify_frozen(workers=4):
     if manifest['seed']!=42 or manifest['selection']!=select() or manifest['pairs']!=expected:
         raise ValueError('Frozen selection changed')
     for relative,digest in manifest['dependencies'].items():
-        if sha256(ROOT/relative)!=digest:raise ValueError(f'Dependency changed: {relative}')
+        # Existing frozen manifests record the original location of the same file.
+        path = OASIS_OVERLAP if relative == 'results/data_audit_20261117/oasis_subject_overlap.json' else relative
+        if sha256(ROOT/path)!=digest:raise ValueError(f'Dependency changed: {relative}')
     def check(item):
         relative,record=item
         if sha256(ROOT/relative)!=record['sha256']:raise ValueError(f'Input changed: {relative}')
@@ -163,7 +166,8 @@ def main(argv=None):
     if a.plan_only:
         print(json.dumps(dict(seed=42,selection=rows,total_pairs=128),indent=2));return
     if OUTPUT.exists():raise FileExistsError('Frozen cohort already exists; validate/reuse it rather than redraw')
-    overlap=ROOT/'results/data_audit_20261117/oasis_subject_overlap.json';audit=json.loads(overlap.read_text())
+    overlap = ROOT / OASIS_OVERLAP
+    audit = json.loads(overlap.read_text())
     if {r['l2r_id'] for r in audit['mapping']}!=set(range(365,415)) or not all(r['exact_label_array_match'] for r in audit['mapping']):raise ValueError('Unexpected OASIS overlap audit')
     acdc=prepare_acdc(rows['acdc'],a.workers)
     pairs=[dict(r,**paths(r)) for group in rows.values() for r in group]

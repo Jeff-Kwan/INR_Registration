@@ -241,9 +241,9 @@ SHA-256 `fed208e6b6c41202857a0877a0b24d6660ba6ce600b180cd1c7454f26905b8d8`;
 the native ZIP is 431,028,873 bytes,
 SHA-256 `1e9f20f6f70c0bdfd945f6e12738b7430546866d2002e7aa1f824988592d3a98`.
 These are computed provenance hashes, not comparisons with publisher-provided
-checksums. ZIP member CRC validation succeeded. All 577 IXI tuples and all 40
-LPBA40 subjects were read and checked; details are in each ignored
-`verification.json`. No original input file was changed.
+checksums. ZIP member CRC validation succeeded. During preparation, each of the 577 IXI
+source pickles is checked against its [recorded SHA-256 digest](../medical/protocols/ixi_source_sha256.json)
+before conversion. The LPBA40 preparation checks all 40 subjects.
 
 
 ## Completed preparation and local evaluator
