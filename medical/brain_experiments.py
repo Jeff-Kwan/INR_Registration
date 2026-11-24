@@ -1,4 +1,4 @@
-"""Plan our method on frozen IXI and LPBA40 benchmarks; --run opts into fitting."""
+"""Plan SIRENPath on frozen IXI and LPBA40 benchmarks; --run opts into fitting."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json

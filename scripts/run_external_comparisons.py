@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / 'docs/EXTERNAL_BASELINES.md'
 METHODS = ('convexadam', 'fireants', 'demons', 'niftyreg')
+NAMES = dict(convexadam='ConvexAdam', fireants='FireANTs-SyN', demons='Demons', niftyreg='NiftyReg')
 
 
 def value(number):
@@ -51,7 +52,7 @@ def update_report(output, exit_code):
             durations = [r['seconds'] for r in records if r['dataset'] == dataset and r['method'] == method]
             runtime = f'{statistics.mean(durations):.2f} ± {statistics.pstdev(durations):.2f}' if durations else '—'
             backend = 'CPU, 4 threads' if method == 'demons' else ('CPU/OpenMP, 4 threads' if method == 'niftyreg' else 'GPU (RTX 5090)')
-            lines.append(f'| {dataset} | {method} | {data.get("completed", 0)}/{intended} | {data.get("successful", 0)} | ' + ' | '.join(numbers) + f' | {backend} | {runtime} | {counts} |')
+            lines.append(f'| {dataset} | {NAMES[method]} | {data.get("completed", 0)}/{intended} | {data.get("successful", 0)} | ' + ' | '.join(numbers) + f' | {backend} | {runtime} | {counts} |')
     lines += ['', 'Runtime is mean ± population SD of per-case subprocess wall time, including startup, input loading, registration, transformation evaluation and scoring. FireANTs used its PyTorch fallback with fused operations unavailable.', '', '### Per-case results', '',
               '| Dataset | Method | Pair | Status | Dice | HD95 | NPJ % | SDlogJ | Seconds | Artifacts |',
               '| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |']
@@ -65,7 +66,7 @@ def update_report(output, exit_code):
         numbers = [value(scores.get(k, {}).get('mean')) for k in ('Dice', 'HD95', 'NPJ', 'SDlogJ')]
         state = 'success' if row['returncode'] == 0 else f'failed ({row["returncode"]})'
         link = os.path.relpath(target, REPORT.parent)
-        lines.append(f'| {job["dataset"]} | {job["method"]} | {job["pair_index"]} | {state} | ' + ' | '.join(numbers) +
+        lines.append(f'| {job["dataset"]} | {NAMES.get(job["method"], job["method"])} | {job["pair_index"]} | {state} | ' + ' | '.join(numbers) +
                      f' | {row["seconds"]:.2f} | [metrics]({link}/metrics.json) · [log]({link}.log) |')
     start, end = f'<!-- BEGIN {output.name} -->', f'<!-- END {output.name} -->'
     block = start + '\n' + '\n'.join(lines) + '\n' + end

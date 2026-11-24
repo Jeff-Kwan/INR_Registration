@@ -14,6 +14,9 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 
 
+DISPLAY_NAMES = {'siren': 'SIRENPath', 'crossfade': 'Fitted crossfade'}
+
+
 def monotone_alignment(similarity,*,speed_penalty=.01,smooth_penalty=.01,band=.25,max_step=16):
     """Choose strictly increasing model indices for uniformly sampled cine frames.
 
@@ -82,7 +85,6 @@ def plot_pncc_curves(report,output):
     import matplotlib.pyplot as plt
     output=Path(output);output.mkdir(parents=True,exist_ok=True)
     colors={'siren':'tab:blue','crossfade':'tab:orange'}
-    names={'siren':'SIREN path','crossfade':'Reconstruction crossfade'}
     cine_times=np.linspace(0,1,report['cine_samples'])
     for methods,filename in [(['siren','crossfade'],'pncc_over_time.png'),(['siren'],'siren_pncc_over_time.png'),(['crossfade'],'crossfade_pncc_over_time.png')]:
         fig,ax=plt.subplots(figsize=(8,5),layout='constrained')
@@ -90,14 +92,14 @@ def plot_pncc_curves(report,output):
             scores=report['results'][method]['scores']
             for alignment,style in [('unaligned','--'),('aligned','-')]:
                 ax.plot(cine_times,scores[alignment]['per_frame'],style,marker='o',color=colors[method],
-                        label=f"{names[method]} {alignment} (mean {scores[alignment]['mean']:.5f})")
+                        label=f"{DISPLAY_NAMES[method]} {alignment} (mean {scores[alignment]['mean']:.5f})")
         ax.set(xlabel='Normalized acquired cine time (ED to ES)',ylabel='Whole-volume signed Patch NCC',xlim=(0,1))
         ax.grid(alpha=.25);ax.legend(fontsize=8);fig.savefig(output/filename,dpi=200);plt.close(fig)
     fig,ax=plt.subplots(figsize=(8,4),layout='constrained');ax.axhline(0,color='black',linestyle='--',linewidth=1)
     for method in colors:
         scores=report['results'][method]['scores']
         delta=np.asarray(scores['aligned']['per_frame'])-np.asarray(scores['unaligned']['per_frame'])
-        ax.plot(cine_times,delta,'o-',color=colors[method],label=names[method])
+        ax.plot(cine_times,delta,'o-',color=colors[method],label=DISPLAY_NAMES[method])
     ax.set(xlabel='Normalized acquired cine time (ED to ES)',ylabel='Aligned minus unaligned Patch NCC',xlim=(0,1))
     ax.grid(alpha=.25);ax.legend();fig.savefig(output/'pncc_alignment_gain.png',dpi=200);plt.close(fig)
 
@@ -158,7 +160,7 @@ def run(args):
         fig.savefig(args.output/(method+'_similarity.png'),dpi=180);plt.close(fig)
     fig,ax=plt.subplots(figsize=(6,6),layout='constrained');ax.plot([0,1],[0,1],'k--',label='Linear alignment')
     for method,style in [('siren','o-'),('crossfade','s-')]:
-        alignment=report['results'][method]['alignment'];ax.plot(alignment['model_times'],alignment['cine_times'],style,label='SIREN path' if method=='siren' else 'Reconstruction crossfade')
+        alignment=report['results'][method]['alignment'];ax.plot(alignment['model_times'],alignment['cine_times'],style,label=DISPLAY_NAMES[method])
     ax.set(xlabel='Model time',ylabel='Normalized acquired cine time',xlim=(0,1),ylim=(0,1));ax.set_aspect('equal');ax.grid(alpha=.25);ax.legend()
     fig.savefig(args.output/'time_warp.png',dpi=200);plt.close(fig)
     plot_pncc_curves(report,args.output)
@@ -166,7 +168,7 @@ def run(args):
     lines=['# Monotone ACDC temporal alignment','','53 model times (delta1/52),14 acquired cine frames from ED1 to ES14. No temporally interpolated reference frames are used for scoring.',
            '', '| Method | Unaligned mean PNCC | Aligned mean PNCC | Change | Independent-frame ceiling |','|---|---:|---:|---:|---:|']
     for method,result in report['results'].items():
-        s=result['scores'];lines.append(f"| {method} | {s['unaligned']['mean']:.6f} | {s['aligned']['mean']:.6f} | {s['aligned']['mean']-s['unaligned']['mean']:+.6f} | {s['independent_best']['mean']:.6f} |")
+        s=result['scores'];lines.append(f"| {DISPLAY_NAMES[method]} | {s['unaligned']['mean']:.6f} | {s['aligned']['mean']:.6f} | {s['aligned']['mean']-s['unaligned']['mean']:+.6f} | {s['independent_best']['mean']:.6f} |")
     lines+=['','Means use the same14 acquired frames including fixed endpoints; report.json also gives12-frame interior means, every selected time pair, all constraints and per-frame PNCC. The independent-frame ceiling ignores order and endpoint constraints. Alignment is selected and scored on the same data; gains are descriptive, not held-out evidence. No training or registration optimizer runs.','']
     (args.artifacts/'REPORT.md').write_text('\n'.join(lines))
 

@@ -14,7 +14,7 @@ def _number(value, name, *, positive=False):
 
 
 def validate_config(config, *, allow_ablation_mse=False):
-    """Reject retired interfaces; loss weights may independently be zero."""
+    """Validate recipe settings, including independently adjustable loss weights."""
     if not isinstance(config, dict) or set(config) != set(DEFAULT):
         raise ValueError('Expected only runtime, model, training, objective and recovery')
     for section in DEFAULT:
@@ -61,10 +61,10 @@ def validate_config(config, *, allow_ablation_mse=False):
     if schedule != 'constant':
         if (not isinstance(schedule, dict) or set(schedule) != {'name', 'start_weight', 'decay_steps'}
                 or schedule['name'] != 'cosine'):
-            raise ValueError('PD-LK weight schedule must be constant or an explicit cosine schedule')
-        _number(schedule['start_weight'], 'PD-LK start weight')
+            raise ValueError('Local transport weight schedule must be constant or an explicit cosine schedule')
+        _number(schedule['start_weight'], 'Local transport start weight')
         if type(schedule['decay_steps']) is not int or not 1 <= schedule['decay_steps'] <= training['steps']:
-            raise ValueError('Invalid PD-LK decay_steps')
+            raise ValueError('Invalid local transport decay_steps')
     if objective['endpoint'] == 'mse' and objective['ncc']['moment_weight'] != 0:
         raise ValueError('MSE ablations disable the NCC-specific moment penalty')
     if registration['registration_similarity'] != 'gw_ncc':

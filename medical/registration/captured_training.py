@@ -1,4 +1,4 @@
-"""Canonical full-gradient NCC/PD-LK/GW-NCC training with captured AdamW."""
+"""SIRENPath training with endpoint NCC, local transport loss and trajectory-based registration."""
 import json
 import time
 import torch
@@ -6,7 +6,7 @@ import torch
 from medical.models.siren import PairedSiren
 from medical.models.siren_functional import siren_parameters
 from medical.registration.symmetric_registration import SymmetricPairRegistration
-from medical.registration.optimization import learning_rate_factor, registration_weight, pdlk_weight as scheduled_pdlk_weight
+from medical.registration.optimization import learning_rate_factor, registration_weight, local_transport_weight as scheduled_local_transport_weight
 from medical.registration.ncc import ncc_options
 from medical.registration.captured_objective import joint_loss
 from medical.registration.temporal_graph_sampling import SobolTimeInputs
@@ -27,8 +27,8 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
     torch.set_float32_matmul_precision('highest')
     pair = PairedSiren(3, **config['model']).to(moving.device)
     pair.training_metadata = {
-        'regularizer': 'pdlk', 'regularizer_weight': objective['weight'],
-        'regularizer_weight_schedule': objective['weight_schedule'],
+        'transport_objective': 'local_transport_loss', 'local_transport_weight': objective['weight'],
+        'local_transport_weight_schedule': objective['weight_schedule'],
         'endpoint_objective': objective['endpoint'], 'endpoint_weight': objective['endpoint_weight'],
         'endpoint_sampling': 'shared_registration_crop', 'spatial_units': 'voxel',
         **integration_metadata('rk2', True),
@@ -40,7 +40,7 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
         'registration_similarity': 'gw_ncc',
         'registration_weight_schedule': settings['registration_weight_schedule'],
         'parameter_l2': objective['parameter_l2'],
-        'brightness_weight': objective['brightness_weight'], 'differential_weight': objective['c'],
+        'brightness_weight': objective['brightness_weight'], 'gradient_constancy_weight': objective['c'],
         'optimization': {'optimizer': settings['optimizer'], 'lr_schedule': settings['lr_schedule']}}
     branch = SymmetricPairRegistration(
         moving, fixed, affine, seed=config['runtime']['seed'], c=objective['c'], eta=objective['eta'],
@@ -64,7 +64,7 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
     target_parameters, target_omegas = siren_parameters(pair.target)
     if omegas != target_omegas:
         raise ValueError('Endpoint frequencies must match')
-    pdlk_weight = torch.zeros((), device=moving.device)
+    local_transport_weight = torch.zeros((), device=moving.device)
     registration_coefficient = torch.zeros((), device=moving.device)
     # Reuse compiled code for equal geometries, with fresh parameters and optimizer state.
     global _LAST_COMPILE_SIGNATURE
@@ -83,7 +83,7 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
             data['source_truth'], data['target_truth'], data['queries'], branch.spatial_scale,
             (data['forward_positions'], data['reverse_positions']), moving, fixed, data['origin'],
             branch.domain_extent, branch.extent, data['times'], tuple(branch.sigma), branch.grid_size,
-            branch.c, branch.eta, pdlk_weight, registration_coefficient, options_ncc,
+            branch.c, branch.eta, local_transport_weight, registration_coefficient, options_ncc,
             objective['registration'], 'rk2', objective['parameter_l2'], objective['endpoint_weight'], objective['brightness_weight'],
             endpoint_mode=objective['endpoint'], transport_enabled=objective['weight'] > 0,
             registration_enabled=objective['registration']['weight'] > 0)
@@ -109,9 +109,9 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
             inputs.reset_offsets(tag, step)
             lr_factor = learning_rate_factor(settings, step)
             rate.fill_(settings['lr'] * lr_factor)
-            weight = scheduled_pdlk_weight(objective, step)
+            weight = scheduled_local_transport_weight(objective, step)
             coefficient = registration_weight(settings, objective['registration']['weight'], step)
-            pdlk_weight.fill_(weight)
+            local_transport_weight.fill_(weight)
             registration_coefficient.fill_(coefficient)
             if step <= warmup:
                 started = time.perf_counter()
@@ -137,7 +137,7 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
                         **{k: float(v.detach()) for k, v in terms.items()},
                         'lr': settings['lr'] * lr_factor,
                         'gradient_norm_before_clip': None if norm is None else float(norm.detach()),
-                        'effective_pdlk_weight': weight, 'effective_registration_weight': coefficient})
+                        'effective_local_transport_weight': weight, 'effective_registration_weight': coefficient})
         stream.synchronize()
     torch.cuda.current_stream(moving.device).wait_stream(stream)
     pair.zero_grad(set_to_none=True)

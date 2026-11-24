@@ -1,4 +1,4 @@
-"""Plan official OASIS validation jobs; --run is required for execution."""
+"""Plan SIRENPath and baseline runs on official Learn2Reg OASIS validation pairs. Execution requires --run."""
 from medical.abdomen_experiments import main as shared_main
 
 def main(argv=None):

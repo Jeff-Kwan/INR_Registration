@@ -1,4 +1,4 @@
-"""Our default paired-SIREN method on protocol-prepared brain benchmarks."""
+"""SIRENPath on protocol-prepared brain benchmarks."""
 import json
 import tempfile
 import time

@@ -1,4 +1,4 @@
-"""Minibatch Pearson NCC and standard-normal Gaussian-moment regularization."""
+"""Minibatch Pearson NCC and standard-normal moment matching."""
 import math
 
 import torch
@@ -24,7 +24,7 @@ def correlation(prediction, target, epsilon):
 
 
 def endpoint_statistics(source, target, source_truth, target_truth, *, epsilon, moment_weight):
-    """Tensor-only endpoint NCC and Gaussian moments; options validated by caller."""
+    """Tensor-only endpoint NCC and moment matching; options validated by caller."""
     source_ncc = correlation(source, source_truth, epsilon)
     target_ncc = correlation(target, target_truth, epsilon)
     ncc_loss = 2-source_ncc-target_ncc

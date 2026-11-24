@@ -1,10 +1,10 @@
 # External registration baselines
 
-All comparison code lives here, separate from `medical/` and our method's
+All comparison code lives here, separate from `medical/` and SIRENPath's
 development. `upstream/` contains code-only sparse checkouts of the authors'
 repositories. These are ignored by our Git repository; tracked `sources.json`
 records the exact revisions and source entry points. The adapters call those
-implementations rather than translating their algorithms into ours.
+implementations rather than translating their algorithms into SIRENPath.
 
 Use `/venv/main/bin/python`. On a Vast instance, first read the complete
 `/workspace/AGENTS.md` and the repository's `AGENTS.md`.
@@ -43,7 +43,7 @@ claim. No CUDA extension build is triggered by an import or setup check.
 
 ## Connected presets
 
-`configs/` contains explicit native arguments, not our SIREN/PD-LK settings. These
+`configs/` contains the native arguments for external baselines. These
 are starting configurations; no DIR-Lab parameter search or comparison has run.
 
 **FireANTs:** native compositive SyN with Adam and rectangular local CC; the
@@ -156,8 +156,6 @@ configs and permitted network checkpoints persist through the case runner.
 
 The [implementation audit](AUDIT.md) distinguishes native algorithm paths from paper recipes, records the corrected ccIDIR/NIR inference conventions, and specifies external repetition policies. `python -m baselines.run_dirlab` now plans 50 fits per case for ccIDIR and scores both directions; all jobs remain unlaunched by default. Our method remains single-seed.
 
-For the prepared all-dataset FireANTs/ConvexAdam/NIR runs, use `python -m baselines.run_all`. It defaults to planning, excludes ccIDIR, and uses all four GPUs when executed with `--run`. Results default to `baselines/results/`. Exact combined and per-method commands are in [BASELINE_RUNS.md](../docs/archived_reports/BASELINE_RUNS.md).
-
 ## Classical CPU baselines
 
 `demons` and `niftyreg` support DIR-Lab, Learn2Reg OASIS and AbdomenCTCT through
@@ -186,12 +184,7 @@ Install the requirements above, then use CMake and a C++17 compiler for NiftyReg
 ```bash
 /venv/main/bin/python -m baselines.setup --methods demons niftyreg
 /venv/main/bin/python -m baselines.setup --check --methods demons niftyreg
-/venv/main/bin/python -m baselines.run_all --methods demons niftyreg
 ```
-
-The final command plans 148 single-seed fits. Execution requires explicit `--run`
-and a fresh output directory. The combined launcher uses its selected queue slots
-also for CPU concurrency. No registration runs during setup or planning.
 
 
 ## Finalized neural-field comparison set

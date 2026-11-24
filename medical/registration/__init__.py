@@ -1,1 +1,1 @@
-"""Three-dimensional PD-LK and deformation recovery."""
+"""Local transport consistency, trajectory-based registration and optical flow recovery."""

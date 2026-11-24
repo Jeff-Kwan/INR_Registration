@@ -224,25 +224,25 @@ class TestLiveRegistration(unittest.TestCase):
         with (patch.object(branch, '_direction_loss', side_effect=AssertionError('Unused trajectory')),
               patch.object(branch, 'sample_positions', side_effect=AssertionError('Unused positions'))):
             energy_only = branch.loss(pair, need_registration=False)
-        gradients = torch.autograd.grad(energy_only['grid_pdlk'], tuple(pair.parameters()))
+        gradients = torch.autograd.grad(energy_only['local_transport_loss'], tuple(pair.parameters()))
         self.assertTrue(all(torch.isfinite(value).all() for value in gradients))
         with patch('medical.registration.symmetric_registration.shared_pair_energy',
                    side_effect=AssertionError('Unused residual energy')):
-            registration_only = branch.loss(pair, need_pdlk=False)
-        self.assertEqual(registration_only['grid_pdlk'], 0)
-        gradients = torch.autograd.grad(registration_only['registration'], tuple(pair.parameters()))
+            registration_only = branch.loss(pair, need_local_transport=False)
+        self.assertEqual(registration_only['local_transport_loss'], 0)
+        gradients = torch.autograd.grad(registration_only['registration_loss'], tuple(pair.parameters()))
         self.assertTrue(all(torch.isfinite(value).all() for value in gradients))
         half = len(gradients)//2
         self.assertTrue(any(value.abs().sum() > 0 for value in gradients[:half]))
         self.assertTrue(any(value.abs().sum() > 0 for value in gradients[half:]))
         with patch.object(pair, 'prepare', side_effect=AssertionError('Unused derivatives')):
-            self.assertEqual(branch.loss(pair, need_pdlk=False, need_registration=False)['registration'], 0)
+            self.assertEqual(branch.loss(pair, need_local_transport=False, need_registration=False)['registration_loss'], 0)
 
     def test_ablation_values_and_gradients_match_full_objective(self):
         pair = make_pair(width=4, omega=10.)
         initial = self.branch()
-        for key, options in (('grid_pdlk', {'need_registration':False}),
-                             ('registration', {'need_pdlk':False})):
+        for key, options in (('local_transport_loss', {'need_registration':False}),
+                             ('registration_loss', {'need_local_transport':False})):
             with self.subTest(term=key):
                 full = copy.deepcopy(initial).loss(pair)[key]
                 ablation = copy.deepcopy(initial).loss(pair, **options)[key]

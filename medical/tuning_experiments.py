@@ -1,4 +1,4 @@
-"""Plan by default; explicitly launch one configuration on frozen tuning pairs."""
+"""Plan by default; explicitly launch one SIRENPath configuration on frozen tuning pairs."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json

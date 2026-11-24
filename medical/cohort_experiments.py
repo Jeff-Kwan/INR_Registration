@@ -1,4 +1,4 @@
-"""Plan ACDC and Neurite-OASIS fits; --run explicitly starts the shared GPU queue."""
+"""Plan SIRENPath fits on ACDC and Neurite-OASIS; --run explicitly starts the shared GPU queue."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json

@@ -49,7 +49,7 @@ class ComparisonTests(unittest.TestCase):
             output=Path(temporary)/'absent'
             with patch('medical.comparison_experiments.make_jobs',return_value=[]), \
                  patch('medical.comparison_experiments.GPUWorker') as worker,redirect_stdout(io.StringIO()):
-                plan=main(['--methods','ours','--output',str(output)])
+                plan=main(['--methods','sirenpath','--output',str(output)])
             self.assertFalse(plan['execution'])
             self.assertFalse(output.exists())
             worker.assert_not_called()

@@ -63,7 +63,7 @@ class TestTrainingRK2(unittest.TestCase):
                     gaussian_kernel='three_tap', registration_similarity=similarity)
                 terms = branch.loss(pair, diagnostics=diagnostics)
                 self.assertEqual('outside' in terms, diagnostics)
-                loss = .1 * terms['grid_pdlk'] + .01 * terms['registration']
+                loss = .1 * terms['local_transport_loss'] + .01 * terms['registration_loss']
                 gradients = torch.autograd.grad(loss, tuple(pair.parameters()))
                 results.append((loss, *gradients))
             for expected, actual in zip(*results):

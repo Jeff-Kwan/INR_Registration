@@ -1,4 +1,4 @@
-"""Plan or launch standardized comparisons on the four selected cohorts."""
+"""Plan or launch standardized SIRENPath and baseline comparisons on four cohorts."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
@@ -24,7 +24,7 @@ METHODS = ('ours', 'convexadam', 'fireants', 'nir', 'demons', 'niftyreg', 'ccidi
 FOLDERS = dict(neurite_oasis='NeuriteOASIS', acdc='ACDC', lpba40='LPBA40', ixi='IXI_TransMorph')
 
 
-def make_jobs(methods, datasets, data, output, ours_config=None):
+def make_jobs(methods, datasets, data, output, sirenpath_config=None):
     jobs = []
     for dataset in datasets:
         root = Path(data) / FOLDERS[dataset] / 'prepared'
@@ -38,7 +38,7 @@ def make_jobs(methods, datasets, data, output, ours_config=None):
             pairs = definition(root, dataset)['pairs']
             metadata = [root/'manifest.json']
         for method in methods:
-            config = (Path(ours_config) if ours_config else ROOT/'medical/configs/default.json') if method=='ours' else ROOT/f'baselines/configs/{method}_{dataset}.json'
+            config = (Path(sirenpath_config) if sirenpath_config else ROOT/'medical/configs/default.json') if method=='ours' else ROOT/f'baselines/configs/{method}_{dataset}.json'
             settings = json.loads(config.read_text())
             if method=='ours':
                 validate_config(settings)
@@ -89,9 +89,15 @@ def summarize(records, jobs):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--methods',nargs='+',choices=METHODS,default=list(METHODS))
+    # Stored plans and result directories use "ours" as the SIRENPath method ID.
+    method_ids = {'sirenpath' if m == 'ours' else m: m for m in METHODS}
+    parser.add_argument(
+        '--methods', nargs='+', choices=method_ids, default=list(method_ids),
+        type=lambda name: 'sirenpath' if name == 'ours' or name.lower() == 'sirenpath' else name,
+        help='Select SIRENPath or one or more external baselines.',
+    )
     parser.add_argument('--datasets',nargs='+',choices=DATASETS,default=list(DATASETS))
-    parser.add_argument('--config',type=Path,help='Our method configuration; external recipes remain pinned')
+    parser.add_argument('--config',type=Path,help='SIRENPath configuration file')
     parser.add_argument('--data',type=Path,default=ROOT/'Data')
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--gpus',type=int,nargs='+',default=[0,1,2,3,4,5,6,7])
@@ -100,6 +106,7 @@ def main(argv=None):
     execution.add_argument('--run',action='store_true')
     execution.add_argument('--plan-only',action='store_true')
     args=parser.parse_args(argv)
+    args.methods = [method_ids[name] for name in args.methods]
     if args.cpu_workers < 1:parser.error('CPU workers must be positive')
     if any(len(set(v))!=len(v) for v in (args.methods,args.datasets,args.gpus)) or any(g<0 for g in args.gpus):
         parser.error('Distinct methods, datasets and nonnegative GPU IDs required')

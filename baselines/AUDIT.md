@@ -11,7 +11,7 @@ audit. Synthetic source-math checks and mocked adapter checks were used.
 
 | Comparison | Source alignment | Experiment alignment |
 | --- | --- | --- |
-| FireANTs SyN | Native `SyNRegistration.optimize` and composed normalized coordinates | Constructor defaults with an explicit generic multiresolution schedule; not a dataset-tuned paper recipe or the quickstart's affine + Greedy variant |
+| FireANTs-SyN | Native `SyNRegistration.optimize` and composed normalized coordinates | Constructor defaults with an explicit generic multiresolution schedule; not a dataset-tuned paper recipe or the quickstart's affine + Greedy variant |
 | ConvexAdam–MIND | Native `convex_adam_pt`; MIND-SSC, coupled convex, inverse consistency, Adam; native XYZ voxel displacement retained | API defaults, without the paper's self-configuration search; not a leaderboard-reproduction claim |
 | ccIDIR | Native paired-INR fit and native **second-order** cycle consensus | DIR-Lab reproduction instructions and paper repetition count followed; exact mask equality unestablished; Learn2Reg uses declared whole-image adaptations |
 | NIR single field | Native Gaussian/SIREN field, spatial sampler, AMP loop, objective and released output conversion | Explicit released-code adaptation, not the paper's hybrid recipe or reported brain-MRI scores |
@@ -45,7 +45,7 @@ maxlen metadata is set as in the CLI.
 **Seed propagation:** baseline subprocesses now use `baselines.case_runner`,
 which applies an explicit seed override to the resolved config before invoking
 the shared runner. Saved config, metrics and each planned job record that seed.
-Python, NumPy and PyTorch RNGs are seeded. Our method has no new seed override
+Python, NumPy and PyTorch RNGs are seeded. SIRENPath has no new seed override
 and remains single-seed.
 
 ## External repetitions

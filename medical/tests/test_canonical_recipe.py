@@ -3,7 +3,7 @@ import unittest
 import torch
 from medical.configuration import load_config, validate_config
 from medical.models.siren import PairedSiren
-from medical.registration.objective import endpoint_loss, TrainingBatch, parameter_agreement
+from medical.registration.objective import endpoint_loss, TrainingBatch, endpoint_parameter_penalty
 from medical.registration.optimization import learning_rate_factor, registration_weight
 
 
@@ -39,7 +39,7 @@ class TestCanonicalRecipe(unittest.TestCase):
         for step in (1, 2500, 5000):
             self.assertEqual(registration_weight(config['training'], 0., step), 0.)
 
-    def test_zero_endpoint_keeps_parameter_agreement_independent(self):
+    def test_zero_endpoint_keeps_endpoint_parameter_penalty_independent(self):
         torch.manual_seed(42)
         pair = PairedSiren(width=4, layers=1).double()
         with torch.no_grad():
@@ -51,7 +51,7 @@ class TestCanonicalRecipe(unittest.TestCase):
         objective['ncc']['moment_weight'] = 0.
         actual = endpoint_loss(pair, batch, objective)['total']
         endpoints = pair.prepare(temporal=False)
-        expected = .01 * parameter_agreement(endpoints.source, endpoints.target)
+        expected = .01 * endpoint_parameter_penalty(endpoints.source, endpoints.target)
         torch.testing.assert_close(actual, expected)
         a = torch.autograd.grad(actual, tuple(pair.parameters()), retain_graph=True)
         b = torch.autograd.grad(expected, tuple(pair.parameters()))

@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "paired-inr-pdlk"
+name = "sirenpath"
 version = "0.2.0.dev0"
-description = "Paired implicit neural image trajectories with shared-grid differential LK registration"
+description = "SIRENPath: Parameter Interpolation of Neural Intensity Fields for Deformable Image Registration"
 requires-python = ">=3.10"
 dependencies = [
   "torch>=2.2",

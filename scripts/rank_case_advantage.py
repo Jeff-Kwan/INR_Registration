@@ -54,14 +54,14 @@ def index_run(root,methods,datasets):
     return records
 
 
-def advantage(ours,external):
+def advantage(sirenpath_dice,external):
     mean=statistics.mean(external)
     if mean<=0:raise ValueError('External mean Dice is zero; relative advantage is undefined')
-    return mean,(ours-mean)/mean
+    return mean,(sirenpath_dice-mean)/mean
 
 
-def analyze(ours_root,classical_root,neural_root,datasets):
-    roots={'ours':Path(ours_root).resolve(),'classical':Path(classical_root).resolve(),'neural':Path(neural_root).resolve()}
+def analyze(sirenpath_root,classical_root,neural_root,datasets):
+    roots={'ours':Path(sirenpath_root).resolve(),'classical':Path(classical_root).resolve(),'neural':Path(neural_root).resolve()}
     indexed={'ours':index_run(roots['ours'],('ours',),datasets)}
     for group,methods in GROUPS.items():indexed[group]=index_run(roots[group],methods,datasets)
     rows=[];extrema={};evidence={}
@@ -86,7 +86,7 @@ def analyze(ours_root,classical_root,neural_root,datasets):
         for group in GROUPS:
             key=group+'_advantage';low=min(r[key] for r in cohort);high=max(r[key] for r in cohort)
             extrema[dataset][group]=dict(lowest=[r for r in cohort if r[key]==low],highest=[r for r in cohort if r[key]==high])
-    return dict(formula='(ours_case_Dice - mean_external_case_Dice) / mean_external_case_Dice',
+    return dict(formula='(SIRENPath_case_Dice - mean_external_case_Dice) / mean_external_case_Dice',
                 averaging='equal weight across the four methods within each group on the same directed case; no dataset-average denominator',
                 groups=GROUPS,roots={k:str(v) for k,v in roots.items()},datasets=list(datasets),
                 neural_results='Corrected NIR MRI/FP32 and DNVF TF32-off results, including repaired NIR ACDC cases; current official_neural_20261116 tree',
@@ -101,9 +101,9 @@ def write_report(report,output):
         writer=csv.DictWriter(stream,fieldnames=list(report['rows'][0]));writer.writeheader();writer.writerows(report['rows'])
     lines=['# Per-case SIRENPath Dice advantage','',report['formula']+'. Positive means SIRENPath wins; negative means it loses.',
            '',f"SIRENPath results: `{report['roots']['ours']}`.",
-           '', 'Classical mean: ConvexAdam, FireANTs, Demons, NiftyReg. Neural mean: ccIDIR, corrected NIR, NODEO, corrected DNVF.',
+           '', 'Classical mean: ConvexAdam, FireANTs-SyN, Demons, NiftyReg. Neural mean: ccIDIR, corrected NIR, NODEO, corrected DNVF.',
            '', 'Percentages below are relative changes, not Dice percentage-point differences. Exact ties retain every case.',
-           '', '| Dataset | Group | Extreme | Pair | Our Dice | External mean Dice | Advantage |',
+           '', '| Dataset | Group | Extreme | Pair | SIRENPath Dice | External mean Dice | Advantage |',
            '|---|---|---|---:|---:|---:|---:|']
     for dataset,groups in report['extrema'].items():
         for group,ends in groups.items():
@@ -116,7 +116,7 @@ def write_report(report,output):
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--ours',type=Path,required=True,help='Explicit choice: original default or manual-promotion official run')
+    parser.add_argument('--sirenpath','--ours',metavar='DIR',type=Path,required=True,help='Directory containing the chosen official SIRENPath results')
     parser.add_argument('--classical',type=Path,default=ROOT/'baselines/results/official_four_20261116')
     parser.add_argument('--neural',type=Path,default=ROOT/'baselines/results/official_neural_20261116',help='Current corrected NIR/DNVF result tree')
     parser.add_argument('--datasets',nargs='+',choices=DATASETS,default=list(DATASETS))
@@ -126,7 +126,7 @@ def main(argv=None):
     output=args.output.resolve()
     if output.exists():parser.error('Output must be a fresh directory')
     if output.is_relative_to((ROOT/'Data').resolve()):parser.error('Output cannot be under Data')
-    report=analyze(args.ours,args.classical,args.neural,args.datasets)
+    report=analyze(args.sirenpath,args.classical,args.neural,args.datasets)
     write_report(report,output)
     print('Wrote',len(report['rows']),'matched cases to',output)
 

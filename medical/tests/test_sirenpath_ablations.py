@@ -11,7 +11,7 @@ import numpy as np
 import torch
 from medical.configuration import load_config, validate_config
 from medical.models.siren import PairedSiren, coordinates_from_indices
-from medical.registration.objective import TrainingBatch, endpoint_loss, parameter_agreement
+from medical.registration.objective import TrainingBatch, endpoint_loss, endpoint_parameter_penalty
 from medical.registration.recovery import recover, derivative_grid, RecoveryResult
 from medical.registration.geometry import identity_grid
 from medical.registration.intensity_crossfade import IntensityCrossfade
@@ -45,7 +45,7 @@ class TestSirenPathAblations(unittest.TestCase):
         e=pair.prepare(temporal=False)
         expected=((pair.source(x).flatten()-batch.source).square().mean()
                   +(pair.target(x).flatten()-batch.target).square().mean()
-                  +.01*parameter_agreement(e.source,e.target))
+                  +.01*endpoint_parameter_penalty(e.source,e.target))
         torch.testing.assert_close(terms['total'],expected)
         a=torch.autograd.grad(terms['total'],tuple(pair.parameters()),retain_graph=True)
         b=torch.autograd.grad(expected,tuple(pair.parameters()))
@@ -82,8 +82,8 @@ class TestSirenPathAblations(unittest.TestCase):
         for run in (2,3,4):
             o=settings_for(run)['objective']
             weight,reg=o['weight'],o['registration']['weight']
-            expected=(endpoint_loss(pair,batch,o)['total']+weight*reference['grid_pdlk']
-                      +reg*reference['registration'])
+            expected=(endpoint_loss(pair,batch,o)['total']+weight*reference['local_transport_loss']
+                      +reg*reference['registration_loss'])
             actual,finite=joint_loss(e.source,e.target,e.omegas,x,x,batch.source,batch.target,
                 branch.coordinates,branch.spatial_scale,positions,branch.moving,branch.fixed,
                 branch.origin,branch.domain_extent,branch.extent,branch.sampled_times,tuple(branch.sigma),

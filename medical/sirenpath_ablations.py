@@ -18,13 +18,13 @@ from medical.gpu_worker import GPUWorker
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNS = {
-    1: ('reconstruction_only', 'Reconstruction only', 'mse', False, False),
-    2: ('transport_only', 'Transport only', 'mse', True, False),
-    3: ('registration_only', 'Registration only', 'mse', False, True),
-    4: ('both_losses', 'Both losses', 'mse', True, True),
+    1: ('reconstruction_only', 'MSE reconstruction (Lθ on)', 'mse', False, False),
+    2: ('transport_only', 'MSE reconstruction + LT (Lθ on)', 'mse', True, False),
+    3: ('registration_only', 'MSE reconstruction + Reg (Lθ on)', 'mse', False, True),
+    4: ('both_losses', 'MSE reconstruction + LT + Reg (Lθ on)', 'mse', True, True),
     5: ('sirenpath', 'SIRENPath', 'ncc', True, True),
-    6: ('raw_crossfade', 'Raw intensity crossfade', None, False, False),
-    7: ('reconstructed_crossfade', 'Canonical reconstructions crossfade', 'ncc (reused)', False, False),
+    6: ('raw_crossfade', 'Raw crossfade', None, False, False),
+    7: ('reconstructed_crossfade', 'Fitted crossfade', 'ncc (reused)', False, False),
 }
 METRICS = ('PSNR', 'PatchNCC', 'DSC', 'HD95', 'NPJ', 'SDlogJ', 'Runtime')
 
@@ -89,7 +89,7 @@ def make_plan(data, output, runs, pairs, gpus, canonical_root=None):
                        '--config', str(snapshot), '--device', 'cuda:0', '--output', str(target)]
             jobs.append(dict(run=index, name=name, pair_index=pair_index, seed=config['runtime']['seed'],
                              training_steps=0 if index in (6,7) else config['training']['steps'],
-                             endpoint=endpoint, transport_loss=transport, registration_loss=registration,
+                             endpoint=endpoint, local_transport_loss=transport, registration_loss=registration,
                              output=str(target), command=command,
                              requires_checkpoint=str(required_checkpoint) if required_checkpoint else None,
                              config_sha256=hashlib.sha256(config_text(config).encode()).hexdigest(),
@@ -152,6 +152,7 @@ def write_report(output, summary):
              'Case means ± population SD; PSNR/Patch NCC first average the two endpoints. '
              'Runtime includes loading through checkpoint serialization. NPJ is percent. '
              'HD95 uses official voxel units; SDlogJ is unshifted (official shifted scores remain in case files).', '',
+             'LT is the local transport loss, Reg is the trajectory-based registration loss, and Lθ is the endpoint parameter penalty.', '',
              '| Run | Success/intended | PSNR (dB) | Patch NCC | DSC | HD95 | NPJ (%) | SDlogJ | Runtime (s) |',
              '|---|---:|---:|---:|---:|---:|---:|---:|---:|']
     for index, result in summary['runs'].items():

@@ -1,17 +1,17 @@
 """Analytical L2 gradient check, with no fitting or recovery."""
 import unittest
 import torch
-from medical.registration.objective import parameter_agreement
+from medical.registration.objective import endpoint_parameter_penalty
 from medical.configuration import load_config, validate_config
 
 
-class TestParameterAgreement(unittest.TestCase):
+class TestEndpointParameterPenalty(unittest.TestCase):
     def test_mean_over_weights_and_biases_and_exact_gradient(self):
         a=torch.tensor([[1.,2.,3.]],requires_grad=True)
         b=torch.tensor([4.],requires_grad=True)
         c=torch.tensor([[2.,4.,6.]],requires_grad=True)
         d=torch.tensor([8.],requires_grad=True)
-        loss=parameter_agreement(((a,b),),((c,d),))
+        loss=endpoint_parameter_penalty(((a,b),),((c,d),))
         torch.testing.assert_close(loss,torch.tensor(7.5))
         gradients=torch.autograd.grad(loss,(a,b,c,d))
         for got,expected in zip(gradients,((a-c)/2,(b-d)/2,(c-a)/2,(d-b)/2)):

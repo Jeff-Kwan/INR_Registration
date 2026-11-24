@@ -1,4 +1,4 @@
-"""Canonical paired-SIREN fitting of prepared ACDC and Neurite-OASIS cohorts."""
+"""SIRENPath fitting on prepared ACDC and Neurite-OASIS cohorts."""
 import json
 from pathlib import Path
 import tempfile

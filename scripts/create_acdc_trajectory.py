@@ -1,4 +1,4 @@
-"""Compare a frozen SIREN weight path, reconstruction crossfade and ACDC cine."""
+"""Compare the frozen SIRENPath trajectory, fitted crossfade and ACDC cine."""
 import argparse
 import csv
 import hashlib
@@ -51,8 +51,8 @@ def run(args):
     from scripts.prepare_acdc import preprocess
     from scripts.download_acdc_testing import fetch,API,TESTING
     from scripts.create_case_media import label_color
-    score,index=median_pair(args.ours)
-    source=args.ours/'acdc/ours'/f'pair{index:03d}'
+    score,index=median_pair(args.sirenpath)
+    source=args.sirenpath/'acdc/ours'/f'pair{index:03d}'
     info=json.loads((source/'run.json').read_text());moving=Path(info['moving']);fixed=Path(info['fixed'])
     patient=moving.name.split('_')[0]
     raw=ROOT/'Data/ACDC/testing'/patient
@@ -140,15 +140,15 @@ def run(args):
         writer=csv.DictWriter(stream,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
     lines=['# ACDC contraction trajectory','',f'Patient {patient}, pair{index}, original Dice {score:.6f}; ED frame{ed} to ES frame{es}; native axis2 middle slice{z}.',
            '', 'real_t panels interpolate neighboring acquired cine frames at exact normalized times; real_nearest_t panels show actual acquired frames. No intermediate labels are fabricated.',
-           '', '| t | Cine frame | SIREN Patch NCC 2D | Crossfade Patch NCC 2D | SIREN Patch NCC 3D | Crossfade Patch NCC 3D |','|---:|---:|---:|---:|---:|---:|']
+           '', '| t | Cine frame | SIRENPath Patch NCC 2D | Fitted crossfade Patch NCC 2D | SIRENPath Patch NCC 3D | Fitted crossfade Patch NCC 3D |','|---:|---:|---:|---:|---:|---:|']
     for row in rows:lines.append(f"| {row['t']:.2f} | {row['frame_coordinate_one_based']:.2f} | {row['siren_cine_linear_patch_ncc_2d']:.5f} | {row['crossfade_cine_linear_patch_ncc_2d']:.5f} | {row['siren_cine_linear_patch_ncc_3d']:.5f} | {row['crossfade_cine_linear_patch_ncc_3d']:.5f} |")
     lines+=['','NCC is measured without display rescaling or fitted calibration. Reconstruction and crossfade use one shared endpoint-derived display window; cine uses its prepared0–1 scale. See report.json for both linear-reference and nearest-acquired-reference scores.','']
     (args.artifacts/'REPORT.md').write_text('\n'.join(lines));print('\n'.join(lines))
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ours',type=Path,default=ROOT/'results/official_ours_cosine_20261116');p.add_argument('--output',type=Path,default=ROOT/'docs/media/acdc_trajectory');p.add_argument('--artifacts',type=Path,default=ROOT/'results/acdc_trajectory_original_20261117');p.add_argument('--device',default='cuda:0');p.add_argument('--run',action='store_true');args=p.parse_args()
-    if not args.run:print(dict(median_pair=median_pair(args.ours),times=TIMES,output=str(args.output),artifacts=str(args.artifacts)));return
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--sirenpath','--ours',metavar='DIR',type=Path,help='Directory containing the official SIRENPath results',default=ROOT/'results/official_ours_cosine_20261116');p.add_argument('--output',type=Path,default=ROOT/'docs/media/acdc_trajectory');p.add_argument('--artifacts',type=Path,default=ROOT/'results/acdc_trajectory_original_20261117');p.add_argument('--device',default='cuda:0');p.add_argument('--run',action='store_true');args=p.parse_args()
+    if not args.run:print(dict(median_pair=median_pair(args.sirenpath),times=TIMES,output=str(args.output),artifacts=str(args.artifacts)));return
     if args.output.exists() or args.artifacts.exists():raise FileExistsError('Use fresh output and artifact paths')
     run(args)
 

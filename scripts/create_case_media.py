@@ -153,7 +153,7 @@ def save_prediction(prediction,output,case,fixed_labels,moving_labels,recorded,m
         matches_recorded_within_1e_4=abs(delta)<=1e-4,map='absolute fixed-to-moving XYZ native voxel coordinates; affine defines fixed sampling grid',image_warp='linear zero outside',label_warp='nearest zero outside'),indent=2)+'\n')
 
 
-def recover_ours(checkpoint,case,consume):
+def recover_sirenpath(checkpoint,case,consume):
     import torch
     from medical.models.siren import PairedSiren
     from medical.registration.recovery import recover
@@ -237,7 +237,7 @@ def run_case(selection,report,output,media_root):
                 save_prediction(prediction,artifacts,case,fixed_labels,moving_labels,recorded,mode)
                 artifacts.rename(directory/method)
         with (directory/(method+'.log')).open('w') as log,redirect_stdout(log),redirect_stderr(log):
-            if method=='ours':recover_ours(checkpoint,case,consume)
+            if method=='ours':recover_sirenpath(checkpoint,case,consume)
             elif method=='dnvf':recover_dnvf(checkpoint,case,consume)
             else:recover_external(method,checkpoint,case,consume,'cpu' if method in ('demons','niftyreg') else 'cuda:0')
         del checkpoint;gc.collect();torch.cuda.empty_cache()

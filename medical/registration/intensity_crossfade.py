@@ -1,4 +1,4 @@
-"""No-fit intensity path implementing the frozen stage-3 derivative interface."""
+"""No-fit intensity path implementing the frozen optical flow recovery derivative interface."""
 from dataclasses import dataclass
 import torch
 import torch.nn.functional as F
@@ -34,7 +34,7 @@ class IntensityCrossfade(torch.nn.Module):
         self.register_buffer('native_half_extent', moving.new_tensor(
             [.5*(n-1) for n in reversed(moving.shape)]), persistent=False)
 
-    def prepare(self, *, temporal=True, compile_parameters=False):
+    def prepare(self, *, compile_parameters=False):
         return self
 
     def at(self, time):

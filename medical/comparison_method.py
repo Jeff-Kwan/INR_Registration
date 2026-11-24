@@ -1,4 +1,4 @@
-"""Canonical model with the common official-comparison evaluator."""
+"""SIRENPath with the common official-comparison evaluator."""
 from medical.comparison_metrics import dataset_for
 
 

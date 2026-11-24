@@ -42,7 +42,7 @@ def provenance(name):
 
 @contextmanager
 def upstream_imports(name):
-    """Scope legacy top-level module names to one upstream checkout per process.
+    """Scope upstream top-level module names to one checkout per process.
 
     Keep the context open during native execution. Independent cases run in
     separate processes; concurrently importing different methods is unsupported.

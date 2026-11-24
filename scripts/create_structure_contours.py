@@ -15,7 +15,7 @@ import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-NAMES=dict(ours='SIRENPath',convexadam='ConvexAdam',fireants='FireANTs',niftyreg='NiftyReg',demons='Demons',dnvf='DNVF',nodeo='NODEO',nir='NIR',ccidir='ccIDIR')
+NAMES=dict(ours='SIRENPath',convexadam='ConvexAdam',fireants='FireANTs-SyN',niftyreg='NiftyReg',demons='Demons',dnvf='DNVF',nodeo='NODEO',nir='NIR',ccidir='ccIDIR')
 
 
 def expanded_crop(crop,shape,factor=1.1):
@@ -46,8 +46,8 @@ def dice(truth,prediction):
     return float(2*np.count_nonzero(truth&prediction)/count) if count else None
 
 
-def signed_targets(labels,ours,baseline):
-    rows=[dict(code=int(code),ours=float(a),baseline=float(b),gap=float(a-b)) for code,a,b in zip(labels,ours,baseline) if a is not None and b is not None]
+def signed_targets(labels,sirenpath_dice,baseline):
+    rows=[dict(code=int(code),ours=float(a),baseline=float(b),gap=float(a-b)) for code,a,b in zip(labels,sirenpath_dice,baseline) if a is not None and b is not None]
     wins=sorted((r for r in rows if r['gap']>0),key=lambda r:(-r['gap'],r['code']))
     losses=sorted((r for r in rows if r['gap']<0),key=lambda r:(r['gap'],r['code']))
     return dict(win=wins[0] if wins else None,loss=losses[0] if losses else None)

@@ -1,4 +1,4 @@
-"""Endpoint NCC with Gaussian moments and paired-parameter agreement."""
+"""Endpoint reconstruction with moment matching and the endpoint parameter penalty."""
 from dataclasses import dataclass
 from functools import lru_cache
 import torch
@@ -15,7 +15,7 @@ class TrainingBatch:
     target_coordinates: torch.Tensor = None
 
 
-def parameter_agreement(source, target):
+def endpoint_parameter_penalty(source, target):
     """Mean squared difference over all paired SIREN weights and biases."""
     pairs = [(a, b) for layer_a, layer_b in zip(source, target)
              for a, b in zip(layer_a, layer_b)]
@@ -39,7 +39,7 @@ def _endpoint_kernel(source, target, omegas, source_coordinates, target_coordina
                      parameter_l2=0., endpoint_weight=1.):
     if mode not in ('ncc', 'mse'):
         raise ValueError('Expected canonical NCC or explicitly requested ablation MSE')
-    agreement = parameter_agreement(source, target) if parameter_l2 else None
+    parameter_penalty = endpoint_parameter_penalty(source, target) if parameter_l2 else None
     source_values = siren_forward(source_coordinates, source, omegas, fuse_scalar_affines=fuse_scalar_affines).flatten()
     target_values = siren_forward(target_coordinates, target, omegas, fuse_scalar_affines=fuse_scalar_affines).flatten()
     source_mse = (source_values - source_truth).square().mean()
@@ -47,8 +47,8 @@ def _endpoint_kernel(source, target, omegas, source_coordinates, target_coordina
     extra = endpoint_statistics(source_values, target_values, source_truth, target_truth, **options)
     fitting = extra['endpoint_ncc_loss'] if mode == 'ncc' else source_mse + target_mse
     endpoint = endpoint_weight * fitting + extra['weighted_moments']
-    if agreement is not None:
-        extra.update(parameter_l2=agreement, weighted_parameter_l2=parameter_l2 * agreement)
+    if parameter_penalty is not None:
+        extra.update(parameter_l2=parameter_penalty, weighted_parameter_l2=parameter_l2 * parameter_penalty)
         endpoint = endpoint + extra['weighted_parameter_l2']
     return {'total': endpoint, 'source_mse': source_mse, 'target_mse': target_mse, **extra}
 

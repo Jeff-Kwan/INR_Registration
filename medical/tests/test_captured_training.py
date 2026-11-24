@@ -81,7 +81,7 @@ class TestCapturedTraining(unittest.TestCase):
             positions=branch.sample_positions();registration=branch.loss(pair,positions=positions);endpoints=pair.prepare(temporal=False)
             for weight,coefficient in ((.1,.01),(0.,.01),(.1,0.),(0.,0.)):
                 settings={'endpoint':'ncc','ncc':{'moment_weight':.005}, 'parameter_l2': .01}
-                reference=endpoint_loss(pair,batch,settings)['total']+weight*registration['grid_pdlk']+coefficient*registration['registration']
+                reference=endpoint_loss(pair,batch,settings)['total']+weight*registration['local_transport_loss']+coefficient*registration['registration_loss']
                 actual,finite=joint_loss(endpoints.source,endpoints.target,endpoints.omegas,x,x,batch.source,batch.target,
                     branch.coordinates,branch.spatial_scale,positions,branch.moving,branch.fixed,branch.origin,
                     branch.domain_extent,branch.extent,branch.sampled_times,tuple(branch.sigma),

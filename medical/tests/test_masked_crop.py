@@ -80,7 +80,7 @@ class TestMaskedCrop(unittest.TestCase):
    with patch('medical.registration.symmetric_registration._compiled_pair_velocity_chunk',return_value=compiled):
     with self.assertRaises(torch.linalg.LinAlgError):
      branch._field_terms(pair,image.new_tensor(.5),return_energy=True)
-    for options in ({}, {'deferred_checks':[], 'need_pdlk':False},
+    for options in ({}, {'deferred_checks':[], 'need_local_transport':False},
                     {'deferred_checks':[], 'need_registration':False}):
      with self.assertRaises(torch.linalg.LinAlgError):
       branch.loss(pair,diagnostics=False,**options)
@@ -89,4 +89,4 @@ class TestMaskedCrop(unittest.TestCase):
     direction={'similarity':image.new_zeros(()),'boundary':image.new_zeros(())}
     with patch.object(branch,'_direction_loss',return_value=direction):
      terms=branch.loss(pair,diagnostics=False,deferred_checks=[])
-     self.assertFalse(bool(torch.isfinite(terms['grid_pdlk'])))
+     self.assertFalse(bool(torch.isfinite(terms['local_transport_loss'])))

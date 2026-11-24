@@ -1,4 +1,4 @@
-"""Joint endpoint NCC, shared-grid PD-LK and GW-NCC registration."""
+"""Joint endpoint reconstruction, local transport loss and trajectory-based registration."""
 import torch
 from medical.models.siren_functional import _interpolate,_parameter_direction
 from medical.registration.objective import _endpoint_kernel
@@ -10,7 +10,7 @@ from medical.registration.training_integrators import DEFAULT_INTEGRATOR
 
 def joint_loss(source,target,omegas,source_coordinates,target_coordinates,source_truth,target_truth,
                query_coordinates,spatial_scale,positions,moving,fixed,origin,domain,extent,
-               times,sigma,grid_size,c,eta,weight,registration_weight,ncc_options,
+               times,sigma,grid_size,c,eta,local_transport_weight,registration_weight,ncc_options,
                registration_options=None,integrator=DEFAULT_INTEGRATOR,parameter_l2=0.,endpoint_weight=1.,brightness_weight=1.,
                endpoint_mode='ncc',transport_enabled=True,registration_enabled=True):
     input_weight=source[0][0]
@@ -21,7 +21,7 @@ def joint_loss(source,target,omegas,source_coordinates,target_coordinates,source
                            parameter_l2=parameter_l2,endpoint_weight=endpoint_weight)
     if not transport_enabled and not registration_enabled:
         zero = terms['total'].new_zeros(())
-        terms.update(pdlk=zero, registration=zero)
+        terms.update(local_transport_loss=zero, registration_loss=zero)
         return terms, torch.ones((), device=zero.device, dtype=torch.bool)
     direction=_parameter_direction(source,target)
     differential = _layer_curvature_chain if fuse_affines else _differential_chain
@@ -37,9 +37,9 @@ def joint_loss(source,target,omegas,source_coordinates,target_coordinates,source
         fields.append(field)
         energies.append(energy.mean())
     fields=tuple(fields)
-    penalty=torch.stack(energies).mean()
-    registration=penalty.new_zeros(())
-    finite=torch.ones((),device=penalty.device,dtype=torch.bool)
+    local_transport_loss=torch.stack(energies).mean()
+    registration=local_transport_loss.new_zeros(())
+    finite=torch.ones((),device=local_transport_loss.device,dtype=torch.bool)
     if registration_enabled:
         options=registration_options or {}
         decoder_options=dict(similarity=options.get('registration_similarity','gw_ncc'),
@@ -50,8 +50,8 @@ def joint_loss(source,target,omegas,source_coordinates,target_coordinates,source
         reverse,finite_reverse=box_decoder(positions[1],fields,fixed,moving,origin,domain,extent,grid_size,True,**decoder_options)
         registration=.5*(forward['similarity']+reverse['similarity']+forward['boundary']+reverse['boundary'])
         finite=finite_forward & finite_reverse
-    terms.update(pdlk=penalty,registration=registration)
-    terms['total']=terms['total']+weight*penalty+registration_weight*registration
+    terms.update(local_transport_loss=local_transport_loss,registration_loss=registration)
+    terms['total']=terms['total']+local_transport_weight*local_transport_loss+registration_weight*registration
     return terms,finite
 
 

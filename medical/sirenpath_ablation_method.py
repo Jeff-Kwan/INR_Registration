@@ -89,7 +89,7 @@ def run_case(case, config, device, *, checkpoint_callback=None, raw=False, refer
                        NPJ=dict(mean=100*metrics['folding_fraction'], units='percent'),
                        SDlogJ=dict(mean=unshifted, definition='std(log(max(detJ,1e-9)))'),
                        official_L2R_SDlogJ=metrics['LogJacDetStd'], reconstruction=reconstruction,
-                       method='SIRENPath' if not raw else 'Raw intensity crossfade',
+                       method='Fitted crossfade' if reference is not None else 'Raw crossfade' if raw else 'SIRENPath',
                        control='reconstructed_crossfade' if reference is not None else 'raw_crossfade' if raw else 'trained_weight_path',
                        seed=config['runtime']['seed'], recovery=recovered.diagnostics,
                        intensity_normalization=dict(method='independent_minmax_0_1', **normalization))
@@ -138,7 +138,7 @@ def load_canonical_checkpoint(path, case, expected_config, device):
         raise ValueError('Crossfade control supports native-voxel checkpoints only')
     validate_config(checkpoint['config'])
     if checkpoint['config'] != expected_config or evidence['config'] != expected_config:
-        raise ValueError('Reconstruction crossfade must reuse the identical canonical run-5 recipe')
+        raise ValueError('Fitted crossfade must reuse the identical canonical run-5 recipe')
     if checkpoint['model'] != expected_config['model']:
         raise ValueError('Canonical checkpoint architecture differs from the configured model')
     pair = PairedSiren(3, **checkpoint['model']).to(device)

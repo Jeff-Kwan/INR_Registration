@@ -107,13 +107,13 @@ class TestSirenCUDA(unittest.TestCase):
             branch.compile_velocity = compiled_velocity
             branch.recompute = recompute
             terms = branch.loss(pair)
-            loss = .1 * terms['grid_pdlk'] + .01 * terms['registration']
+            loss = .1 * terms['local_transport_loss'] + .01 * terms['registration_loss']
             gradients = torch.autograd.grad(loss, tuple(pair.parameters()))
             if not compiled_derivatives:
                 expected_terms, expected_gradients = terms, gradients
             else:
-                self.assert_relative_close(terms['grid_pdlk'], expected_terms['grid_pdlk'])
-                self.assert_relative_close(terms['registration'], expected_terms['registration'])
+                self.assert_relative_close(terms['local_transport_loss'], expected_terms['local_transport_loss'])
+                self.assert_relative_close(terms['registration_loss'], expected_terms['registration_loss'])
                 for actual, expected in zip(gradients, expected_gradients):
                     self.assert_relative_close(actual, expected)
 

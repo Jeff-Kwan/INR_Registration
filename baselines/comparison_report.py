@@ -4,7 +4,7 @@ import json
 import statistics
 
 ROOT=Path(__file__).resolve().parents[1]
-NAMES=dict(ours='SIRENPath',convexadam='ConvexAdam',fireants='FireANTs',demons='Demons',niftyreg='NiftyReg',ccidir='ccIDIR',nir='NIR',nodeo='NODEO',dnvf='DNVF')
+NAMES=dict(ours='SIRENPath',convexadam='ConvexAdam',fireants='FireANTs-SyN',demons='Demons',niftyreg='NiftyReg',ccidir='ccIDIR',nir='NIR',nodeo='NODEO',dnvf='DNVF')
 DATASETS=dict(neurite_oasis='Neurite-OASIS',acdc='ACDC',lpba40='LPBA40',ixi='IXI')
 
 
@@ -34,7 +34,7 @@ def refresh(root=ROOT):
             backend='CPU/OpenMP, 4 threads' if method=='niftyreg' else 'CPU, 4 threads' if method=='demons' else 'GPU (RTX5090)'
             row='| '+ds_name+' | '+label+f" | {aggregate['successful']}/{aggregate['intended']} | "+' | '.join(cells)+f" | {m['HD95']['scored_pairs']}/{aggregate['intended']} | {elapsed} | {backend} |"
             (corrected if method in ('nir','dnvf') else primary).append(row)
-    lines+=['','## SIRENPath and other baselines','',*header,*primary,
+    lines+=['','## SIRENPath and comparison baselines','',*header,*primary,
             '','## Corrected NIR and DNVF reruns','',
             'NIR uses the corrected MRI LNCC/spectral recipe in IEEE FP32; DNVF uses its original recipe with TF32 disabled. '
             'All preparations and scoring remain frozen. Each metric mean uses successful cases with a defined score. '

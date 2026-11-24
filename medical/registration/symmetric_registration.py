@@ -114,7 +114,7 @@ _deferred_pair_velocity = partial(shared_pair_velocity, defer_errors=True)
 
 
 def shared_pair_energy(g, q, hessian, mixed, velocity, c, eta, *, brightness_weight=1.):
-    """Pooled PD-LK residual with gradients through the shared solve."""
+    """Local transport energy per cell with gradients through the shared solve."""
     brightness = q + (g * velocity[:, None]).sum(-1)
     differential = mixed + (hessian @ velocity[:, None, :, None]).squeeze(-1)
     return ((brightness_weight * brightness.square() + c * differential.square().sum(-1)).mean(-1)
@@ -405,11 +405,11 @@ class SymmetricPairRegistration(SharedGridGeometry):
             dtype=self.moving.dtype, generator=generator) * size for _ in range(2))
 
     def loss(self, pair, *, positions=None, generator=None, time_generator=None,
-             need_pdlk=True, need_registration=True, diagnostics=True, deferred_checks=None):
-        key='grid_pdlk'
-        if not need_pdlk and not need_registration:
+             need_local_transport=True, need_registration=True, diagnostics=True, deferred_checks=None):
+        key='local_transport_loss'
+        if not need_local_transport and not need_registration:
             zero = self.moving.new_zeros(())
-            return {key:zero, 'registration':zero}
+            return {key:zero, 'registration_loss':zero}
         if need_registration:
             if positions is None:
                 positions = self.sample_positions(generator)
@@ -419,17 +419,17 @@ class SymmetricPairRegistration(SharedGridGeometry):
         times = self._sample_times(time_generator)
         endpoints = pair.prepare(compile_parameters=self.compile_derivatives or self.compile_velocity)
         # The ordinary CUDA trainer supplies its pre-update status collector.
-        # Deferral requires the full PD-LK energy, which observes every solve.
-        defer_solve = (deferred_checks is not None and not diagnostics and need_pdlk
+        # Deferral requires the full local transport energy, which observes every solve.
+        defer_solve = (deferred_checks is not None and not diagnostics and need_local_transport
                        and need_registration)
         velocity_function = _deferred_pair_velocity if defer_solve else shared_pair_velocity
-        paired_terms = [self._field_terms(pair, t, return_energy=need_pdlk,
+        paired_terms = [self._field_terms(pair, t, return_energy=need_local_transport,
                         endpoints=endpoints, need_field=need_registration, velocity_function=velocity_function) for t in times]
         fields = tuple(term[0] for term in paired_terms)
-        regularizer_loss = (torch.stack([term[1] for term in paired_terms]).mean()
-                     if need_pdlk else self.moving.new_zeros(()))
+        local_transport_loss = (torch.stack([term[1] for term in paired_terms]).mean()
+                     if need_local_transport else self.moving.new_zeros(()))
         if not need_registration:
-            return {key:regularizer_loss,'registration':regularizer_loss.new_zeros(()),
+            return {key:local_transport_loss,'registration_loss':local_transport_loss.new_zeros(()),
                     **self._time_diagnostics()}
         forward = self._direction_loss(positions[0], fields, False, diagnostics=diagnostics, finite_checks=deferred_checks)
         reverse = self._direction_loss(positions[1], fields, True, diagnostics=diagnostics, finite_checks=deferred_checks)
@@ -438,13 +438,13 @@ class SymmetricPairRegistration(SharedGridGeometry):
         boundary = .5 * (forward['boundary'] + reverse['boundary'])
         total = similarity + boundary
         if not diagnostics:
-            return {key: regularizer_loss, 'registration': total}
+            return {key: local_transport_loss, 'registration_loss': total}
         image = .5 * (forward['mse'] + reverse['mse'])
         box_fraction = self.moving.new_tensor((
             self.crop_shape[2] / self.moving.shape[2],
             self.crop_shape[1] / self.moving.shape[1],
             self.crop_shape[0] / self.moving.shape[0]))
-        result = dict(registration=total, image_mse=image, image_similarity=similarity, boundary=boundary,
+        result = dict(registration_loss=total, image_mse=image, image_similarity=similarity, boundary=boundary,
                       outside=.5 * (forward['outside'] + reverse['outside']),
                       valid_particles=torch.minimum(forward['valid_particles'], reverse['valid_particles']),
                       retained_fraction=1 - .5 * (forward['outside'] + reverse['outside']),
@@ -455,5 +455,5 @@ class SymmetricPairRegistration(SharedGridGeometry):
                       **self._time_diagnostics())
         result.update({f'{direction}_{key}': value for direction, values in
                        (('forward', forward), ('reverse', reverse)) for key, value in values.items()})
-        result[key] = regularizer_loss
+        result[key] = local_transport_loss
         return result

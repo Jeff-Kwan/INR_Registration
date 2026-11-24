@@ -44,6 +44,7 @@ def render(output,case,fixed_labels,moving_labels,methods,selection,media_output
     from matplotlib.colors import Normalize
     from matplotlib.cm import ScalarMappable
     from matplotlib.patches import Patch
+    from baselines.comparison_report import NAMES
     from scripts.create_case_media import label_color,save_legend
     images=Path(media_output);images.mkdir(parents=True,exist_ok=True)
     fixed=case['fixed']['data'];moving=case['moving']['data'];z=fixed.shape[2]//2
@@ -90,9 +91,9 @@ def render(output,case,fixed_labels,moving_labels,methods,selection,media_output
     def recorded(method):
         group='ours' if method=='ours' else 'classical' if method in report['groups']['classical'] else 'neural'
         return json.loads((Path(report['roots'][group])/selection['dataset']/method/f"pair{selection['pair_index']:03d}"/'metrics.json').read_text())
-    baseline=selection['strongest_baseline'];ours=recorded('ours');other=recorded(baseline)
-    if ours['labels']!=other['labels']:raise ValueError('Label order differs')
-    gaps=[dict(code=int(code),ours=float(a),baseline=float(b),difference=float(a-b)) for code,a,b in zip(ours['labels'],ours['Dice']['detailed'],other['Dice']['detailed']) if a is not None and b is not None]
+    baseline=selection['strongest_baseline'];sirenpath=recorded('ours');other=recorded(baseline)
+    if sirenpath['labels']!=other['labels']:raise ValueError('Label order differs')
+    gaps=[dict(code=int(code),ours=float(a),baseline=float(b),difference=float(a-b)) for code,a,b in zip(sirenpath['labels'],sirenpath['Dice']['detailed'],other['Dice']['detailed']) if a is not None and b is not None]
     gaps.sort(key=lambda r:(-abs(r['difference']),r['code']));gap=gaps[0];code=gap['code']
     warped_labels={method:np.asarray(nib.load(output/method/'warped_labels.nii.gz').dataobj) for method in ('ours',baseline)}
     contour_z=z
@@ -123,8 +124,10 @@ def render(output,case,fixed_labels,moving_labels,methods,selection,media_output
                                slice=contour_z,middle_slice_used=contour_z==z,crop=[x0,x1,y0,y1],crop_selection='union of target fixed and both warped masks plus12pixels, same crop and slice for both methods',
                                caveat='full-volume Dice gap may not be visible in this single slice; compare recovered scores in audit before interpreting contours'))
     (output/'inspection.json').write_text(json.dumps(details,indent=2)+'\n')
-    lines=['# Median-Dice targeted structure check','',f"{selection['dataset']} pair{selection['pair_index']}; strongest dataset-mean baseline: {baseline}.",
-           '',f"Selected label{code} ({label_name}) by largest absolute full-volume per-label Dice gap: SIRENPath {gap['ours']:.6f}, {baseline} {gap['baseline']:.6f}; winner: {details['targeted']['winner']}.",
+    baseline_name=NAMES.get(baseline,baseline)
+    winner=details['targeted']['winner']
+    lines=['# Median-Dice targeted structure check','',f"{selection['dataset']} pair{selection['pair_index']}; strongest dataset-mean baseline: {baseline_name}.",
+           '',f"Selected label{code} ({label_name}) by largest absolute full-volume per-label Dice gap: SIRENPath {gap['ours']:.6f}, {baseline_name} {gap['baseline']:.6f}; winner: {NAMES.get(winner,winner)}.",
            '',f"General panels: middle slice{z}. Targeted contour panels: slice{contour_z}, common crop{x0,x1,y0,y1}.",
            '', 'Selection is explicitly post-hoc and highlights the largest disagreement; it is not a typical-structure claim. No anatomical boundary explanation is inferred automatically from these plots. Full-volume gaps do not guarantee an obvious difference on a single slice.','']
     (output/'INSPECTION.md').write_text('\n'.join(lines))

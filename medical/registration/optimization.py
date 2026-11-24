@@ -1,4 +1,4 @@
-"""AdamW with canonical cosine LR or the explicitly requested OneCycle tuning option."""
+"""AdamW settings, learning-rate schedules and loss weights."""
 import math
 
 
@@ -44,8 +44,8 @@ def learning_rate_factor(settings, step):
     progress = min(1., max(0., (step - 1) / max(settings['steps'] - 1, 1)))
     schedule = settings['lr_schedule']
     if schedule['name'] == 'onecycle':
-        # Historical LR-only recipe: keep AdamW betas fixed. Host-side scalar
-        # evaluation feeds the existing live CUDA-graph LR tensor each update.
+        # OneCycle varies only the learning rate. The host updates the live
+        # CUDA-graph learning-rate tensor each step.
         warmup = schedule['warmup_fraction']
         if progress < warmup:
             rise_progress = progress / warmup
@@ -67,8 +67,8 @@ def registration_weight(settings, final_weight, step):
     return final_weight + (schedule['start_weight'] - final_weight) * remaining
 
 
-def pdlk_weight(objective, step):
-    """A zero PD-LK coefficient disables its loss throughout the schedule."""
+def local_transport_weight(objective, step):
+    """A zero local transport coefficient disables the local transport loss throughout the schedule."""
     final=objective['weight']
     if final==0 or objective['weight_schedule']=='constant':return final
     schedule=objective['weight_schedule']
