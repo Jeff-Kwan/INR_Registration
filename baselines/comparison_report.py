@@ -16,7 +16,7 @@ def refresh(root=ROOT):
     old=document.read_text();tail=old[old.index('## Methods'):]
     tail=tail[:tail.index('\nAll results use')] if '\nAll results use' in tail else tail
     total=sum(len(v['jobs']) for v in reports.values());failures=sum(j['returncode']!=0 for v in reports.values() for j in v['jobs'])
-    header=['| Dataset | Method | Fits succeeded | Dice ↑ | HD95 ↓ | NPJ (%) ↓ | SDlogJ ↓ | HD95 pairs | Runtime (s/case) | Backend |',
+    header=['| Dataset | Method | Fits succeeded | Dice ↑ | HD95 (mm) ↓ | NPJ (%) ↓ | SDlogJ ↓ | HD95 pairs | Runtime (s/case) | Backend |',
             '|---|---|---:|---:|---:|---:|---:|---:|---:|---|']
     lines=['# Baseline comparison aggregate report','',
            f'Finished evaluations: **{total}**; successful: **{total-failures}**; process failures: **{failures}**. '
@@ -49,6 +49,6 @@ def refresh(root=ROOT):
                     'These four cases fail before the first optimizer update. ACDC/NIR aggregates therefore cover96/100 fits; '
                     'the failures are not assigned zero scores.']
     lines+=['','Runtime is averaged over successful cases and includes case loading, fitting, recovery/transformation evaluation, scoring and output serialization. Neural externals use fresh subprocesses; SIRENPath uses persistent workers. CPU classical baselines ran in parallel with GPU baselines. FireANTs used its PyTorch fallback.',
-            '', 'All preparations/cohorts and standardized_v1 scoring are frozen. HD95 is prepared-grid mm (IXI uses its unit-voxel benchmark frame). Its valid-pair coverage can differ between methods; direct ranking needs a common valid subset. Dice uses nearest-neighbour zero-outside label warps. NPJ is100×mean(detJ≤0); SDlogJ isstd(log(max(detJ,1e-9))), with central differences and two-voxel border exclusion.', '',tail,
+            '', 'All preparations/cohorts and standardized_v1 scoring are frozen. HD95 is reported in mm for all four cohorts. The IXI benchmark grid has nominal 1 × 1 × 1 mm spacing. Its valid-pair coverage can differ between methods; direct ranking needs a common valid subset. Dice uses nearest-neighbour zero-outside label warps. NPJ is100×mean(detJ≤0); SDlogJ isstd(log(max(detJ,1e-9))), with central differences and two-voxel border exclusion.', '',tail,
             'All results use standardized_v1 scoring. [Classical aggregates](../baselines/results/official_four_20261116/summary.json) · [Current neural aggregates](../baselines/results/official_neural_20261116/summary.json) · [SIRENPath aggregates](../results/official_ours_cosine_20261116/summary.json) · [Correction/precision audit](NEURAL_BASELINE_DIAGNOSTICS.md) · [Rerun plan](NEURAL_RERUNS.md)','']
     document.write_text('\n'.join(lines))

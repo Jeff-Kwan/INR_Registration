@@ -72,8 +72,8 @@ Dice is an equal foreground-label mean, HD95 uses affine-column spacing in mm,
 NPJ is 100 times the fraction of nonpositive Jacobian determinants, and SDlogJ
 is the population standard deviation of log(max(detJ,1e-9)). Jacobians use the
 same central differences and exclude two boundary voxels on every axis.
-Nearest-neighbor zero-outside label sampling applies to every method. IXI uses
-its released benchmark unit-voxel frame for distances. Label sets are Neurite
+Nearest-neighbor zero-outside label sampling applies to every method. For IXI, the prepared affine assigns 1 mm per voxel along each axis.
+The reported HD95 is in mm on this benchmark grid. Label sets are Neurite
 1–35, ACDC 1–3, LPBA40's 56 codes, and IXI's 30 scored anatomical codes with
 equal label weighting. Both-empty labels have null Dice; missed foreground has
 Dice zero. Empty surfaces have null HD95 and cause a null case HD95 mean.

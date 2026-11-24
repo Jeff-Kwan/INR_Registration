@@ -17,7 +17,7 @@ All methods share each view’s slice/crop and one fixed-image1st–99th percent
 | ConvexAdam | 0.713809 | 5.581815 | 0.001574 | 0.244589 |
 | DNVF | 0.723059 | 5.907359 | 0.000000 | 0.290101 |
 
-Metrics are whole-volume standardized_v1 with the dataset-specific scored labels; identity is the unwarped moving segmentation. HD95 uses prepared-grid spacing; IXI is a nominal unit-voxel benchmark frame,not recovered patient-world geometry. NPJ is the percentage of nonpositive interior Jacobians.
+Metrics are whole-volume standardized_v1 with the dataset-specific scored labels; identity is the unwarped moving segmentation. HD95 is reported in mm on the prepared grid. For IXI, the benchmark assigns nominal 1 × 1 × 1 mm spacing. NPJ is the percentage of nonpositive interior Jacobians.
 
 ## Original recorded case metrics
 

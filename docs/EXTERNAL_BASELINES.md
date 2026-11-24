@@ -17,7 +17,7 @@ One seed (42) per pair. Eight GPU workers and eight independent CPU workers, fou
 
 [Frozen plan](../baselines/results/official_four_20261116/plan.json) · [Progress](../baselines/results/official_four_20261116/progress.json) · [Final summary](../baselines/results/official_four_20261116/summary.json)
 
-All runs use standardized_v1. Dice is the equal foreground-label mean. HD95 uses prepared-grid mm. NPJ is a percentage. SDlogJ uses log(max(detJ,1e-9)). Jacobians use central differences with two boundary voxels excluded. IXI distances use its benchmark unit-voxel frame. Missing surfaces produce null HD95 and explicit scored counts.
+All runs use standardized_v1. Dice is the equal foreground-label mean. HD95 uses prepared-grid mm. NPJ is a percentage. SDlogJ uses log(max(detJ,1e-9)). Jacobians use central differences with two boundary voxels excluded. IXI HD95 is reported in mm using nominal 1 × 1 × 1 mm benchmark spacing. Missing surfaces produce null HD95 and explicit scored counts.
 
 | Dataset | Method | Finished | Successful | Dice | HD95 | NPJ % | SDlogJ | Backend | Runtime s/case | Scored pairs (Dice / HD95 / NPJ / SDlogJ) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |

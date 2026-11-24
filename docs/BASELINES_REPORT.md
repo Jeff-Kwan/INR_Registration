@@ -4,7 +4,7 @@ Finished evaluations: **2781**; successful: **2781**; process failures: **0**. I
 
 ## SIRENPath and other baselines
 
-| Dataset | Method | Fits succeeded | Dice ↑ | HD95 ↓ | NPJ (%) ↓ | SDlogJ ↓ | HD95 pairs | Runtime (s/case) | Backend |
+| Dataset | Method | Fits succeeded | Dice ↑ | HD95 (mm) ↓ | NPJ (%) ↓ | SDlogJ ↓ | HD95 pairs | Runtime (s/case) | Backend |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---|
 | Neurite-OASIS | SIRENPath | 49/49 | 0.812 ± 0.023 | 1.797 ± 0.384 | 0.000959 ± 0.001290 | 0.341 ± 0.048 | 44/49 | 87.51 ± 18.67 | GPU (RTX5090) |
 | Neurite-OASIS | ConvexAdam | 49/49 | 0.761 ± 0.032 | 2.294 ± 0.497 | 0.015924 ± 0.011275 | 0.362 ± 0.070 | 45/49 | 9.38 ± 1.52 | GPU (RTX5090) |
@@ -39,7 +39,7 @@ Finished evaluations: **2781**; successful: **2781**; process failures: **0**. I
 
 NIR uses the corrected MRI LNCC/spectral recipe in IEEE FP32; DNVF uses its original recipe with TF32 disabled. All preparations and scoring remain frozen. Each metric mean uses successful cases with a defined score. ACDC/NIR uses the largest available odd NCC extent up to9 per sampled axis:9×9×7 for four thin cases,9×9×9 otherwise.
 
-| Dataset | Method | Fits succeeded | Dice ↑ | HD95 ↓ | NPJ (%) ↓ | SDlogJ ↓ | HD95 pairs | Runtime (s/case) | Backend |
+| Dataset | Method | Fits succeeded | Dice ↑ | HD95 (mm) ↓ | NPJ (%) ↓ | SDlogJ ↓ | HD95 pairs | Runtime (s/case) | Backend |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---|
 | Neurite-OASIS | NIR | 49/49 | 0.757 ± 0.030 | 2.428 ± 0.506 | 0.278743 ± 0.023533 | 1.268 ± 0.044 | 44/49 | 36.26 ± 1.97 | GPU (RTX5090) |
 | Neurite-OASIS | DNVF | 49/49 | 0.803 ± 0.024 | 1.944 ± 0.408 | 0.000000 ± 0.000000 | 0.324 ± 0.024 | 45/49 | 101.44 ± 0.81 | GPU (RTX5090) |
@@ -52,7 +52,7 @@ NIR uses the corrected MRI LNCC/spectral recipe in IEEE FP32; DNVF uses its orig
 
 Runtime is averaged over successful cases and includes case loading, fitting, recovery/transformation evaluation, scoring and output serialization. Neural externals use fresh subprocesses; SIRENPath uses persistent workers. CPU classical baselines ran in parallel with GPU baselines. FireANTs used its PyTorch fallback.
 
-All preparations/cohorts and standardized_v1 scoring are frozen. HD95 is prepared-grid mm (IXI uses its unit-voxel benchmark frame). Its valid-pair coverage can differ between methods; direct ranking needs a common valid subset. Dice uses nearest-neighbour zero-outside label warps. NPJ is100×mean(detJ≤0); SDlogJ isstd(log(max(detJ,1e-9))), with central differences and two-voxel border exclusion.
+All preparations/cohorts and standardized_v1 scoring are frozen. HD95 is reported in mm for all four cohorts. The IXI benchmark grid has nominal 1 × 1 × 1 mm spacing. Its valid-pair coverage can differ between methods; direct ranking needs a common valid subset. Dice uses nearest-neighbour zero-outside label warps. NPJ is100×mean(detJ≤0); SDlogJ isstd(log(max(detJ,1e-9))), with central differences and two-voxel border exclusion.
 
 ## Methods
 

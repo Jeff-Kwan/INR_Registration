@@ -24,4 +24,4 @@ For ACDC we retained the brain sampler’s three-voxel stride on every axis. A 1
 
 ## Common evaluation
 
-Anatomical labels entered only after fitting. We sampled the moving labels on the original fixed grid by nearest neighbor, assigning background outside the image. We measured foreground Dice overlap, 95th-percentile Hausdorff distance in the prepared image geometry, the percentage of nonpositive Jacobian determinants, and the standard deviation of the log Jacobian determinant. IXI distances use its released unit-voxel geometry.
+Anatomical labels entered only after fitting. We sampled the moving labels on the original fixed grid by nearest neighbor, assigning background outside the image. We measured foreground Dice overlap, 95th-percentile Hausdorff distance (HD95) in mm on the prepared grid, the percentage of nonpositive Jacobian determinants, and the standard deviation of the log Jacobian determinant. For IXI, the prepared affine assigns nominal 1 × 1 × 1 mm spacing because the release omits the original scanner affine.

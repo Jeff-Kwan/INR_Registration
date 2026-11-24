@@ -39,7 +39,7 @@ def update_report(output, exit_code):
              f'[Frozen plan]({relative}/plan.json) · [Progress]({relative}/progress.json) · [Final summary]({relative}/summary.json)', '',
              'All runs use standardized_v1. Dice is the equal foreground-label mean. HD95 uses prepared-grid mm. '
              'NPJ is a percentage. SDlogJ uses log(max(detJ,1e-9)). Jacobians use central differences with two boundary voxels excluded. '
-             'IXI distances use its benchmark unit-voxel frame. Missing surfaces produce null HD95 and explicit scored counts.', '',
+             'IXI HD95 is reported in mm using nominal 1 × 1 × 1 mm benchmark spacing. Missing surfaces produce null HD95 and explicit scored counts.', '',
              '| Dataset | Method | Finished | Successful | Dice | HD95 | NPJ % | SDlogJ | Backend | Runtime s/case | Scored pairs (Dice / HD95 / NPJ / SDlogJ) |',
              '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | --- |']
     for dataset in dict.fromkeys(j['dataset'] for j in plan['jobs']):

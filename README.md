@@ -20,6 +20,7 @@ Sobol temporal draws, two orthogonal query pairs per cell, sigma 0.5-cell veloci
 smoothing, 32,768 reconstruction samples and 65,536 independent particles per
 direction. Frozen recovery uses 8 intervals ×8 RK2 substeps with an axis cap 256.
 Each loss component can be disabled by setting its documented weight to zero.
+Reproduced results may vary even with the same seed because of nondeterministic CUDA operations and differences in how PyTorch compiles GPU kernels.
 
 The dataset reference covers the official Learn2Reg OASIS ablation cohort and
 the four comparison cohorts, Neurite-OASIS, IXI, LPBA40 and ACDC. It records

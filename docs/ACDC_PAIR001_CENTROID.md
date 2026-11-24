@@ -17,7 +17,7 @@ All methods share each view’s slice/crop and one fixed-image1st–99th percent
 | FireANTs | 0.809959 | 7.523669 | 0.000000 | 0.244633 |
 | DNVF | 0.792725 | 9.901882 | 0.000000 | 0.227795 |
 
-Metrics are whole-volume standardized_v1 with the dataset-specific scored labels; identity is the unwarped moving segmentation. HD95 uses prepared-grid spacing; IXI is a nominal unit-voxel benchmark frame,not recovered patient-world geometry. NPJ is the percentage of nonpositive interior Jacobians.
+Metrics are whole-volume standardized_v1 with the dataset-specific scored labels; identity is the unwarped moving segmentation. HD95 is reported in mm on the prepared grid. For IXI, the benchmark assigns nominal 1 × 1 × 1 mm spacing. NPJ is the percentage of nonpositive interior Jacobians.
 
 ## Original recorded case metrics
 

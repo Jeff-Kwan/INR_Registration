@@ -91,8 +91,9 @@ Our per-pair optimization does not train a shared model on the training split.
 
 **Preparation.** Preserve author-preprocessed arrays exactly, 160×192×224, with
 no extra alignment, resampling or intensity normalization. The source pickles
-have no original patient-world affine: NIfTI conversion records a unit-voxel
-benchmark frame, not reconstructed patient geometry.
+omit the original patient-world affine. Conversion assigns an identity affine.
+The shared comparison evaluator reports IXI HD95 in mm using nominal
+1 × 1 × 1 mm spacing on this prepared benchmark grid.
 
 **Evaluation.** Author 46-class one-hot encoding, trilinear label-channel warp
 then argmax; 17 equally weighted anatomical groups built from 30 scored labels.
