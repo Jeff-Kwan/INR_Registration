@@ -1,4 +1,4 @@
-# SIRENPath — paired-SIREN registration
+# SIRENPath
 
 Fit two coordinate SIRENs independently for each image pair. Linear interpolation
 of their parameters supplies a continuous intensity path. Local velocity solves on a shared grid
