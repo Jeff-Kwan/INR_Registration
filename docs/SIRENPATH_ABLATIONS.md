@@ -101,7 +101,7 @@ For a separate run-7-only evaluation, point to an existing run-5 directory:
 ```bash
 bash scripts/launch_sirenpath_ablations.sh \
   --output results/sirenpath_reconstructed_crossfade \
-  --runs 7 --canonical-root results/sirenpath_l2r_oasis_ablations/05_sirenpath \
+  --runs 7 --canonical-root results/sirenpath_l2r_oasis_ablations_20261116/05_sirenpath \
   --plan-only
 ```
 
@@ -138,7 +138,7 @@ construction** (if valid nonconstant windows exist). These are not evidence of
 registration quality. JSON represents +∞ with null numeric mean and explicit
 `positive_infinity` / `infinite_pairs` fields; the Markdown report displays ∞.
 
-## Launching later
+## Planning and running the study
 
 Plan all runs without creating outputs, launching workers or touching CUDA:
 
@@ -154,7 +154,7 @@ bash scripts/launch_sirenpath_ablations.sh \
   --output results/sirenpath_l2r_oasis_quick4 --subset quick4 --plan-only
 ```
 
-After the external jobs finish, launch the full study into a fresh output directory:
+To run the full study, use a fresh output directory:
 
 ```bash
 bash scripts/launch_sirenpath_ablations.sh \
@@ -191,7 +191,7 @@ Dataset preparation remains frozen.
 [Live report](../results/sirenpath_l2r_oasis_ablations_20261116/ABLATIONS_REPORT.md) ·
 [Progress](../results/sirenpath_l2r_oasis_ablations_20261116/progress.json) ·
 [Plan](../results/sirenpath_l2r_oasis_ablations_20261116/plan.json) ·
-[Final summary when complete](../results/sirenpath_l2r_oasis_ablations_20261116/summary.json).
+[Final summary](../results/sirenpath_l2r_oasis_ablations_20261116/summary.json).
 
 Completion update: **133/133 ablation evaluations completed, zero process failures**, at **22:55 HKT on 16 November 2026**. Final results are in the linked live report and summary.
 

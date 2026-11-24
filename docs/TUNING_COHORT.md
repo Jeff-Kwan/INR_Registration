@@ -99,15 +99,13 @@ The automated search ranks categories by this equal-dataset Dice summary;
 Validation: six CPU selection/synthetic/mocked tests passed, including plan-only
 side effects, dispatch/config snapshots, normalization, map direction and scratch
 cleanup after scoring failure. No GPU training or saved-model recovery was run
-to validate this launcher. Search execution status is tracked in [TUNING_SEARCH.md](TUNING_SEARCH.md).
+to validate this launcher. The original search is described in [TUNING_SEARCH.md](TUNING_SEARCH.md).
 
-## Agreed candidate list — 20 sweeps plus one combined candidate
+## Recorded tuning candidates
 
-All candidates use the complete128-pair cohort. Constants and time-varying weights
-are grouped together as schedules. Each candidate changes only its listed schedule
-or scalar from candidate1. The user authorized all20 sweeps plus one combined-candidate run, with128 fits
-each (2688 fits total). All20 configurations are generated in the search output,
-and captured training supports the requested cosine weight schedule for the local transport loss (LT).
+The search used the frozen 128-pair cohort. Each candidate below varied one
+scalar or schedule from candidate 1. The [search protocol](TUNING_SEARCH.md)
+describes how the candidates were ranked and combined.
 
 | ID | Group | Setting |
 |---:|---|---|
@@ -136,27 +134,6 @@ LT c=4 is already candidate1. Default LT schedule is constant0.1;
 registration is cosine0.03→0.01; the endpoint parameter penalty weight is 0.01; moment is0.005;
 LR is cosine1e-4→2e-5. Constants are schedules, not separate factor groups.
 
-### Restored OneCycle candidate
-
-[15_onecycle.json](../medical/configs/tuning/15_onecycle.json) changes only the
-learning-rate schedule and final factor. It reproduces the historical source
-`HEAD:medical/registration/optimization.py` and original
-`HEAD:medical/configs/native_siren_onecycle_5k.json` LR settings, without restoring
-any historical model, objective, sampling, optimizer or integrator branches.
-
-For r=(step−1)/4999, rise from0.25 to1 with a half-cosine for r<0.1,
-then decay from1 to0.25 with a half-cosine over the remaining90%. Multiply by
-peak LR1e-4. The continuous peak is at10%; discrete update501 is closest to it.
-AdamW betas stay(0.9,0.999); there is no momentum cycling or objective warmup.
-The scalar schedule updates the same live CUDA LR tensor used by captured training.
-
-The5000-update summed LR is0.3124625, versus0.3 for the default cosine.
-Both schedule shape and endpoints/integrated LR differ, so this is a historical
-recipe comparison, not an isolated causal test of warmup. Default.json remains
-unchanged. Inspect candidate15 without fitting:
-
-```bash
-bash scripts/launch_tuning.sh --config medical/configs/tuning/15_onecycle.json --output results/tuning/15_onecycle --plan-only
-```
-
-[Automated rankings, combination and final promotion protocol](TUNING_SEARCH.md).
+Candidate 15 used an LR-only OneCycle schedule. The resolved sweep configurations
+and ranking records are preserved in the [reproducibility archive](reproducibility/README.md).
+The maintained recipe is the [canonical cosine configuration](../medical/configs/default.json).

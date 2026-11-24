@@ -1,7 +1,5 @@
 > **Corrected reruns complete:**618/618 NIR/DNVF fits now succeed, including all100 ACDC/NIR cases after the thin-volume NCC fix. Current scores are in the separate corrected-rerun table in [BASELINES_REPORT.md](BASELINES_REPORT.md).
 
-> **Current correction status:** invalid NIR and TF32-enabled DNVF official results have been deleted and withdrawn from aggregation. Both full replacements are prepared, not launched. Other methods are preserved. See [NEURAL_RERUNS.md](NEURAL_RERUNS.md) and the current [BASELINES_REPORT.md](BASELINES_REPORT.md). Historical timing/diagnostic discussion below does not represent current competitive results.
-
 # External baseline results
 
 Central record of standardized comparisons on Neurite-OASIS, ACDC, LPBA40 and IXI.
@@ -9,7 +7,7 @@ Central record of standardized comparisons on Neurite-OASIS, ACDC, LPBA40 and IX
 <!-- BEGIN official_four_20261116 -->
 ## official_four_20261116
 
-Running. Updated 2026-11-17 21:41:34 HKT.
+Completed. Updated 2026-11-17 21:41:34 HKT.
 
 1236 / 1236 fits finished, with 0 process failures.
 
@@ -1317,7 +1315,7 @@ Device usage sampled every 0.5 seconds; PyTorch peaks are allocator counters. Ne
 ## Neural external baselines — launched 2026-11-16
 
 Launched **20:00 HKT, 16 November 2026**, in tmux session
-`inr-neural-baselines`. Attach with `tmux attach -t inr-neural-baselines`.
+`inr-neural-baselines`.
 All eight RTX 5090 GPUs run one fit per GPU from a shared queue.
 Methods: **ccIDIR, NIR, NODEO, DNVF**, 309 fits each, **1,236 fits total**.
 Each method covers Neurite-OASIS 49, ACDC 100, LPBA40 test 45 and IXI test 115.
@@ -1327,21 +1325,13 @@ The run plan records preparation/configuration/evaluator hashes and the exact
 ordered inputs. Resolved method configurations are copied into `configs/`.
 All 1,236 planned jobs passed input-existence checks before launch.
 
-Estimated duration **3–4 hours**, finish approximately **23:00 HKT today to
-00:00 HKT on 17 November**. The one-Neurite-case measurements project 2.97 hours
-at ideal eight-GPU utilization; this budget allows scheduling and contention.
-Dataset-dependent times remain uncertain; largest-case DNVF tests passed on all
-four cohorts, reaching 30.71 GiB device usage on Neurite/IXI. No competing GPU
-jobs should be launched while this queue is active.
-
 Run directory: `baselines/results/official_neural_20261116`.
 [Plan](../baselines/results/official_neural_20261116/plan.json) ·
 [Live progress](../baselines/results/official_neural_20261116/progress.json) ·
-[Final summary, when complete](../baselines/results/official_neural_20261116/summary.json).
+[Final summary](../baselines/results/official_neural_20261116/summary.json).
 Per-case logs, metrics and checkpoints are retained. No dense maps or warped
 images are persisted. Standardized Dice, HD95, NPJ (%) and SDlogJ aggregates,
 scored denominators and failures are written by the launcher after every case.
-The tmux pane remains available when the launcher exits, retaining exit status.
 <!-- BEGIN official_neural_20261116 -->
 
 ## Completed neural external baselines — 2026-11-16
@@ -1994,9 +1984,6 @@ All case results follow; null metrics remain explicit.
 | IXI | NODEO | 115 | 0.723473 | 3.845508 | 0.006013 | 0.401181 | 53.53 | [metrics](../baselines/results/official_neural_20261116/ixi/nodeo/pair115/metrics.json) · [log](../baselines/results/official_neural_20261116/ixi/nodeo/pair115.log) |
 <!-- END official_neural_20261116 -->
 
-Diagnostic qualification: [NIR/DNVF audit](NEURAL_BASELINE_DIAGNOSTICS.md) identifies
-a major NIR/LPBA40 normalization confound and widespread DNVF/IXI optimization
-failures. Affected scores are provisional adaptation results; no reruns or
-score replacements have been performed.
-
-Controlled DNVF IXI pair66 with TF32 off: Dice0.740307 versus original0.057563; HD95 3.680531 versus23.658882; NPJ0% versus3.413493%. Full replacement of both methods is prepared:618 fits, heuristic ETA59.5min on8 GPUs. [Details](NEURAL_RERUNS.md).
+The initial NIR and DNVF runs exposed a normalization issue on LPBA40 and a
+precision issue on IXI. The corrected runs replaced both sets of scores.
+[Diagnostic audit](NEURAL_BASELINE_DIAGNOSTICS.md) · [Corrected results](BASELINES_REPORT.md#corrected-nir-and-dnvf-reruns).

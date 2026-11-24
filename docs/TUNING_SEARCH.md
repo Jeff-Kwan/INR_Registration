@@ -1,9 +1,10 @@
 # SIRENPath automated tuning search
 
-The user authorized20 complete one-dimensional sweep configurations, one assembled
-combination, and conditional promotion/full official comparison execution.
-All21 configurations receive the same128 frozen development pairs, seed42,
-5000 updates, canonical architecture and frozen recovery. No screening subsets.
+The original search evaluated 20 one-dimensional sweep configurations and an
+assembled combination on the frozen 128-pair development cohort, with seed 42,
+5,000 updates and canonical recovery. The retired sweep controller and generated
+presets are no longer distributed. The [reproducibility archive](reproducibility/README.md)
+preserves the settings and results.
 
 ## Search artifacts
 
@@ -61,34 +62,6 @@ no additional topology or runtime promotion gate was requested. This rule need
 not imply an improvement in overall mean Dice: one dataset can regress enough
 to outweigh three smaller improvements. The user's3/4 rule remains the criterion.
 
-If no finalist qualifies, retain the current default and stop. Otherwise save the
-previous default, replace `medical/configs/default.json`, update METHOD/README/agent
-recipe references and promotion evidence, then launch the309 official SIRENPath
-fits using a snapshot of the selected configuration. All outputs use fresh paths.
-
-## Commands and execution
-
-```bash
-# Preparation only; output must be absent:
-bash scripts/launch_tuning_search.sh prepare --output results/tuning_search_20261117
-
-# Execute the authorized workflow:
-bash scripts/launch_tuning_search.sh run --output results/tuning_search_20261117 --gpus 0 1 2 3 4 5 6 7
-
-# Recompute rankings after all20 sweeps have completed:
-bash scripts/launch_tuning_search.sh rank --output results/tuning_search_20261117
-```
-
-A process lock prevents duplicate controllers. A rerun reuses only complete runs
-with matching input/configuration provenance; it refuses to overwrite partial runs.
-The default is checked against its pre-search hash before any promotion.
-
-Initial budget:21×25–30min≈8.75–10.5h, plus≈50min for the official run if promoted.
-Update the ETA using the first full default run. GPU0–7, one persistent worker per
-GPU within each configuration, fresh model/optimizer per pair. Prior completed
-experiments are never reused as tuning evidence.
-
-Launched in tmux session `sirenpath_tuning_20261117` at18:00 UTC on16 November2026
-(02:00 HKT on17 November). Controller log and exit_code are retained under the
-search output; status.json records each stage. Initial completion estimate for
-tuning:10:45–12:30 HKT; official run, if promoted, adds approximately50 minutes.
+The recorded decision was to retain the canonical configuration. The search
+did not promote a finalist. The decision and ranking are preserved in the
+[tuning records](reproducibility/README.md).

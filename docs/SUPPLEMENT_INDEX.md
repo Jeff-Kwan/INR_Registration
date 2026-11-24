@@ -50,7 +50,7 @@ Run tools from the repository root with /venv/main/bin/python on this instance, 
 | Generate contour panels | scripts/create_structure_contours.py | Existing recovered labels/maps and fixed inputs. This script writes figures directly; it has no plan-only switch. |
 | Generate ACDC trajectory | scripts/create_acdc_trajectory.py; plan-only by default, --run executes | Backed-up default checkpoint, prepared ED/ES inputs and full cine in trajectory artifacts. |
 | Generate aligned trajectory | scripts/align_acdc_trajectory.py; plan-only by default, --run executes | Trajectory artifacts and checkpoint/input dependencies used by the script. --plots-only reuses its cached alignment artifacts, if retained. |
-| Recompute tuning ranks | python -m medical.tuning_search rank --output RESTORED_TUNING_ROOT | Restored tuning settings and summaries; reconstruct archived paths before use. Does not require tuning checkpoints. |
+| Inspect recorded tuning ranks | [Tuning archive](reproducibility/README.md) | The tuning JSONL records preserve the ranking and promotion decision. |
 
 JSONL archives wrap each original record as path, sha256 and content. Restore content to the original relative path under an isolated reproduction root; serialize JSON content or write text content as appropriate. The hash describes the original file bytes; reparsing/reserializing JSON need not reproduce those bytes. The archive is scientific evidence, not a drop-in replacement directory until restored. Some original records contain nonfinite JSON numeric values; handle those explicitly.
 

@@ -20,7 +20,7 @@ are retained; the older results below used registration cosine0.03→0.01.
 
 Expected duration50–60min; initial finish estimate **12:30–12:40 HKT**.
 [Progress](../results/official_ours_reg002_20261117/progress.json) and
-[summary when complete](../results/official_ours_reg002_20261117/summary.json).
+[summary](../results/official_ours_reg002_20261117/summary.json).
 Controller log: `.local/manual_reg002_20261117/run.log`; exit_code records completion.
 
 ## SIRENPath — cosine schedule, 2026-11-16
@@ -78,7 +78,7 @@ Neurite-OASIS HD95 is defined for 44/49 cases: pairs 2, 3, 11, 12 and 15 have un
 ## Neural external baselines — launched 2026-11-16
 
 Launched **20:00 HKT, 16 November 2026**, in tmux session
-`inr-neural-baselines`. Attach with `tmux attach -t inr-neural-baselines`.
+`inr-neural-baselines`.
 All eight RTX 5090 GPUs run one fit per GPU from a shared queue.
 Methods: **ccIDIR, NIR, NODEO, DNVF**, 309 fits each, **1,236 fits total**.
 Each method covers Neurite-OASIS 49, ACDC 100, LPBA40 test 45 and IXI test 115.
@@ -88,27 +88,18 @@ The run plan records preparation/configuration/evaluator hashes and the exact
 ordered inputs. Resolved method configurations are copied into `configs/`.
 All 1,236 planned jobs passed input-existence checks before launch.
 
-Estimated duration **3–4 hours**, finish approximately **23:00 HKT today to
-00:00 HKT on 17 November**. The one-Neurite-case measurements project 2.97 hours
-at ideal eight-GPU utilization; this budget allows scheduling and contention.
-Dataset-dependent times remain uncertain; largest-case DNVF tests passed on all
-four cohorts, reaching 30.71 GiB device usage on Neurite/IXI. No competing GPU
-jobs should be launched while this queue is active.
-
 Run directory: `baselines/results/official_neural_20261116`.
 [Plan](../baselines/results/official_neural_20261116/plan.json) ·
 [Live progress](../baselines/results/official_neural_20261116/progress.json) ·
-[Final summary, when complete](../baselines/results/official_neural_20261116/summary.json).
+[Final summary](../baselines/results/official_neural_20261116/summary.json).
 Per-case logs, metrics and checkpoints are retained. No dense maps or warped
 images are persisted. Standardized Dice, HD95, NPJ (%) and SDlogJ aggregates,
 scored denominators and failures are written by the launcher after every case.
-The tmux pane remains available when the launcher exits, retaining exit status.
 
 ## Neural baseline completion
 
 All **1,236/1,236** fits completed successfully at **22:16 HKT on 16 November 2026**,
-with zero process failures; wall duration approximately **2 h 16 min**. The tmux pane
-`inr-neural-baselines` retains launcher exit status 0.
+with zero process failures; wall duration approximately **2 h 16 min**.
 Final scores, runtime and HD95 coverage are consolidated in
 [BASELINES_REPORT.md](BASELINES_REPORT.md); per-case evidence and exclusions are in
 [EXTERNAL_BASELINES.md](EXTERNAL_BASELINES.md). The final machine-readable summary is
@@ -127,32 +118,13 @@ Dataset preparation remains frozen.
 [Live report](../results/sirenpath_l2r_oasis_ablations_20261116/ABLATIONS_REPORT.md) ·
 [Progress](../results/sirenpath_l2r_oasis_ablations_20261116/progress.json) ·
 [Plan](../results/sirenpath_l2r_oasis_ablations_20261116/plan.json) ·
-[Final summary when complete](../results/sirenpath_l2r_oasis_ablations_20261116/summary.json).
+[Final summary](../results/sirenpath_l2r_oasis_ablations_20261116/summary.json).
 
 Completion update: **133/133 ablation evaluations completed, zero process failures**, at **22:55 HKT on 16 November 2026**. Final results are in the linked live report and summary.
 
 Completed aggregate scores: [ABLATIONS_REPORT.md](ABLATIONS_REPORT.md).
 
-## NIR/DNVF replacement pending
-
-The invalid completed NIR/DNVF official outputs and scores have been removed. Both
-full replacements are prepared (**618 fits, not launched**); other methods remain
-unchanged. Requested old-runtime×110% ETA is **59.5minutes on8 GPUs**. See
-[NEURAL_RERUNS.md](NEURAL_RERUNS.md) for corrected recipes and the successful
-controlled DNVF TF32-off test.
-
-## Launched — 23:21 HKT, 16 November
-
-Both corrected full reruns are **running** in tmux session
-`inr-neural-replacements`, using all eight RTX5090 GPUs. Total618 fits,
-309 per method. Initial heuristic ETA59.5minutes: approximately **00:22 HKT on
-17 November**, subject to the corrected NIR recipe's actual speed.
-
-Attach with `tmux attach -t inr-neural-replacements`.
-[Live aggregates](BASELINES_REPORT.md) and
-[progress](../baselines/results/official_neural_20261116/progress.json) update
-after completed cases. The618 previously completed ccIDIR/NODEO results remain
-in that progress file; replacement progress is finished minus618.
+The corrected NIR and DNVF runs completed all 309 fits per method. [Rerun protocol](NEURAL_RERUNS.md).
 
 ## Thin-volume NIR completion
 

@@ -34,8 +34,7 @@ Setup fetches and imports source; it never constructs a model or runs registrati
 It uses the available PyTorch installation. Tests use temporary synthetic inputs
 and mock every native fit/optimize call. They check axis order, coordinate scale,
 transformation direction, cycle consensus, strict configuration options, plan-only
-execution and scratch cleanup on failures. Numerical registration accuracy,
-convergence and GPU memory have not been tested for these adapters.
+execution and scratch cleanup on failures. The [benchmark report](../docs/BASELINES_REPORT.md) records full registration results.
 
 FireANTs currently uses its official PyTorch fallback because its optional fused
 CUDA extension is not built. Every result records whether fused operations were
@@ -45,7 +44,9 @@ claim. No CUDA extension build is triggered by an import or setup check.
 ## Presets, planning and outputs
 
 The [baseline protocols](../docs/BASELINE_PROTOCOLS.md) describe the recipes and
-local adaptations. ## Classical CPU baselines
+local adaptations.
+
+## Classical CPU baselines
 
 | Adapter | Public source recipe | Backend |
 | --- | --- | --- |
@@ -68,9 +69,7 @@ Install the requirements above, then use CMake and a C++17 compiler for NiftyReg
 
 ## Finalized neural-field comparison set
 
-The selected methods are ccIDIR, NIR, NODEO and DNVF. Additional literature
-methods are deferred until the first paper draft establishes available space.
-Original IDIR and SINR are outside this launch set.
+The selected methods are ccIDIR, NIR, NODEO and DNVF. Original IDIR and SINR are outside this launch set.
 
 ```bash
 bash scripts/launch_neural_comparisons.sh --output baselines/results/official_neural --plan-only
@@ -106,8 +105,7 @@ fit. The final pre-update map and matching network state follow native validatio
 semantics. Native CSV scratch is cleaned on success and exceptions.
 
 Compatibility and mocked-entry tests validate source pins, map axes and scratch
-cleanup. Full optimization performance and memory usage require an authorized
-run. The four neural adapters preserve prepared image values.
+cleanup. The four neural adapters preserve prepared image values.
 
 ## Corrected MRI replacements
 

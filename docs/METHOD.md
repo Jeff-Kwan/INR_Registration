@@ -134,14 +134,6 @@ clipping and fused AdamW step. Spatial samples and temporal choices refresh each
 update. Compilation warmup and graph setup are included in training time.
 Numerical eager helpers validate the same equations on synthetic inputs.
 
-## Explicit tuning option: historical OneCycle LR
-
-The canonical default remains cosine1e-4→2e-5 without warmup. The requested
-[OneCycle tuning candidate](TUNING_COHORT.md#restored-onecycle-candidate) uses the
-same captured CUDA FP32 training equations and AdamW, with LR-only cosine rise
-2.5e-5→1e-4 over10% of updates and cosine fall to2.5e-5 over the remaining90%.
-AdamW betas stay fixed. No other historical implementation is restored.
-
 ## Frozen stage-3 recovery
 
 After fitting, hold the endpoint networks fixed and recover maps without training

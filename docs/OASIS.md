@@ -23,16 +23,16 @@ Other released subjects remain available but are not added to validation.
 ```
 
 Preparation has already completed here and refuses an existing destination.
-The launcher prints a plan only: 19 pairs × SIRENPath plus four baselines =
-95 jobs. `--methods sirenpath fireants convexadam ccidir nir` and `--pairs 1 2` select
+The launcher prints a plan only: 19 pairs × SIRENPath plus six baselines =
+133 jobs. `--methods sirenpath fireants convexadam ccidir nir` and `--pairs 1 2` select
 subsets. One worker per requested GPU runs independent cases, exposing each GPU
 as logical cuda:0 to preserve native bare `.cuda()` calls. A later explicitly
 requested experiment can add `--run --output results/oasis_new`. Training uses
 one configured seed; multiseed validation is not enabled.
 
 The single-case runner uses `--method medical.oasis_method --config
-medical/configs/default.json` for SIRENPath. Baselines use `--method
-baselines.NAME --config baselines/configs/NAME_oasis.json`. Supply the official
+medical/configs/default.json` for SIRENPath. For example, ConvexAdam uses `--method
+baselines.convexadam --config baselines/configs/convexadam_oasis.json`. Supply the official
 moving/fixed image paths and a new output directory. Use `/venv/main/bin/python`.
 
 ## Training and evaluation

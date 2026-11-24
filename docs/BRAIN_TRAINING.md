@@ -12,8 +12,9 @@ The launcher prints a plan by default; fitting requires an explicit `--run`.
 | IXI/TransMorph | `Data/IXI_TransMorph/prepared` | 160×192×224 | 115 | 58 |
 | LPBA40/SITReg | `Data/LPBA40/prepared` | 160×192×160 | 45 | 10 |
 
-Each root contains `images/*.nii`, `labels/*.nii`, `protocol.json`,
-`preparation.json` and `validation.json`. Original archives and extracted inputs
+Preparation writes `images/*.nii`, `labels/*.nii`, `protocol.json` and
+`preparation.json`. The research instance also retains a separate audit in
+`validation.json`. Original archives and extracted inputs
 remain separate and unchanged. These ignored data files must not be staged.
 
 IXI preserves the author's preprocessed arrays exactly. Its atlas is the moving

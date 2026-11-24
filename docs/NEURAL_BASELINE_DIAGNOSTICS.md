@@ -2,7 +2,7 @@
 
 Read-only inspection of completed logs, prepared intensity/label arrays and pinned
 source code. No registration reruns, training, optimizer steps, dense checkpoint recovery,
-preparation changes or hyperparameter changes were performed. Original scores remain.
+preparation changes or hyperparameter changes were performed. The observations below describe the original runs. The benchmark report uses the [completed corrected reruns](BASELINES_REPORT.md#corrected-nir-and-dnvf-reruns).
 
 ## NIR on LPBA40: strong evidence of an adapter intensity confound
 
@@ -203,7 +203,7 @@ ablation run and frozen preparations were not changed.
 Prefer the author's MRI objective and existing dataset intensity normalization.
 If an input transformation is still necessary, allow a separately documented,
 fixed, label-free in-memory method adapter for the entire affected cohort, not
-per-subject exceptions. Keep original scores; corrected runs receive a new name.
+per-subject exceptions. The corrected reruns later replaced the original scores in the official result tree.
 Do not change the canonical SIRENPath normalization or the active ablations.
 Percentile clipping is a declared alternative, not evidence of author fidelity.
 
@@ -211,5 +211,5 @@ Percentile clipping is a declared alternative, not evidence of author fidelity.
 
 The explicitly requested DNVF IXI pair66 rerun with TF32 disabled improved Dice
 from0.057563 to0.740307 and HD95 from23.658882 to3.680531, with NPJ decreasing
-from3.413493% to0%. Full NIR/DNVF replacements are now prepared; invalid official
-outputs/scores were deleted on user instruction. See [NEURAL_RERUNS.md](NEURAL_RERUNS.md).
+from3.413493% to0%. Both corrected methods subsequently completed all 309 cases. See the
+[rerun protocol](NEURAL_RERUNS.md) and [corrected results](BASELINES_REPORT.md#corrected-nir-and-dnvf-reruns).

@@ -14,7 +14,7 @@ audit. Synthetic source-math checks and mocked adapter checks were used.
 | FireANTs-SyN | Native `SyNRegistration.optimize` and composed normalized coordinates | Constructor defaults with an explicit generic multiresolution schedule; not a dataset-tuned paper recipe or the quickstart's affine + Greedy variant |
 | ConvexAdam–MIND | Native `convex_adam_pt`; MIND-SSC, coupled convex, inverse consistency, Adam; native XYZ voxel displacement retained | API defaults, without the paper's self-configuration search; not a leaderboard-reproduction claim |
 | ccIDIR | Native paired-INR fit and native **second-order** cycle consensus | Whole-image fitting and dense cycle-consensus inference with 2500 updates and static cycle weight |
-| NIR single field | Native Gaussian/SIREN field, spatial sampler, AMP loop, objective and released output conversion | Explicit released-code adaptation, not the paper's hybrid recipe or reported brain-MRI scores |
+| NIR single field | Native Gaussian/SIREN field, spatial sampler, IEEE FP32 training loop, objective and released output conversion | Explicit released-code adaptation, not the paper's hybrid recipe or reported brain-MRI scores |
 
 ## Corrections made
 
@@ -61,23 +61,11 @@ separate self-configuration workflows; we do not claim to have run them or to
 have obtained task-selected hyperparameters. The selected path uses raw images,
 not nnUNet semantic features.
 
-**NIR:** the [released training CLI](https://github.com/uci-cbcl/NIR/blob/45c0d5ccbe22c72603e4782560f487ff1e20bcfd/scripts/train_efficient_3d_ct_reg_pairwise.py)
-has inconsistent defaults (`sine` encoding is absent in EfficientMLP; random
-point tensors lack the spatial layout required by its forward method). The valid
-Gaussian/SIREN and downsize paths are explicitly selected. Width/layer structure,
-sine frequency, sampling, AMP, loss and learning-rate scheduling are native.
-Only import compatibility is patched, with the exact diff recorded.
-
-**Corrected audit:** the completed preset combines some paper numbers (Adam LR
-1e-4, Jacobian penalty1000, 900 requested iterations) with the released CT-example
-MSE objective, Gaussian scale1 and native sine frequency10. The [paper MRI
-recipe](https://arxiv.org/html/2206.03111v3#S3.SS4.SSS2) uses local NCC, Gaussian
-scale3 and sine frequency30. This is not a paper-faithful MRI recipe. Original
-scores remain recorded as released-MSE adaptation results, pending correction.
-See [the diagnostic audit](../docs/NEURAL_BASELINE_DIAGNOSTICS.md). Native LR
-scheduling and whole-loader passes are retained.
-The native loop completes eight-batch passes and thus makes 904 optimizer-step
-attempts for the 900 request at batch size 1. AMP may skip nonfinite steps.
+**NIR.** The corrected single-field MRI recipe uses native local NCC, Gaussian
+scale 3 with 2π encoding, sine frequency 30 and IEEE FP32. The native learning-rate
+schedule and whole-loader passes are retained, giving 904 updates for a request
+of 900 at batch size 1. The original AMP/MSE run is described in the
+[diagnostic audit](../docs/NEURAL_BASELINE_DIAGNOSTICS.md).
 Requested and native-loop counts are stored in metrics. The downsize sampler's
 three-voxel stride sets sample count; sample_exp=18 is unused by that branch.
 Its OASIS cohort, crop and evaluation labels differ from Learn2Reg validation.
@@ -128,8 +116,7 @@ measurements. Detailed settings and metrics are in the ignored profile results.
 
 ## Finalized neural-field implementations
 
-The selected neural-field methods are ccIDIR, NIR, NODEO and DNVF. Additional
-methods are deferred until the first draft. The source revisions and native
+The selected neural-field methods are ccIDIR, NIR, NODEO and DNVF. The source revisions and native
 entry points are pinned in sources.json. The dedicated neural launcher selects
 these four methods on all four official cohorts with standardized_v1 scoring.
 
@@ -149,7 +136,7 @@ is replaced with a single in-memory pair on the prepared grid. Native validation
 segmentation logging receives placeholder labels; real labels enter only the
 shared post-fit evaluator. Captured weights match the final pre-update field
 used by native validation. A small synthetic CUDA backward pass through the
-source SIREN and integrator passed. Full optimizer executions remain pending.
+source SIREN and integrator passed. The corrected DNVF runs completed all 309 cases.
 
 ccIDIR uses the existing source adapter with a whole-image ROI for the four
 selected cohorts and native second-order cycle consensus. NIR retains its
