@@ -4,8 +4,7 @@
     "recipe": "Author OASIS SyN test recipe: scales 4/2/1, iterations 200/100/50, Adam lr 0.1, CC width 5, gradient sigma 0.5, warp sigma 0.25",
     "paper_recipe_reproduction": false,
     "limitations": [
-      "Author OASIS is a different cohort from Learn2Reg OASIS; settings transferred across the three connected cohorts",
-      "Dataset-specific CT tuning is unverified",
+      "The preset is transferred to the prepared comparison cohorts without a dataset-specific search",
       "Published speed reproduction requires the fused backend and matching timing scope"
     ],
     "recipe_source": "fireants/scripts/pairwise/oasis.py at the pinned revision, algo=syn test branch"
@@ -22,12 +21,10 @@
   },
   "ccidir": {
     "implementation": "pinned native ImplicitRegistrator.fit and second-order consensus",
-    "recipe": "2500 iterations and static cycle weight; 50 fits per DIR-Lab case with both directions scored",
+    "recipe": "2500 iterations, static cycle weight, whole-image fitting and second-order cycle consensus",
     "paper_recipe_reproduction": false,
     "limitations": [
-      "mask equality with authors' original masks is not established",
-      "numeric random seed IDs were not published; we record IDs 0..49",
-      "Learn2Reg cohorts are declared adaptations"
+      "Dense fixed-to-moving inference uses voxel normalization and unit spacing for the native cycle penalty"
     ]
   },
   "nir": {
@@ -50,7 +47,7 @@
     "paper_recipe_reproduction": false,
     "limitations": [
       "Single-resolution classic Demons example; diffeomorphic and multiscale variants are separate methods",
-      "MRI histogram matching enabled for OASIS; CT intensities preserved",
+      "MRI histogram matching enabled on the supported cohorts",
       "CPU execution"
     ]
   },

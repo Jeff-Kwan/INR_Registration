@@ -176,9 +176,7 @@ Smoothing prototype replaces tiny grouped convolutions with reflect-indexed
 three-tap stencils compiled together. Value max difference 1.19e-7; VJP relative
 L2 ~8e-8. Decoder prototype compiles fixed-size masked centered moments with
 bidirectional RK2 per direction, avoiding dynamic particle indexing. Finite
-trajectory checks remain outside compilation. Only unmasked cropped box NCC is
-covered; DIR-Lab masks, skip cases, uncropped boundaries and full config support
-require dedicated acceptance before implementation.
+trajectory checks remain outside compilation.
 
 Complete parameter VJP on identical trained-checkpoint probes/times/particles
 matched at relative L2 4.95e-7; loss difference 4.66e-10. Nevertheless, large random

@@ -4,7 +4,89 @@ Use [the canonical method](docs/METHOD.md), [default configuration](medical/conf
 
 ## Environment
 
-Install into a CUDA-enabled Python environment using the dependency declarations in pyproject.toml and baselines/requirements.txt. On the research machine use /venv/main/bin/python. The exact current installed versions and hardware are recorded in [the reproducibility archive](docs/reproducibility/README.md). This snapshot is an observation of the environment at archival time, not a verified historical lockfile or a guarantee of bitwise determinism. Installing editable project packages and baseline sources requires the setup steps in [the baseline guide](baselines/README.md). Preserve the CUDA-enabled PyTorch build when installing dependencies.
+The SIRENPath inventory below was measured on 22 November 2026 (HKT) from `/venv/main/bin/python`. It covers training, frozen recovery, scoring, dataset preparation and figure generation for the four official comparison cohorts and the Learn2Reg OASIS ablations. The current project name and version are `sirenpath==0.2.0.dev0`. Dependency declarations live in [pyproject.toml](pyproject.toml), and the [reproducibility archive](docs/reproducibility/README.md) retains the earlier full research environment. The package versions below describe the live installation. A fresh install has yet to be verified against this inventory.
+
+### Host and build tools
+
+| Component | Observed version |
+| --- | --- |
+| Python | 3.12.15 |
+| OS and architecture | Ubuntu 24.04.5 LTS, x86-64, glibc 2.39 |
+| GPU and driver | NVIDIA GeForce RTX 5090 (compute capability 12.0), driver 595.99.02 |
+| PyTorch CUDA backend | 13.2 |
+| System CUDA compiler | nvcc 13.2.86 |
+| Host compilers and build runner | GCC/G++ 13.3.0, Ninja 1.11.1 |
+| Shell and source control | Bash 5.2.21, Git 2.43.0 |
+| Python packaging tools | pip 26.2.2, uv 0.13.4, wheel 0.48.0 |
+
+### SIRENPath Python dependencies
+
+| Role | Installed packages |
+| --- | --- |
+| Training and recovery | `torch==2.14.1+cu132`, `triton==3.8.0`, `numpy==2.5.4` |
+| Medical I/O and scoring | `nibabel==5.5.0`, `scipy==1.18.1`, `surface-distance==0.1` |
+| Declared by the base package | `pillow==13.0.0`, `tqdm==4.70.1` |
+| ACDC preparation and protocol scoring | `scikit-image==0.26.0`, `medpy==0.5.2`, `simpleitk==2.5.7` |
+| LPBA40 preparation and protocol scoring | `composable-mapping==0.1.2`, `deformation-inversion-layer==1.1.2` |
+| Figures and trajectory analysis | `matplotlib==3.11.2` |
+| Build backend | `setuptools==84.2.1` |
+
+- `surface-distance` reports version `0.1`. Use the upstream Git commit `1f805cea446805e559badc80dd27f34175e4173d` to identify the exact source.
+- The maintained Learn2Reg scorer uses the checked-in metric functions with the pinned `surface-distance` package.
+
+### Resolved transitive Python dependencies
+
+These versions come from installed package metadata on this Linux/Python environment, including PyTorch's CUDA extras and the dataset and plotting packages listed above.
+
+**CUDA packages**
+
+```text
+cuda-bindings==13.4.4
+cuda-pathfinder==1.8.3
+cuda-toolkit==13.2.2
+nvidia-cublas==13.4.1.3
+nvidia-cuda-cupti==13.2.86
+nvidia-cuda-nvrtc==13.2.86
+nvidia-cuda-runtime==13.2.86
+nvidia-cudnn-cu13==9.24.0.43
+nvidia-cufft==12.2.0.57
+nvidia-cufile==1.17.1.22
+nvidia-curand==10.4.2.66
+nvidia-cusolver==12.2.0.11
+nvidia-cusparse==12.7.10.12
+nvidia-cusparselt-cu13==0.8.1
+nvidia-nccl-cu13==2.30.7
+nvidia-nvjitlink==13.4.92
+nvidia-nvshmem-cu13==3.4.5
+nvidia-nvtx==13.2.86
+```
+
+**Other packages**
+
+```text
+absl-py==2.5.1
+contourpy==1.4.0
+cycler==0.12.1
+filelock==4.2.4
+fonttools==4.68.0
+fsspec==2026.9.0
+imageio==2.38.1
+jinja2==3.1.6
+kiwisolver==1.5.1
+lazy-loader==0.6
+markupsafe==3.0.4
+mpmath==1.3.0
+networkx==3.7
+packaging==26.3
+pyparsing==3.3.3
+python-dateutil==2.9.0.post0
+six==1.17.0
+sympy==1.14.0
+tifffile==2026.11.12
+typing-extensions==4.16.0
+```
+
+External baseline setup is documented in the [baseline guide](baselines/README.md).
 
 ## Inputs and execution
 

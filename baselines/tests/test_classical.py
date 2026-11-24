@@ -24,20 +24,25 @@ class ClassicalTests(unittest.TestCase):
         affine = np.array([[0., -2., 0., 13.], [1.5, 0., 0., -7.], [0., 0., 3., 5.], [0., 0., 0., 1.]])
         data = np.arange(np.prod(self.shape), dtype=np.float32).reshape(self.shape)
         self.case = {k: dict(data=data, affine=affine, path=str(root / f'{phase}.nii.gz'))
-                     for k, phase in [('fixed', 'T00'), ('moving', 'T50')]}
-        self.points = np.tile([3., 4., 5.], (300, 1))
+                     for k, phase in [('fixed', 'fixed'), ('moving', 'moving')]}
+        self.points = np.array([[3., 4., 5.], [2., 5., 6.]])
         self.shift = np.array([.3, -.2, .1])
-        for phase, points in [('T00', self.points), ('T50', self.points + self.shift)]:
-            np.savetxt(root / f'{phase}_landmarks_voxel.csv', points, delimiter=',', header='x,y,z', comments='')
+        self.enterContext(patch('medical.comparison_metrics.validate_case'))
+        self.enterContext(patch('medical.comparison_metrics.evaluate', side_effect=self.score))
         physical = affine[:3, :3] @ self.shift
         self.ras = np.indices(self.shape).transpose(1, 2, 3, 0) @ affine[:3, :3].T + affine[:3, 3] + physical
         self.lps = np.broadcast_to(physical * [-1, -1, 1], (*self.shape, 3)).copy()
 
     def config(self, name):
-        return json.loads((ROOT / f'configs/{name}.json').read_text())
+        return json.loads((ROOT / f'configs/{name}_neurite_oasis.json').read_text())
+
+    def score(self, case, predict, evaluation):
+        self.assertEqual(evaluation, 'neurite_oasis')
+        error = np.abs(predict(self.points) - (self.points + self.shift)).max()
+        return {'max_coordinate_error': float(error)}
 
     def assert_result(self, result):
-        self.assertLess(result['metrics']['continuous_tre_mm']['mean_mm'], 1e-5)
+        self.assertLess(result['metrics']['max_coordinate_error'], 1e-5)
         self.assertFalse(result['checkpoint']['parameter_checkpoint'])
         self.assertEqual(result['metrics']['backend'].split()[0], 'CPU')
 

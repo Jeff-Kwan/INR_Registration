@@ -12,8 +12,8 @@ Run: `results/official_ours_reg002_20261117`;309 fits across Neurite-OASIS49,
 ACDC100,LPBA4045 and IXI115. Data preparation and evaluation cohorts remain frozen.
 
 The user manually promoted registration constant0.02 after inspecting the tuning
-sweeps; this did not pass the earlier automated promotion criterion. PD-LK remains
-constant0.1,c=4,moment0.005,parameterL2=0.01,cosine LR1e-4→2e-5,no warmup,
+sweeps; this did not pass the earlier automated promotion criterion. The local transport loss (LT) weight remains
+constant0.1,c=4,moment0.005,endpoint parameter penalty weight 0.01,cosine LR1e-4→2e-5,no warmup,
 5000 updates,seed42. Other canonical settings and standardized_v1 metrics remain.
 [Promotion evidence](TUNING_PROMOTION.md). Previous results and tuning evidence
 are retained; the older results below used registration cosine0.03→0.01.
@@ -23,7 +23,7 @@ Expected duration50–60min; initial finish estimate **12:30–12:40 HKT**.
 [summary when complete](../results/official_ours_reg002_20261117/summary.json).
 Controller log: `.local/manual_reg002_20261117/run.log`; exit_code records completion.
 
-## Our method — cosine schedule, 2026-11-16
+## SIRENPath — cosine schedule, 2026-11-16
 
 Launched at **18:39 HKT on 16 November 2026** under supervisor service
 `inr-ours-comparisons`, using all eight RTX 5090 GPUs and one persistent worker

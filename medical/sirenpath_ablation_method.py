@@ -1,4 +1,5 @@
 """SIRENPath L2R-OASIS ablations, with shared frozen recovery and scoring."""
+from functools import partial
 import hashlib
 from pathlib import Path
 import json
@@ -7,7 +8,7 @@ import time
 import numpy as np
 import torch
 from medical.configuration import validate_config
-from medical.abdomen_evaluation import validate_case, evaluate, _interior_jacobian
+from medical.learn2reg_evaluation import validate_case, evaluate, _interior_jacobian
 from medical.registration.training import fit_pair
 from medical.registration.recovery import recover
 from medical.registration.intensity_crossfade import IntensityCrossfade
@@ -15,10 +16,11 @@ from medical.sirenpath_reconstruction import endpoint_scores, reconstruct_endpoi
 from medical.models.siren import PairedSiren
 
 
-def run_case(case, config, device, *, checkpoint_callback=None, raw=False, reference_checkpoint=None):
+def run_case(case, config, device, *, checkpoint_callback=None, raw=False, reference_checkpoint=None,
+             field_fitter=None):
     if raw and reference_checkpoint is not None:
         raise ValueError('Choose raw images or trained reconstructions, not both')
-    validate_config(config, allow_ablation_mse=True)
+    validate_config(config, allow_ablation_mse=field_fitter is None)
     validate_case(case, 'oasis')
     started = time.perf_counter()
     arrays, normalization = [], {}
@@ -59,13 +61,19 @@ def run_case(case, config, device, *, checkpoint_callback=None, raw=False, refer
         synchronize()
         timings['finite_difference_setup_seconds'] = time.perf_counter()-stamp
     else:
-        pair = fit_pair(*arrays, config, affine=affine, allow_ablation_mse=True,
-                        report=lambda row: print(json.dumps({'training':row}), flush=True),
-                        checkpoint_callback=checkpoint_callback)
+        fit = partial(fit_pair, allow_ablation_mse=True) if field_fitter is None else field_fitter
+        pair = fit(*arrays, config, affine=affine,
+                   report=lambda row: print(json.dumps({'training': row}), flush=True),
+                   checkpoint_callback=checkpoint_callback)
         synchronize()
         timings['training_seconds'] = time.perf_counter()-stamp
     pair.eval().requires_grad_(False)
     stamp = time.perf_counter()
+    if field_fitter is not None:
+        endpoints = pair.prepare(temporal=False)
+        predictions = tuple(reconstruct_endpoint(endpoints.at(t).image, image,
+                                                  config['runtime']['inference_chunk'])
+                            for t, image in enumerate(arrays))
     reconstruction = endpoint_scores(pair, arrays, chunk=config['runtime']['inference_chunk'], raw=raw, predictions=predictions)
     synchronize()
     timings['reconstruction_seconds'] = time.perf_counter()-stamp

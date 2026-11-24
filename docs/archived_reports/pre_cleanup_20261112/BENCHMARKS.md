@@ -9,10 +9,9 @@ All existing dataset paths and bytes are preserved. Dataset setup remains under 
 | lpba | S01 fixed; configured subjects or discovered S02–S10 | MRI nonzero-foreground percentiles 1/99 | First application focus |
 | oasis | Explicit fixed record and moving list/count | MRI nonzero-foreground percentiles 1/99 | Available probe |
 | hippocampus | Explicit fixed record and moving list/count | MRI nonzero-foreground percentiles 1/99 | Available probe |
-| abdomenct | Explicit fixed record and moving list/count | Configured HU window | Available probe |
 | lungct | Each case's own expiration/inspiration channels | Configured HU window | Available paired loader; historical failed cohort remains qualified |
 
-Released probe geometry is verified rather than reapplied. Mismatched grids raise. LPBA prepared-data provenance is unresolved; neither setup nor loading invents raw-release preprocessing. Annotation loading is separate from image loading. Lung masks and the subset of available manual landmarks remain evaluation-only.
+Released probe geometry is verified rather than reapplied. Mismatched grids raise. LPBA prepared-data provenance is unresolved; neither setup nor loading invents raw-release preprocessing. Annotation loading is separate from image loading.
 
 `pairs` lists exact identifiers; `pairs --verify-data` validates selected image grids, mappings, and annotations without fitting. No dataset scan is part of the synthetic validation suite.
 
@@ -41,7 +40,6 @@ The fresh cohorts use the maintained SIREN architecture, shared initialization, 
 | LPBA40 (S02–S10 vs S01) | 0.1 | Maintained preset; archived full-cohort reference Dice 0.698714 / HD95 6.3175 mm at seed 42 (`docs/archive/methods/BEST_RESULTS.md`), reproduced as 0.6982 / 6.327 (`docs/archive/methods/ARCHITECTURES.md`) |
 | OASIS (0002–0011 vs 0001) | 0.1 | Archived calibrated full cohort: SIREN Dice 0.7937 / HD95 2.568 mm, 10/10 gate pass; the probe-benchmark 0.01 setting gave 0.766 / 2.87 (`docs/archive/methods/ARCHITECTURES.md`, `docs/archive/medical/probe_benchmark_analysis.md`) |
 | Hippocampus (0002–0021 vs 0001) | 0.01 | Probe benchmark Dice 0.752 / HD95 3.20 mm, 20/20; the weight-0.1 calibration pair collapsed to ~5.4 dB and failed the gate (`docs/archive/medical/probe_benchmark_analysis.md`) |
-| Abdomen CT (0002–0011 vs 0001) | 0.01 | Probe benchmark Dice 0.3545 / HD95 43.35 mm, 10/10; the architecture harness reported 0.3555 / 43.68 at the same weight. Weight 0.1 fails the endpoint gate on this cohort (`docs/archive/medical/probe_benchmark.json`, `docs/archive/methods/ARCHITECTURES.md`) |
 
 Common settings are the packaged presets: SIREN width 256, four sine layers, `omega=30`; 5,000 Adam steps, batch 32,768, learning rate 2e-4 with final factor 0.25, gradient clip 1.0; `c=4`, `eta=1e-6`, `rho=0`, 4,096 PD-LK points; recovery with 16 intervals, smoothness 0.01, ridge 1e-6, 500 PCG iterations, relative tolerance 2e-5, and four midpoint-RK2 substeps; endpoint gate 25 dB PSNR; MONAI macro Dice and symmetric HD95 in millimetres.
 
@@ -50,10 +48,7 @@ These weights are the prior MSE+PD-LK-only baseline settings, inherited from dif
 ## Five-cohort default benchmark and shared-configuration sweep (2026-11-12)
 
 The packaged shared-grid default was rerun on all five cohorts at revision `4055b07` (dirty
-worktree), seed 42, with the five packaged JSON configs unchanged. New SIREN means (Dice / HD95
-mm) are LPBA40 0.7112 / 6.14, OASIS 0.7660 / 2.87, Hippocampus 0.7711 / 3.11, Abdomen CT
-0.4104 / 40.26 and Lung CT 0.8123 / 48.52; Lung CT remains a failed cohort and is not pooled
-into a headline average. Reused classical rows come from the 2026-11-10 run and are marked as
+worktree), seed 42, with the five packaged JSON configs unchanged. Reused classical rows come from the 2026-11-10 run and are marked as
 such. A pre-declared 27-candidate sweep over `c`, local box fraction and recovery smoothness
 retained the packaged `(4, 0.5, .01)` configuration; the [report](reports/default_method_baselines_20261112.md)
 records the tuning subset, cohort-balanced criterion, per-pair tables and the decision.

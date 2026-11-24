@@ -1,4 +1,4 @@
-"""In-memory adapter to pinned Learn2Reg AbdomenCTCT public-validation metrics."""
+"""In-memory Learn2Reg scoring for OASIS and prepared label arrays."""
 import ast
 import hashlib
 from functools import lru_cache
@@ -14,8 +14,8 @@ from medical.registration.cuda_kernels import supported
 
 PROTOCOL_DIR=Path(__file__).parent/'protocols'
 REVISION='88475095e35442087a24439ff34ec09f54bc7dac'
-PROTOCOLS={name:json.loads((PROTOCOL_DIR/f'{name}_val.json').read_text()) for name in ('abdomenctct','oasis')}
-PROTOCOL=PROTOCOLS['abdomenctct']
+PROTOCOL = json.loads((PROTOCOL_DIR / 'oasis_val.json').read_text())
+PROTOCOLS = {'oasis': PROTOCOL}
 
 class NumpyCompat:
     # The pinned utility uses the NumPy 1 spelling removed by NumPy 2.
@@ -40,7 +40,7 @@ def label_path(volume):
     if image.parent.name!='imagesTr': raise ValueError('Expected official imagesTr inputs')
     return image.parent.parent/'labelsTr'/image.name
 
-def validate_case(case,protocol="abdomenctct"):
+def validate_case(case,protocol="oasis"):
     specification=PROTOCOLS[protocol]
     for volume in case.values():
         label=nib.load(label_path(volume))
@@ -139,7 +139,7 @@ def _interior_jacobian(mapping):
     return determinant
 
 
-def evaluate(case,prediction,protocol="abdomenctct"):
+def evaluate(case,prediction,protocol="oasis"):
     """Prediction: absolute moving XYZ voxels on fixed XYZ grid, or point callable."""
     fixed=np.asarray(nib.load(label_path(case['fixed'])).dataobj)
     moving=np.asarray(nib.load(label_path(case['moving'])).dataobj)

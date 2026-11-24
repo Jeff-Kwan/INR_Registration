@@ -12,7 +12,7 @@ not the dataset-wide average. A zero denominator is undefined and raises an erro
 
 Groups:
 
-- Classical: ConvexAdam, FireANTs, Demons, NiftyReg, equal method weights.
+- Classical: ConvexAdam, FireANTs-SyN, Demons, NiftyReg, equal method weights.
 - Neural: ccIDIR, NIR, NODEO, DNVF, equal method weights. The default neural root
   is `baselines/results/official_neural_20261116`, which contains the corrected
   NIR MRI/FP32 and DNVF TF32-off reruns, including the four repaired NIR ACDC cases.
@@ -34,12 +34,12 @@ run when ready. These examples have **not** been executed:
 ```bash
 # Original default, registration cosine0.03→0.01:
 /venv/main/bin/python -B scripts/rank_case_advantage.py \
-  --ours results/official_ours_cosine_20261116 \
+  --sirenpath results/official_ours_cosine_20261116 \
   --output results/case_advantage_original
 
 # Manually promoted constant registration0.02 (wait for complete results):
 /venv/main/bin/python -B scripts/rank_case_advantage.py \
-  --ours results/official_ours_reg002_20261117 \
+  --sirenpath results/official_ours_reg002_20261117 \
   --output results/case_advantage_reg002
 ```
 

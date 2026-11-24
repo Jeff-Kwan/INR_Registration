@@ -7,7 +7,7 @@ import time
 
 import nibabel as nib
 import numpy as np
-from .common import finish, preflight, predict_for_case
+from .common import finish, preflight
 from .sources import verify_source, native_modules
 from .physical import ras_mapping_predictor, provenance_checkpoint
 
@@ -37,7 +37,7 @@ def run_case(case, config, device):
         if not np.allclose(image.affine, case['fixed']['affine'], atol=1e-5):
             raise ValueError('Native deformation changed the fixed evaluation grid')
         predict = ras_mapping_predictor(field, case)
-        return finish('niftyreg', case, config, predict_for_case(case, config, predict), provenance_checkpoint(), started,
+        return finish('niftyreg', case, config, predict, provenance_checkpoint(), started,
                       variant='reg_f3d public defaults', backend='CPU OpenMP',
                       registration_seconds=registration_seconds,
                       native_command=command, preprocessing='native image intensities', optimization_roi='whole_image',

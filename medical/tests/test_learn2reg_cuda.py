@@ -8,7 +8,7 @@ import numpy as np
 from scipy.ndimage import map_coordinates
 import torch
 
-from medical import abdomen_evaluation as evaluation
+from medical import learn2reg_evaluation as evaluation
 
 
 @skipUnless(os.environ.get('INR_TEST_CUDA') == '1' and torch.cuda.is_available(),
@@ -18,8 +18,8 @@ class TestLearn2RegCuda(TestCase):
         self.shape = (13, 11, 7)
         self.identity = np.stack(np.indices(self.shape), axis=-1).astype(np.float32)
         rng = np.random.default_rng(9)
-        self.moving = rng.integers(0, 14, self.shape, dtype=np.uint8)
-        self.fixed = rng.integers(0, 13, self.shape, dtype=np.uint8)
+        self.moving = rng.integers(0, 36, self.shape, dtype=np.uint8)
+        self.fixed = rng.integers(0, 35, self.shape, dtype=np.uint8)
         self.case = {key: {'path': f'/synthetic/imagesTr/{key}.nii.gz'}
                      for key in ('fixed', 'moving')}
 
@@ -37,7 +37,7 @@ class TestLearn2RegCuda(TestCase):
         mapping[..., 1] += .5
         mapping[0, 0, 0] = [np.nextafter(np.float32(.5), np.float32(0)), 0., 0.]
         official = evaluation.official_functions()
-        labels = list(range(1, 14))
+        labels = list(range(1, 36))
         for pins in (mapping, mapping + 1000):
             # The real native map has XYZ axes in a strided ZYX allocation.
             gpu = torch.tensor(pins.transpose(2, 1, 0, 3).copy(), device='cuda').permute(2, 1, 0, 3)

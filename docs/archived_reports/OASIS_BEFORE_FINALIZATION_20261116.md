@@ -37,10 +37,7 @@ moving/fixed image paths and a new output directory. Use `/venv/main/bin/python`
 
 ## Training and evaluation
 
-OASIS reuses the prepared-volume training, in-memory evaluation and scheduling
-infrastructure added for AbdomenCTCT. The small OASIS entry points select its own
-pair list, 35 labels and configs. No abdominal or lung-specific preprocessing is
-applied. Our method uses independent in-memory min/max scaling to [0,1], endpoint
+Our method uses independent in-memory min/max scaling to [0,1], endpoint
 sampling inside the current shared registration crop, and the configured objective
 with PCG+RK2 recovery. Whole-volume endpoint reconstruction metrics are evaluation
 diagnostics; they do not change the training sampling domain.
@@ -55,15 +52,13 @@ These are initial, declared OASIS adaptations of the existing native presets,
 not tuned reproduction claims. Source implementation pins and compatibility
 patches remain unchanged.
 
-Metrics use the same pinned official evaluator as abdomen, with OASIS's 35-label
-configuration. Synthetic tests compare results to the complete original evaluator
+Metrics use the pinned official evaluator with OASIS's 35-label configuration. Synthetic tests compare results to the complete original evaluator
 with its displacement loader mocked. Nearest-neighbor label pullback, absent-label
 exclusion, unit-spacing HD95, two-voxel Jacobian border exclusion and the pinned
 `detJ+3` SDlogJ convention are preserved. At the released 1 mm spacing the HD95
 voxel values also correspond numerically to millimetres. Unshifted folding is
 reported separately from the official shifted/clipped count. Nonfinite values
-are explicit JSON nulls and score coverage is retained in summaries. See
-[the shared metric details](ABDOMENCTCT.md#evaluation).
+are explicit JSON nulls and score coverage is retained in summaries.
 
 Maps and warped images remain in memory. Only scores, resolved config and permitted
 network checkpoints persist; dense methods retain provenance-only checkpoints.

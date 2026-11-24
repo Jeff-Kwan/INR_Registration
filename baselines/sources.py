@@ -15,6 +15,23 @@ def git(path, *args):
     return subprocess.check_output(['git', '-C', str(path), *args], text=True)
 
 
+def trimmed_sources(name, path):
+    """Recreate declared file trims from the exact pinned upstream blobs."""
+    spec = SOURCES[name]
+    for relative, ranges in spec.get('omit_lines', {}).items():
+        target = path / relative
+        if target.is_symlink() or not target.resolve().is_relative_to(path.resolve()):
+            raise RuntimeError(f'{name}: invalid source path for trim: {relative}')
+        blob = subprocess.check_output(['git', '-C', str(path), 'show', f"{spec['revision']}:{relative}"])
+        lines = blob.splitlines(keepends=True)
+        omitted = set()
+        for first, last in ranges:
+            if not 1 <= first <= last <= len(lines):
+                raise RuntimeError(f'{name}: invalid source trim in {relative}')
+            omitted.update(range(first, last + 1))
+        yield target, b''.join(line for number, line in enumerate(lines, 1) if number not in omitted)
+
+
 def verify_source(name):
     spec = SOURCES[name]
     if 'package' in spec:
@@ -30,14 +47,19 @@ def verify_source(name):
     if git(path, 'rev-parse', 'HEAD').strip() != spec['revision']:
         raise RuntimeError(f'{name}: upstream revision differs from sources.json')
     expected = (ROOT / spec['patch']).read_text() if spec.get('patch') else ''
-    if git(path, 'diff', '--binary', 'HEAD') != expected:
+    omitted_paths = []
+    for target, trimmed in trimmed_sources(name, path):
+        if not target.is_file() or target.read_bytes() != trimmed:
+            raise RuntimeError(f'{name}: source differs from the recorded trim: {target.relative_to(path)}')
+        omitted_paths.append(f':(exclude){target.relative_to(path).as_posix()}')
+    if git(path, 'diff', '--binary', 'HEAD', '--', *omitted_paths) != expected:
         raise RuntimeError(f'{name}: source changes differ from the recorded compatibility patch')
     return path
 
 
 def provenance(name):
     spec = SOURCES[name]
-    return {k: spec[k] for k in ('url', 'revision', 'entry', 'patch') if k in spec}
+    return {k: spec[k] for k in ('url', 'revision', 'entry', 'patch', 'omit_lines') if k in spec}
 
 
 @contextmanager

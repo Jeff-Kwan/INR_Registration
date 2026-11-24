@@ -7,24 +7,14 @@ from medical.registration.training_integrators import sample_times
 
 
 class NativeGraphInputs:
-    def __init__(self,branch,count,seed,steps):
-        self.branch,self.count,self.seed=branch,count,seed
+    def __init__(self, branch, count, seed):
+        self.branch, self.count = branch, count
         self.shape=tuple(branch.moving.shape)
         self.ranges=torch.tensor([n-c+1 for n,c in zip(self.shape,branch.crop_shape)],device=branch.moving.device)
-        self.half=branch.moving.new_tensor([c-1 for c in branch.crop_shape])/2
         self.crop_volume=math.prod(branch.crop_shape)
         self.seeds=[seed,seed+4000037,seed+4000047,seed+4000057]
-        self.offsets=self.measure_offsets()
-        self.groups={tag:self.generators() for tag in range(max(1,len(branch.crop_center_sites)))}
-        self.choices=[0]*steps
-        if branch.crop_center_sites:
-            generator=self.generator(seed)
-            choices=torch.empty(steps,device=branch.moving.device,dtype=torch.long)
-            for step in range(steps):
-                generator.set_offset(step*self.offsets[0])
-                choices[step:step+1].copy_(torch.randint(len(branch.crop_center_sites),(1,),
-                    device=branch.moving.device,generator=generator))
-            self.choices=choices.cpu().tolist()
+        self.offsets = self.measure_offsets()
+        self.streams = self.generators()
 
     def generator(self,seed):
         return torch.Generator(device=self.branch.moving.device).manual_seed(seed)
@@ -33,37 +23,24 @@ class NativeGraphInputs:
 
     def measure_offsets(self):
         branch=self.branch;device=branch.moving.device
-        source_offsets=[]
-        for tag in range(max(1,len(branch.crop_center_sites))):
-            generator=self.generator(self.seed)
-            if branch.crop_center_sites:
-                torch.randint(len(branch.crop_center_sites),(1,),device=device,generator=generator)
-                torch.randint(len(branch.crop_center_sites[tag]),(1,),device=device,generator=generator)
-            else:torch.rand(3,device=device,generator=generator)
-            torch.randint(self.crop_volume,(self.count,),device=device,generator=generator)
-            source_offsets.append(generator.get_offset())
-        if len(set(source_offsets))!=1:raise ValueError('Endpoint mask bounds changed the CUDA RNG counter layout')
-        particle,query,time=self.generators()[1:]
+        source, particle, query, time = self.generators()
+        torch.rand(3, device=device, generator=source)
+        torch.randint(self.crop_volume, (self.count,), device=device, generator=source)
         for _ in range(2):torch.rand(branch.particles,3,device=device,generator=particle)
         torch.randn(len(branch.centres),normal_count(branch.pairs_per_cell,branch.query_geometry),3,device=device,generator=query)
         if branch.random_timesteps:
             for _ in range(branch.time_strata):torch.rand((),device=device,generator=time)
-        return [source_offsets[0],particle.get_offset(),query.get_offset(),time.get_offset()]
+        return [stream.get_offset() for stream in (source, particle, query, time)]
 
-    def reset_offsets(self,tag,step):
-        for generator,offset in zip(self.groups[tag],self.offsets):generator.set_offset((step-1)*offset)
+    def reset_offsets(self, step):
+        for generator, offset in zip(self.streams, self.offsets):
+            generator.set_offset((step - 1) * offset)
 
-    def draw(self,tag):
-        branch=self.branch;device=branch.moving.device
-        source,particle,query,time=self.groups[tag]
-        if branch.crop_center_sites:
-            endpoint=torch.randint(len(branch.crop_center_sites),(1,),device=device,generator=source)
-            torch._assert_async((endpoint==tag).all(),'Native crop endpoint RNG is out of sequence')
-            sites=branch.crop_center_sites[tag]
-            index=torch.randint(len(sites),(1,),device=device,generator=source)
-            center=sites[index].squeeze(0)
-            origin=torch.minimum((center-self.half).round().long().clamp_min(0),self.ranges-1)
-        else:origin=(torch.rand(3,device=device,generator=source)*self.ranges).long()
+    def draw(self):
+        branch = self.branch
+        device = branch.moving.device
+        source, particle, query, time = self.streams
+        origin = (torch.rand(3, device=device, generator=source) * self.ranges).long()
         xyz_origin=origin.flip(0).to(branch.moving.dtype)
         local=torch.randint(self.crop_volume,(self.count,),device=device,generator=source)
         indices=torch.zeros_like(local)

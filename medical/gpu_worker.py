@@ -78,7 +78,7 @@ class GPUWorker:
         def argument(name,default=None):
             return command[command.index(name)+1] if name in command else default
         job={name:argument('--'+name) for name in ('moving','fixed','config','output')}
-        job.update(method=argument('--method','medical.paired_method'),log=str(log))
+        job.update(method=argument('--method','medical.oasis_method'),log=str(log))
         try:
             self.connection.send(job)
             status=self.connection.recv()

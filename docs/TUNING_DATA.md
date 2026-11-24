@@ -45,11 +45,6 @@ archive is retained, but only the50 evaluation subjects are currently prepared
 in its dedicated folder. The remaining364 subjects are available in that archive
 and through the corresponding L2R release, rather than an independent new cohort.
 
-AbdomenCTCT has30 labeled CT volumes; DIR-Lab has10 CT cases. These are useful
-for their documented tasks or numerical robustness, but they are not matched
-cardiac/brain-MRI development sets. Their prior uses and evaluation protocols
-must be respected before defining any additional tuning study.
-
 ACDC acquisition update: all100 official training patients are downloaded and verified.
 [Acquisition details](ACDC.md#official-training-cohort-acquired--17-november2026) ·
 [Download manifest](../Data/ACDC/training_download_manifest.json). Selected development inputs are prepared; no tuning was performed.

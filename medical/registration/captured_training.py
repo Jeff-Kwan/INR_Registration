@@ -15,8 +15,26 @@ from medical.registration.training_integrators import integration_metadata
 _LAST_COMPILE_SIGNATURE = None
 
 
-def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=None,
-             fixed_mask=None, checkpoint_callback=None, allow_ablation_mse=False):
+def fit_pair(moving, fixed, config, *, report=None, affine=None,
+             checkpoint_callback=None, allow_ablation_mse=False):
+    return fit_field(moving, fixed, config,
+                     lambda: PairedSiren(3, **config['model']), _paired_arguments, joint_loss,
+                     report=report, affine=affine,
+                     checkpoint_callback=checkpoint_callback, allow_ablation_mse=allow_ablation_mse)
+
+
+def _paired_arguments(pair):
+    source, omegas = siren_parameters(pair.source)
+    target, target_omegas = siren_parameters(pair.target)
+    if omegas != target_omegas:
+        raise ValueError('Endpoint frequencies must match')
+    return source, target, omegas
+
+
+def fit_field(moving, fixed, config, create_field, field_arguments, loss_function, *,
+              report=None, affine=None,
+              checkpoint_callback=None, allow_ablation_mse=False):
+    """Shared captured update for differentiable fields with the same loss inputs."""
     from medical.configuration import validate_config
     validate_config(config, allow_ablation_mse=allow_ablation_mse)
     settings, objective = config['training'], config['objective']
@@ -25,14 +43,14 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
         raise ValueError('Canonical captured training requires CUDA FP32 endpoint images')
     torch.manual_seed(config['runtime']['seed'])
     torch.set_float32_matmul_precision('highest')
-    pair = PairedSiren(3, **config['model']).to(moving.device)
+    pair = create_field().to(moving.device)
     pair.training_metadata = {
         'transport_objective': 'local_transport_loss', 'local_transport_weight': objective['weight'],
         'local_transport_weight_schedule': objective['weight_schedule'],
         'endpoint_objective': objective['endpoint'], 'endpoint_weight': objective['endpoint_weight'],
         'endpoint_sampling': 'shared_registration_crop', 'spatial_units': 'voxel',
         **integration_metadata('rk2', True),
-        'mask_role': 'crop_center_only', 'execution': 'captured',
+        'execution': 'captured',
         'matmul_precision': torch.get_float32_matmul_precision(),
         'sampling': 'native spatial CUDA RNG; scrambled2D Sobol temporal quadrature',
         'training_time_sampling': 'scrambled_sobol_per_half',
@@ -46,40 +64,29 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
         moving, fixed, affine, seed=config['runtime']['seed'], c=objective['c'], eta=objective['eta'],
         compile_derivatives=True, training_integrator='rk2', brightness_weight=objective['brightness_weight'],
         **{k: v for k, v in objective['registration'].items() if k != 'weight'})
-    branch.crop_center_sites = []
-    for image, mask in ((moving, moving_mask), (fixed, fixed_mask)):
-        if mask is not None:
-            if mask.shape != image.shape or mask.dtype != torch.bool or mask.device != image.device:
-                raise ValueError('Invalid crop-center mask')
-            sites = mask.nonzero().to(image.dtype)
-            if not len(sites):
-                raise ValueError('Empty crop-center mask')
-            branch.crop_center_sites.append(sites)
     rate = torch.tensor(settings['lr'], device=moving.device)
     optimizer = torch.optim.AdamW(pair.parameters(), lr=rate,
                                   weight_decay=settings['optimizer']['weight_decay'],
                                   fused=True, capturable=True)
     inputs = SobolTimeInputs(branch, settings['batch_size'], config['runtime']['seed'], settings['steps'])
-    source_parameters, omegas = siren_parameters(pair.source)
-    target_parameters, target_omegas = siren_parameters(pair.target)
-    if omegas != target_omegas:
-        raise ValueError('Endpoint frequencies must match')
+    parameters = field_arguments(pair)
     local_transport_weight = torch.zeros((), device=moving.device)
     registration_coefficient = torch.zeros((), device=moving.device)
     # Reuse compiled code for equal geometries, with fresh parameters and optimizer state.
     global _LAST_COMPILE_SIGNATURE
-    signature = (tuple(moving.shape), str(moving.dtype), str(moving.device), json.dumps(config, sort_keys=True))
+    signature = (loss_function, tuple(moving.shape), str(moving.dtype), str(moving.device),
+                 json.dumps(config, sort_keys=True), json.dumps(pair.model_config, sort_keys=True))
     if signature != _LAST_COMPILE_SIGNATURE:
-        torch._dynamo.reset_code(joint_loss.__code__)
+        torch._dynamo.reset_code(loss_function.__code__)
         _LAST_COMPILE_SIGNATURE = signature
-    compiled = torch.compile(joint_loss, fullgraph=True, dynamic=False, options={'triton.cudagraphs': False})
+    compiled = torch.compile(loss_function, fullgraph=True, dynamic=False, options={'triton.cudagraphs': False})
     options_ncc = ncc_options(objective['ncc'])
 
-    def update(tag):
-        data = inputs.draw(tag)
+    def update():
+        data = inputs.draw()
         pair.zero_grad(set_to_none=False)
         terms, finite = compiled(
-            source_parameters, target_parameters, omegas, data['coordinates'], data['coordinates'],
+            *parameters, data['coordinates'], data['coordinates'],
             data['source_truth'], data['target_truth'], data['queries'], branch.spatial_scale,
             (data['forward_positions'], data['reverse_positions']), moving, fixed, data['origin'],
             branch.domain_extent, branch.extent, data['times'], tuple(branch.sigma), branch.grid_size,
@@ -100,13 +107,12 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
 
     stream = torch.cuda.Stream(device=moving.device)
     stream.wait_stream(torch.cuda.current_stream(moving.device))
-    graphs, captured_outputs = {}, {}
+    graph = None
     warmup = min(3, settings['steps'])
     setup_seconds = 0.
     with torch.cuda.stream(stream):
         for step in range(1, settings['steps'] + 1):
-            tag = inputs.choices[step - 1]
-            inputs.reset_offsets(tag, step)
+            inputs.reset_offsets(step)
             lr_factor = learning_rate_factor(settings, step)
             rate.fill_(settings['lr'] * lr_factor)
             weight = scheduled_local_transport_weight(objective, step)
@@ -115,21 +121,20 @@ def fit_pair(moving, fixed, config, *, report=None, affine=None, moving_mask=Non
             registration_coefficient.fill_(coefficient)
             if step <= warmup:
                 started = time.perf_counter()
-                terms, norm = update(tag)
+                terms, norm = update()
                 stream.synchronize()
                 setup_seconds += time.perf_counter() - started
             else:
-                if tag not in graphs:
+                if graph is None:
                     started = time.perf_counter()
                     graph = torch.cuda.CUDAGraph()
                     with torch.cuda.graph(graph, stream=stream):
-                        captured_outputs[tag] = update(tag)
-                    graphs[tag] = graph
-                    inputs.reset_offsets(tag, step)
+                        captured_output = update()
+                    inputs.reset_offsets(step)
                     stream.synchronize()
                     setup_seconds += time.perf_counter() - started
-                graphs[tag].replay()
-                terms, norm = captured_outputs[tag]
+                graph.replay()
+                terms, norm = captured_output
             if checkpoint_callback is not None:
                 checkpoint_callback(step, pair)
             if report is not None and (step % settings['log_every'] == 0 or step == settings['steps']):

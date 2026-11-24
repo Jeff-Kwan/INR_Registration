@@ -56,9 +56,7 @@ and termination reason. The objective, FP32 fields, scalar Jacobi preconditioner
 A tensor-only iteration fuses the clamped-neighbor positive Laplacian, operator,
 reductions and vector updates with torch.compile(fullgraph=True). The Python loop
 and ten-iteration convergence checks remain outside compilation. The independent
-eager edge-difference operator supplies true-residual checks. Compilation is now
-**enabled by default for DIR-Lab, OASIS and AbdomenCTCT** through the shared
-recover and solver entrypoints. CPU remains eager. Pass compile_solver=False
+eager edge-difference operator supplies true-residual checks. CPU remains eager. Pass compile_solver=False
 to either entrypoint for the corrected eager reference; no checkpoint or config
 migration is needed. No external-baseline solvers are changed.
 
@@ -98,8 +96,7 @@ impulses, initial guesses, zero RHS, iteration-limit reporting, injected optimis
 recursive residuals, compiled FP32 fixed-iteration agreement below 1e-3 relative
 L2 error, and scratch cleanup on exceptions. The focused solver suite passed all
 five checks with CUDA enabled. The medical suite passed 38 CPU checks, with six
-opt-in CUDA checks skipped. No training, abdomen runs, new dependencies, mixed
-precision, concurrent intervals or new preconditioners were introduced.
+opt-in CUDA checks skipped.
 
 Timing/diagnostic/metric JSON and equal-length kernel traces are under ignored
 results/pcg_optimization/. Temporary profiling drivers are

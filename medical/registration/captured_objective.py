@@ -19,16 +19,28 @@ def joint_loss(source,target,omegas,source_coordinates,target_coordinates,source
     terms=_endpoint_kernel(source,target,omegas,source_coordinates,target_coordinates,
                            source_truth,target_truth,endpoint_mode,ncc_options,fuse_scalar_affines=fuse_affines,
                            parameter_l2=parameter_l2,endpoint_weight=endpoint_weight)
-    if not transport_enabled and not registration_enabled:
+    direction = _parameter_direction(source, target) if transport_enabled or registration_enabled else ()
+    samples = tuple(_interpolate(source, target, time) for time in times) if direction else ()
+    differential = _layer_curvature_chain if fuse_affines else _differential_chain
+    return transport_registration(terms, samples, direction, omegas, query_coordinates,
+                                  spatial_scale, positions, moving, fixed, origin, domain, extent,
+                                  sigma, grid_size, c, eta, local_transport_weight, registration_weight,
+                                  registration_options, integrator, brightness_weight,
+                                  differential, registration_enabled)
+
+
+def transport_registration(terms, samples, direction, omegas, query_coordinates,
+                           spatial_scale, positions, moving, fixed, origin, domain, extent,
+                           sigma, grid_size, c, eta, local_transport_weight, registration_weight,
+                           registration_options, integrator, brightness_weight,
+                           differential, registration_enabled):
+    if not samples:
         zero = terms['total'].new_zeros(())
         terms.update(local_transport_loss=zero, registration_loss=zero)
         return terms, torch.ones((), device=zero.device, dtype=torch.bool)
-    direction=_parameter_direction(source,target)
-    differential = _layer_curvature_chain if fuse_affines else _differential_chain
     fields=[]
     energies=[]
-    for time in times:
-        parameters=_interpolate(source,target,time)
+    for parameters in samples:
         velocity,energy=_pair_velocity_chunk(parameters,direction,omegas,query_coordinates,
             spatial_scale,c,eta,True,derivative_function=differential,velocity_function=checked_velocity,
             brightness_weight=brightness_weight)

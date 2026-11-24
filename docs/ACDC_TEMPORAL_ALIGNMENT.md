@@ -13,7 +13,7 @@ normalized-time sampling intervals,not an asserted physical acquisition rate.
 
 For every model/cine pair compute the existing signed9³ whole-volume Patch NCC,
 valid windows,stride1,excluding constant reference windows. Build a53×14 matrix
-separately for SIREN parameter interpolation and endpoint-reconstruction crossfade.
+separately for SIRENPath parameter interpolation and Fitted crossfade.
 Both methods use identical preprocessing,metrics,grid and alignment constraints.
 
 ## Constrained alignment
@@ -35,12 +35,12 @@ ceiling without order or endpoint constraints. It is not a physical trajectory.
 
 | Method | Unaligned mean PNCC | Aligned mean PNCC | Gain | Independent-frame ceiling |
 |---|---:|---:|---:|---:|
-| SIREN weight path |0.917636|0.919325|+0.001689|0.920546|
-| Reconstruction crossfade |0.918011|0.918527|+0.000516|0.918882|
+| SIRENPath |0.917636|0.919325|+0.001689|0.920546|
+| Fitted crossfade |0.918011|0.918527|+0.000516|0.918882|
 
-Excluding the two endpoints,means are0.909549→0.911520 for SIREN and
-0.909987→0.910589 for crossfade. Both selected warps deviate at most0.057692
-from linear normalized time. Aligned SIREN exceeds aligned crossfade by0.000798.
+Excluding the two endpoints,means are0.909549→0.911520 for SIRENPath and
+0.909987→0.910589 for Fitted crossfade. Both selected warps deviate at most0.057692
+from linear normalized time. Aligned SIRENPath exceeds aligned Fitted crossfade by0.000798.
 
 These are small,post-hoc improvements selected and measured on the same cine
 sequence. Whole-volume similarity includes stationary surrounding anatomy.
@@ -54,9 +54,9 @@ The PNG-only directory `docs/media/acdc_trajectory/aligned/` contains:
 - [Time warp](media/acdc_trajectory/aligned/time_warp.png): horizontal model time,
   vertical normalized cine time,diagonal linear reference,both constrained curves.
 - [PNCC over time](media/acdc_trajectory/aligned/pncc_over_time.png): aligned and
-  unaligned SIREN/crossfade on the same cine-time axis,with means in the legend.
-- Individual [SIREN](media/acdc_trajectory/aligned/siren_pncc_over_time.png) and
-  [crossfade](media/acdc_trajectory/aligned/crossfade_pncc_over_time.png) curves.
+  unaligned SIRENPath/Fitted crossfade on the same cine-time axis,with means in the legend.
+- Individual [SIRENPath](media/acdc_trajectory/aligned/siren_pncc_over_time.png) and
+  [Fitted crossfade](media/acdc_trajectory/aligned/crossfade_pncc_over_time.png) curves.
 - [PNCC gain](media/acdc_trajectory/aligned/pncc_alignment_gain.png).
 - Separate similarity-matrix heatmaps with alignment curves.
 - Each method/frame subdirectory has separate aligned model,unaligned model and

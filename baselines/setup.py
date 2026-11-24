@@ -3,7 +3,7 @@ import argparse
 import json
 import subprocess
 
-from .sources import ROOT, SOURCES, native_modules, upstream_imports, verify_source
+from .sources import ROOT, SOURCES, native_modules, trimmed_sources, upstream_imports, verify_source
 
 
 def fetch(name):
@@ -31,6 +31,8 @@ def fetch(name):
     subprocess.run(['git', '-C', str(path), 'checkout', '--detach', spec['revision']], check=True)
     if spec.get('patch'):
         subprocess.run(['git', '-C', str(path), 'apply', str(ROOT / spec['patch'])], check=True)
+    for target, contents in trimmed_sources(name, path):
+        target.write_bytes(contents)
     verify_source(name)
     if name == 'niftyreg':
         build_niftyreg(path)

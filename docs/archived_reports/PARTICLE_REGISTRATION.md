@@ -115,8 +115,7 @@ This is a time-length-weighted two-stage penalty, not unbiased temporal quadratu
 `random_timesteps: false` fixes the split at 0.5. These are Euler steps; no RK2
 accuracy claim applies to this training alternative.
 
-The crop and mask policies remain shared with endpoint reconstruction. DIR-Lab
-masks choose the crop center only. Every particle is scored, including crop
+The crop and mask policies remain shared with endpoint reconstruction. Every particle is scored, including crop
 exits. Image interpolation and derivative queries extend at the full-image
 border, without clipping the transported coordinates. The final full-image
 boundary penalty remains live. Gradients flow through the point solves, both
@@ -213,7 +212,6 @@ and crop-center mask policies are unchanged. Logs include raw `cycle_mm2` and
 `cycle_starts_fixed`; checkpoints record the sampling convention. See
 `medical/configs/ablations/particle_cycle.json`.
 
-
 The first requested far-phantom cycle trial completed at width256, seed42,
 5000steps,4096 loop particles and sigma7.5mm. The matched loop control
 (cycle_weight0) reached forward/reverse EPE16.711/15.718vox and Dice0.59119;
@@ -227,7 +225,6 @@ tuning the cycle penalty; it is not evidence against cycle consistency in
 general. The earlier independent bidirectional fixed-sigma result was
 4.033/3.644vox and Dice0.96893. The cycle preset remains an opt-in negative
 prototype. [Trial evidence](../results/particle_cycle_20261115T074947Z/analysis.json).
-
 
 ### Huber option and return-LK diagnosis
 
@@ -256,7 +253,6 @@ v(t)=a+bt gives returned−start=−b*(tau²+(1−tau)²), despite an invertible
 continuous flow. A unit check verifies this. Robustifying the cycle distance
 therefore cannot by itself distinguish integration error from inconsistent
 motion. [Gradient diagnosis](../results/cycle_gradient_probe_20261115T075713Z/summary.json).
-
 
 The focused Huber diagnostic fits retained both brightness and differential LK
 on the outward leg and outward NCC. With return LK removed, the zero-cycle
@@ -300,7 +296,6 @@ control. Gradient-boundary tests verify unchanged point values, live outward
 NCC, live return LK/NCC/cycle parameter gradients, and the missing cross-leg
 coordinate gradient. Frozen PCG/RK2 recovery is unchanged.
 
-
 The detached-return sweep completed all three5000-step far-phantom fits with
 seed42,4096particles,sigma7.5mm, both-leg LK and NCC. Weights0/0.001/0.01 gave
 forward/reverse EPE3.895/3.579,3.761/3.448,4.757/4.371vox and Dice
@@ -321,7 +316,6 @@ removing coordinate gradients inside either trip. Later exact norm values are
 approximate because ill-conditioning increases eager/compiled discrepancies.
 [Detached trial evidence](../results/detached_return_sweep_20261115T081538Z/analysis.json)
 · [Previous-variant gradient attribution](../results/previous_cycle_gradient_20261115T081236Z/summary.json).
-
 
 The requested detached-return Huber sweep used delta1mm and weights0.001,
 0.01,0.1, with the same seed42/5000steps/4096particles/sigma7.5mm settings.

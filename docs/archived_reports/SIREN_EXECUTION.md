@@ -148,4 +148,4 @@ User-authorized rollout, 2026-11-13: `compile_velocity` now also compiles the fu
 
 Full RK2 decoder compilation was subsequently disabled by default at user request. Optional `objective.registration.compile_decoder: true` explicitly enables it on CUDA; absence means false. Existing compile_velocity continues to control compiled derivative/solve, smoothing and masked box-NCC statistics, with native RK2 and sampling. No new training run was launched.
 
-The native CUDA implementation also accelerates ordinary box-NCC training, frozen recovery, and scoring. [Four-GPU pipeline timings and numerical checks](PIPELINE_SPEED_ROUND.md). The follow-up covers width-512 derivatives, endpoint fusion and DIR-Lab synchronization. [Second four-GPU benchmark](PIPELINE_SPEED_ROUND_2.md).
+The native CUDA implementation also accelerates ordinary box-NCC training, frozen recovery, and scoring. [Four-GPU pipeline timings and numerical checks](PIPELINE_SPEED_ROUND.md).

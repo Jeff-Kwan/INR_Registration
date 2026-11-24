@@ -6,8 +6,9 @@ The sole maintained settings are [default.json](../medical/configs/default.json)
 Training enters through `medical.registration.training.fit_pair`, which exposes
 the captured CUDA trainer directly. There is no alternate eager training loop.
 
-The objective is endpoint NCC with Gaussian moments, full-gradient shared-grid
-PD-LK, bidirectional GW-NCC and paired-parameter L2. `captured_objective.joint_loss`
+The objective is endpoint NCC with moment matching, the full-gradient local transport
+loss (LT) on a shared grid, the bidirectional trajectory-based registration loss
+and the endpoint parameter penalty. `captured_objective.joint_loss`
 is the tensor-only implementation used by compilation/capture. Eager tensor
 functions and the shared-grid reference class verify the same values and VJPs.
 Prepared parameter bundles are short-lived live graphs: never cache them across
@@ -15,8 +16,8 @@ optimizer updates. Keep all coordinate, derivative, solve, smoothing and traject
 gradients live; detach reporting scalars only.
 
 Loss coefficients remain adjustable, including zero and an endpoint coefficient
-independent of moment matching and parameter agreement. Brightness and
-differential LK residual coefficients can also be disabled independently. A zero registration coefficient overrides its
+independent of moment matching and the endpoint parameter penalty. Brightness and
+spatial-gradient constancy residual coefficients can also be disabled independently. A zero registration coefficient overrides its
 cosine schedule. The positive numerical ridge and NCC epsilon are required.
 Retired configuration keys are rejected; do not reintroduce compatibility branches.
 

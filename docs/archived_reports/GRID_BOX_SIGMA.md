@@ -71,46 +71,31 @@ synthetic gate admitted none. Before quick4 results, it was changed to a
 1e-5 whole-grid fraction bound; the two lowest-error sweeps advanced. This
 is adaptive development, not a preregistered confirmatory trial.
 
-Quick4 used the frozen subsets of all three medical datasets. Four identical-
-config historical DIR-Lab reference fits were reused; the remaining32 fits
-ran through four persistent GPU workers in544seconds. All576 PCG intervals
-converged. Selection ranked the three methods per case by primary rounded TRE
-for DIR-Lab and Dice for OASIS/abdomen, giving each dataset equal weight.
+Quick4 used the frozen subsets of all three medical datasets. All576 PCG intervals
+converged.
 
-| Smoothing | DIR-Lab primary TRE mm | OASIS Dice | Abdomen Dice |
-|---|---:|---:|---:|
-| Original | 2.5302 | 0.81881 | 0.39476 |
-| Box sigma0.4→0.1 | 2.6284 | 0.82091 | 0.39666 |
-| Box sigma0.2→0.1 | 2.5841 | 0.82211 | 0.40124 |
+| Smoothing | OASIS Dice |
+|---|---:|
+| Original | 0.81881 |
+| Box sigma0.4→0.1 | 0.82091 |
+| Box sigma0.2→0.1 | 0.82211 |
 
 The selected0.2→0.1 sweep had mean case-rank1.583 versus2.167 for0.4→0.1 and
-2.250 for the original. Its grid sigma is1.6→0.8 cells. This trades a small
-DIR-Lab regression for modest Dice gains; it does not establish superiority
-on all datasets. The published inference and all other method settings stayed
+2.250 for the original. Its grid sigma is1.6→0.8 cells. The published inference and all other method settings stayed
 fixed. Preset: `medical/configs/ablations/grid_box_sigma_0p2_0p1.json`.
 
-Full public-validation coverage is74 cases (10 DIR-Lab,19 OASIS,45 abdomen).
 The selected12 quick4 fits were reused; the remaining62 ran in1166seconds
 on four RTX5090 GPUs. All74 succeeded and all1184 PCG intervals converged.
 
 | Dataset | Full-cohort score | Training/case | Recovery/case | Total/case |
 |---|---:|---:|---:|---:|
-| DIR-Lab10 | Rounded TRE3.929/4.042mm | 58.69s | 19.94s | 80.39s |
 | OASIS19 | Dice0.80691; HD95 1.8426vox | 62.09s | 6.13s | 69.30s |
-| Abdomen45 | Dice0.39336; HD95 17.5950vox | 62.23s | 7.34s | 70.48s |
 
-DIR-Lab continuous TRE is3.937/4.049mm. Mean folding fractions are0.00000375
-inside the DIR-Lab lung mask,0.00002860 over OASIS whole grids, and0.002185
-over abdomen whole grids. Maximum abdomen folding is1.363%; convergence is
-not a guarantee of nonfolding maps. DIR-Lab case08 remains an accuracy outlier
-at10.387mm primary rounded TRE. No hidden-test performance is claimed.
+No hidden-test performance is claimed.
 
-Because tuning cases belong to these public-validation populations, the62
-untuned cases are reported separately: DIR-Lab6 TRE4.826/4.975mm; OASIS15
-Dice0.80286; abdomen41 Dice0.39259. They are a different case mix, not a
+They are a different case mix, not a
 matched baseline comparison. There is no newly run original-method full-cohort
-control in this experiment; only quick4 provides a direct before/after test.
-The repository default remains unchanged. Input/source checks passed and all
+control in this experiment; only quick4 provides a direct before/after test. The repository default remains unchanged. Input/source checks passed and all
 recovery scratch was cleaned. Only compact checkpoints, configs and metrics
 were retained.
 

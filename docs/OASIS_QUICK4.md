@@ -11,7 +11,7 @@ unchanged. This is a development subset, not an independent test benchmark.
 Preview only, without training or workers:
 
 ```bash
-/venv/main/bin/python -m medical.oasis_experiments --methods ours --subset quick4
+/venv/main/bin/python -m medical.oasis_experiments --methods sirenpath --subset quick4
 ```
 
 Preparation and this subset do not authorize experiments. Use a single seed;

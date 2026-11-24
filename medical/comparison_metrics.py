@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from scipy.ndimage import map_coordinates, find_objects
 import surface_distance
-from medical.abdomen_evaluation import dense_mapping, _interior_jacobian, _surface_distances
+from medical.learn2reg_evaluation import dense_mapping, _interior_jacobian, _surface_distances
 from medical.brain_data import protocols
 
 DATASETS = ('neurite_oasis', 'acdc', 'lpba40', 'ixi')

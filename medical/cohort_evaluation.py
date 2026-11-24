@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from medical.abdomen_evaluation import evaluate_labels, json_metric
+from medical.learn2reg_evaluation import evaluate_labels, json_metric
 
 
 def acdc_metrics(fixed, warped):

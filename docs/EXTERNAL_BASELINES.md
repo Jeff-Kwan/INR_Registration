@@ -9,7 +9,7 @@ Central record of standardized comparisons on Neurite-OASIS, ACDC, LPBA40 and IX
 <!-- BEGIN official_four_20261116 -->
 ## official_four_20261116
 
-Completed. Updated 2026-11-16 17:50:10 HKT.
+Running. Updated 2026-11-17 21:41:34 HKT.
 
 1236 / 1236 fits finished, with 0 process failures.
 

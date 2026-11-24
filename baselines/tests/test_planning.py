@@ -1,30 +1,11 @@
 """Planning must not spawn registration workers or create output directories."""
-from contextlib import redirect_stdout
-import io
-import json
-from pathlib import Path
-import tempfile
 import unittest
-from unittest.mock import patch
 
-from baselines.run_dirlab import main
 from baselines.sources import native_modules, SOURCES, upstream_imports
 from baselines.tests.test_adapters import config
 
 
 class PlanningTests(unittest.TestCase):
-    def test_default_is_plan_only(self):
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory) / 'output'
-            with patch('baselines.run_dirlab.verify_source'), patch('subprocess.run') as run, redirect_stdout(io.StringIO()) as text:
-                main(['--cases', '1', '--output', str(output), '--data', directory])
-            run.assert_not_called()
-            self.assertFalse(output.exists())
-            plan = json.loads(text.getvalue())
-            self.assertFalse(plan['execution'])
-            self.assertEqual(len(plan['jobs']), 50 + len(SOURCES) - 1)
-            self.assertTrue(all(job['missing_inputs'] for job in plan['jobs']))
-
     def test_presets_match_native_option_names(self):
         # Imports and signature/default inspection only. No constructors/fit/solve.
         import inspect

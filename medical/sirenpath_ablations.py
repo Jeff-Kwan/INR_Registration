@@ -1,7 +1,6 @@
-"""Plan or launch the seven user-defined SIRENPath ablations on frozen L2R OASIS."""
+"""Plan or launch SIRENPath ablations on the frozen Learn2Reg OASIS validation pairs."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
-import copy
 import hashlib
 import json
 from pathlib import Path
@@ -12,7 +11,7 @@ import sys
 import threading
 import time
 
-from medical.abdomen_evaluation import PROTOCOLS
+from medical.learn2reg_evaluation import PROTOCOL
 from medical.configuration import load_config, validate_config
 from medical.gpu_worker import GPUWorker
 
@@ -25,26 +24,45 @@ RUNS = {
     5: ('sirenpath', 'SIRENPath', 'ncc', True, True),
     6: ('raw_crossfade', 'Raw crossfade', None, False, False),
     7: ('reconstructed_crossfade', 'Fitted crossfade', 'ncc (reused)', False, False),
+    8: ('ncc_reconstruction', 'NCC reconstruction + moment matching (Lθ on)', 'ncc', False, False),
+    9: ('ncc_transport', 'NCC reconstruction + moment matching + LT (Lθ on)', 'ncc', True, False),
+    10: ('ncc_registration', 'NCC reconstruction + moment matching + Reg (Lθ on)', 'ncc', False, True),
+    11: ('both_losses_no_parameter_l2', 'MSE reconstruction + LT + Reg (Lθ off)', 'mse', True, True),
+    12: ('sirenpath_no_parameter_l2', 'NCC reconstruction + moment matching + LT + Reg (Lθ off)', 'ncc', True, True),
+    13: ('reconstruction_only_no_parameter_l2', 'MSE reconstruction (Lθ off)', 'mse', False, False),
+    16: ('ncc_reconstruction_no_parameter_l2', 'NCC reconstruction + moment matching (Lθ off)', 'ncc', False, False),
+    19: ('ncc_no_moments', 'NCC reconstruction + LT + Reg (Lθ on, moment matching off)', 'ncc', True, True),
+    20: ('xyzt', 'XYZT input', 'ncc', True, True),
+    21: ('film', 'Hidden-layer FiLM', 'ncc', True, True),
 }
+MAIN_RUNS = tuple(range(1, 8))
+ARCHITECTURES = {20: 'xyzt', 21: 'film'}
+WITHOUT_PARAMETER_L2 = {11, 12, 13, 16}
+
 METRICS = ('PSNR', 'PatchNCC', 'DSC', 'HD95', 'NPJ', 'SDlogJ', 'Runtime')
 
 
 def settings_for(index):
-    config = copy.deepcopy(load_config())
+    config = load_config()
     _, _, endpoint, transport, registration = RUNS[index]
     if index in (6,7):
         # No training is invoked: the config supplies normalization and recovery.
         return config
     objective = config['objective']
+    if index in WITHOUT_PARAMETER_L2 or index in ARCHITECTURES:
+        objective['parameter_l2'] = 0.
     objective['endpoint'] = endpoint
-    if endpoint == 'mse':
+    if endpoint == 'mse' or index == 19:
         objective['ncc']['moment_weight'] = 0.
     if not transport:
         objective['weight'] = 0.
     if not registration:
         objective['registration']['weight'] = 0.
         config['training']['registration_weight_schedule']['start_weight'] = 0.
-    return validate_config(config, allow_ablation_mse=True)
+    validate_config(config, allow_ablation_mse=index not in ARCHITECTURES)
+    if index in ARCHITECTURES:
+        config['architecture'] = ARCHITECTURES[index]
+    return config
 
 
 def sha256(path):
@@ -61,7 +79,8 @@ def make_plan(data, output, runs, pairs, gpus, canonical_root=None):
         raise ValueError('Output cannot be under Data')
     preparation = data/'preparation.json'
     manifest = json.loads(preparation.read_text())
-    if manifest['evaluation_pairs'] != PROTOCOLS['oasis']['eval_pairs']:
+    protocol_pairs = PROTOCOL['eval_pairs']
+    if manifest['evaluation_pairs'] != protocol_pairs:
         raise ValueError('Frozen preparation pairs differ from the official protocol')
     if 7 in runs and 5 not in runs and canonical_root is None:
         raise ValueError('Run 7 requires run 5 in the selection or --canonical-root pointing to its case directories')
@@ -74,13 +93,22 @@ def make_plan(data, output, runs, pairs, gpus, canonical_root=None):
         slug, name, endpoint, transport, registration = RUNS[index]
         config = configurations[str(index)]
         snapshot = output/'configs'/f'{index:02d}_{slug}.json'
+        if index in ARCHITECTURES:
+            module = 'medical.architecture_ablation_method'
+        elif index == 7:
+            module = 'medical.reconstructed_crossfade_method'
+        elif index == 6:
+            module = 'medical.raw_crossfade_method'
+        else:
+            module = 'medical.sirenpath_ablation_method'
+        training_steps = 0 if index in (6, 7) else config['training']['steps']
+        parameter_l2 = config['objective']['parameter_l2'] if training_steps else None
+        config_sha256 = hashlib.sha256(config_text(config).encode()).hexdigest()
         for pair_index in pairs:
-            pair = PROTOCOLS['oasis']['eval_pairs'][pair_index-1]
+            pair = protocol_pairs[pair_index - 1]
             images = {k:data/pair[k] for k in ('moving','fixed')}
             inputs = [*images.values(), *(data/pair[k].replace('imagesTr','labelsTr') for k in ('moving','fixed'))]
             target = output/f'{index:02d}_{slug}'/f'pair{pair_index:03d}'
-            module = ('medical.reconstructed_crossfade_method' if index == 7 else
-                      'medical.raw_crossfade_method' if index == 6 else 'medical.sirenpath_ablation_method')
             required_checkpoint = checkpoint_root/f'pair{pair_index:03d}'/'checkpoint.pt' if index==7 else None
             if index==7 and canonical_root is not None:
                 inputs += [required_checkpoint, required_checkpoint.parent/'run.json', required_checkpoint.parent/'metrics.json']
@@ -88,18 +116,22 @@ def make_plan(data, output, runs, pairs, gpus, canonical_root=None):
                        '--moving', str(images['moving']), '--fixed', str(images['fixed']),
                        '--config', str(snapshot), '--device', 'cuda:0', '--output', str(target)]
             jobs.append(dict(run=index, name=name, pair_index=pair_index, seed=config['runtime']['seed'],
-                             training_steps=0 if index in (6,7) else config['training']['steps'],
+                             training_steps=training_steps,
                              endpoint=endpoint, local_transport_loss=transport, registration_loss=registration,
+                             parameter_l2=parameter_l2,
                              output=str(target), command=command,
                              requires_checkpoint=str(required_checkpoint) if required_checkpoint else None,
-                             config_sha256=hashlib.sha256(config_text(config).encode()).hexdigest(),
+                             config_sha256=config_sha256,
                              missing_inputs=[str(p) for p in inputs if not p.is_file()]))
     sources = ['configuration.py', 'sirenpath_ablations.py', 'sirenpath_ablation_method.py',
-               'sirenpath_reconstruction.py', 'raw_crossfade_method.py', 'reconstructed_crossfade_method.py', 'abdomen_evaluation.py',
+               'sirenpath_reconstruction.py', 'raw_crossfade_method.py', 'reconstructed_crossfade_method.py', 'learn2reg_evaluation.py',
                'registration/objective.py', 'registration/captured_objective.py',
                'registration/captured_training.py', 'registration/optimization.py',
                'registration/recovery.py', 'registration/recovery_sampling.py',
                'registration/flow.py', 'registration/intensity_crossfade.py']
+    if any(index in ARCHITECTURES for index in runs):
+        sources += ['architecture_ablation_method.py', 'models/conditioned_siren.py',
+                    'models/siren.py', 'models/siren_functional.py', 'registration/derivatives.py']
     return dict(dataset='L2R-OASIS', total_jobs=len(jobs), training_jobs=sum(j['training_steps']>0 for j in jobs),
                 gpus=gpus, runs=runs, pair_indices=pairs, jobs=jobs,
                 configurations=configurations, canonical_checkpoint_root=str(checkpoint_root),
@@ -191,7 +223,7 @@ def main(argv=None):
     parser.add_argument('--data', type=Path, default=ROOT/'Data/OASIS')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--canonical-root', type=Path, help='Existing run-5 directory containing pairNNN/checkpoint.pt; otherwise depend on this study run 5')
-    parser.add_argument('--runs', nargs='+', type=int, choices=RUNS, default=list(RUNS))
+    parser.add_argument('--runs', nargs='+', type=int, choices=RUNS, default=list(MAIN_RUNS))
     selection = parser.add_mutually_exclusive_group()
     selection.add_argument('--pairs', nargs='+', type=int)
     selection.add_argument('--subset', choices=['quick4'])
@@ -200,18 +232,19 @@ def main(argv=None):
     mode.add_argument('--run', action='store_true')
     mode.add_argument('--plan-only', action='store_true')
     args = parser.parse_args(argv)
+    pair_count = len(PROTOCOL['eval_pairs'])
     if args.subset:
         frozen = json.loads((ROOT/'medical/protocols/oasis_quick4.json').read_text())
         if frozen['protocol_sha256'] != sha256(ROOT/'medical/protocols/oasis_val.json'):
             parser.error('Frozen quick4 protocol hash mismatch')
         args.pairs = frozen['pair_indices']
     elif args.pairs is None:
-        args.pairs = list(range(1,20))
+        args.pairs = list(range(1, pair_count + 1))
     for values, name in ((args.runs,'runs'),(args.pairs,'pairs'),(args.gpus,'GPUs')):
         if len(values)!=len(set(values)):
             parser.error(f'Distinct {name} required')
-    if any(i not in range(1,20) for i in args.pairs) or any(i<0 for i in args.gpus):
-        parser.error('Pairs must be 1..19 and GPUs nonnegative')
+    if any(i not in range(1, pair_count + 1) for i in args.pairs) or any(i < 0 for i in args.gpus):
+        parser.error(f'Pairs must be 1..{pair_count} and GPUs nonnegative')
     output = args.output.resolve()
     try:
         plan = make_plan(args.data, output, args.runs, args.pairs, args.gpus, args.canonical_root)

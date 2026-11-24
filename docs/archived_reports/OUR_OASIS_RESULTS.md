@@ -22,7 +22,7 @@ External presets and limitations: [external baseline report](EXTERNAL_BASELINES.
 
 ## Reconstruction and runtime
 
-PSNR is computed exhaustively from the **final fitted endpoint models** over the whole native volume, using peak 1 after independent min/max normalization. These are not training-minibatch estimates, lung-only scores or warped-image similarity. Reported PSNR is the mean of pair-level dB scores.
+PSNR is computed from the final fitted endpoint models over the whole native volume, using peak 1 after independent min–max normalization. Reported PSNR is the mean of pair-level dB scores.
 
 - Moving endpoint PSNR (dB): **34.15 ± 0.53**.
 - Fixed endpoint PSNR (dB): **34.06 ± 0.53**.

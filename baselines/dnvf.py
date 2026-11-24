@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import numpy as np
 import torch
-from .common import execution, finish, preflight, predict_for_case, sample_xyz_field
+from .common import execution, finish, preflight, sample_xyz_field
 from .sources import native_modules, upstream_imports
 from .precision import ieee_fp32
 
@@ -71,7 +71,8 @@ def run_case(case, config, device):
             displacement = captured['flow'][0].movedim(0, -1).numpy()
             identity = np.indices(shape, dtype=np.float32).transpose(1, 2, 3, 0)
             mapping = identity + displacement
-            predicted = predict_for_case(case, config, lambda points: sample_xyz_field(mapping, points))
+            def predicted(points):
+                return sample_xyz_field(mapping, points)
             checkpoint = dict(kind='network_weights', state=captured['state'],
                               snapshot='final native validation map, before its last optimizer update')
             return finish('dnvf', case, config, predicted, checkpoint, started,

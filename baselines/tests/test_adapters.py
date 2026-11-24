@@ -12,12 +12,12 @@ import numpy as np
 import torch
 
 from baselines import ccidir, convexadam, fireants, nir
-from baselines.common import normalized_grid_predictions, validate_config
+from baselines.common import validate_config
 from baselines.sources import ROOT
 
 
 def config(name):
-    return json.loads((ROOT / 'configs' / f'{name}.json').read_text())
+    return json.loads((ROOT / 'configs' / f'{name}_neurite_oasis.json').read_text())
 
 
 class AdapterTests(unittest.TestCase):
@@ -26,16 +26,21 @@ class AdapterTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         directory = Path(self.temp.name)
         self.shape = (5, 7, 9)  # Unequal dimensions catch XYZ/ZYX swaps.
-        self.points = np.tile([1.2, 2.3, 3.4], (300, 1))
+        self.points = np.array([[1.2, 2.3, 3.4], [2., 4., 6.]])
         self.shift = np.array([0.2, -0.4, 0.6])
         affine = np.diag([-0.97, -1.13, 2.5, 1.0])
         self.case = {}
-        for key, phase, points in [('fixed', 'T00', self.points), ('moving', 'T50', self.points + self.shift)]:
+        for key in ('fixed', 'moving'):
             data = np.arange(np.prod(self.shape), dtype=np.float32).reshape(self.shape)
-            path = directory / f'{phase}.nii.gz'
+            path = directory / f'{key}.nii.gz'
             self.case[key] = {'data': data, 'affine': affine, 'path': str(path)}
-            np.savetxt(directory / f'{phase}_landmarks_voxel.csv', points, delimiter=',', header='x,y,z', comments='')
-            nib.save(nib.Nifti1Image(np.ones(self.shape, dtype=np.uint8), affine), directory / f'{phase}_lung_mask.nii.gz')
+        self.enterContext(patch('medical.comparison_metrics.validate_case'))
+        self.enterContext(patch('medical.comparison_metrics.evaluate', side_effect=self.score))
+
+    def score(self, case, predict, evaluation):
+        self.assertEqual(evaluation, 'neurite_oasis')
+        error = np.abs(predict(self.points) - (self.points + self.shift)).max()
+        return {'max_coordinate_error': float(error)}
 
     def contexts(self, module, native):
         self.enterContext(patch.object(module, 'upstream_imports', return_value=nullcontext()))
@@ -48,12 +53,7 @@ class AdapterTests(unittest.TestCase):
         return (2 * (xyz + torch.tensor(self.shift)) / torch.tensor(np.array(self.shape)-1) - 1).unsqueeze(0)
 
     def assert_scores(self, result):
-        self.assertLess(result['metrics']['continuous_tre_mm']['mean_mm'], 2e-6)
-        self.assertEqual(result['metrics']['prediction_outside_voxel_grid'], 0)
-        self.assertEqual(result['metrics']['folding_status'], 'not_evaluated')
-
-    def test_normalized_grid_convention(self):
-        np.testing.assert_allclose(normalized_grid_predictions(self.grid(), self.points, self.shape), self.points+self.shift, atol=1e-6)
+        self.assertLess(result['metrics']['max_coordinate_error'], 2e-6)
 
     def test_convexadam_native_voxel_displacement(self):
         native = SimpleNamespace(convex_adam_pt=Mock(return_value=np.broadcast_to(self.shift, (*self.shape, 3))))
@@ -75,7 +75,7 @@ class AdapterTests(unittest.TestCase):
         output = Path(self.temp.name) / 'output'
         scores = run_case(self.case['moving']['path'], self.case['fixed']['path'],
                           config('convexadam'), output, convexadam.run_case, 'cpu')
-        self.assertLess(scores['continuous_tre_mm']['mean_mm'], 2e-6)
+        self.assertLess(scores['max_coordinate_error'], 2e-6)
         self.assertEqual({path.name for path in output.iterdir()}, {'checkpoint.pt', 'metrics.json', 'run.json'})
         checkpoint = torch.load(output / 'checkpoint.pt', weights_only=True)
         self.assertEqual(set(checkpoint), {'method', 'source', 'config', 'kind', 'parameter_checkpoint', 'reason'})
@@ -100,25 +100,23 @@ class AdapterTests(unittest.TestCase):
             self.cc_scratch.append(Path(kwargs['save_folder']))
             self.assertEqual(tuple(fixed.shape), self.shape[::-1])
             return SimpleNamespace(network=network, network_rev=reverse, fit=Mock(side_effect=RuntimeError('native failure') if fail else None))
-        self.native_landmarks = []
-        def normalize(points, shape):
-            self.native_landmarks.append(points.copy())
-            return torch.tensor(2 * points / np.array(shape) - 1, dtype=torch.float32)
+        self.native_coordinates = []
         def consensus(net, rev, coordinates, inf_order):
             self.assertEqual(inf_order, 2)
-            delta = torch.tensor(2 * self.shift[::-1].copy() / np.array(self.shape[::-1]), dtype=torch.float32)
+            self.native_coordinates.append(coordinates.detach().numpy())
+            delta = torch.tensor(4 * self.shift[::-1].copy() / (np.array(self.shape[::-1]) - 1), dtype=torch.float32)
             # A nonzero consensus offset catches using forward-only inference.
-            return coordinates, coordinates, delta.expand_as(coordinates) * (2 if net is network else -2)
-        general = SimpleNamespace(landmarks_to_coordmarks=normalize, compute_coordinates_cycle_autoretry=Mock(side_effect=consensus),
-                                  coordmarks_to_landmarks=lambda coords, shape: (coords+1)*torch.tensor(shape)/2)
+            return coordinates, coordinates, delta.expand_as(coordinates)
+        general = SimpleNamespace(compute_coordinates_cycle_autoretry=Mock(side_effect=consensus))
         return [SimpleNamespace(ImplicitRegistrator=Mock(side_effect=constructor)), general]
 
-    def test_ccidir_preserves_one_based_cycle_consensus(self):
+    def test_ccidir_preserves_dense_cycle_consensus(self):
         self.contexts(ccidir, self.cc_native())
         self.enterContext(patch.object(torch.Tensor, 'cuda', lambda value: value))
         result = ccidir.run_case(self.case, config('ccidir'), 'cuda:0')
         self.assert_scores(result)
-        np.testing.assert_allclose(self.native_landmarks[0], self.points[:, ::-1]+1)
+        expected = 2 * self.points[:, ::-1] / (np.array(self.shape[::-1]) - 1) - 1
+        np.testing.assert_allclose(self.native_coordinates[0], expected, atol=1e-7)
         self.assertTrue(all(not path.exists() for path in self.cc_scratch))
         self.assertEqual(set(result['checkpoint']['forward']), {'weight', 'bias'})
 
@@ -128,13 +126,6 @@ class AdapterTests(unittest.TestCase):
             ccidir.run_case(self.case, config('ccidir'), 'cuda:0')
         self.assertTrue(self.cc_scratch)
         self.assertTrue(all(not path.exists() for path in self.cc_scratch))
-
-    def test_ccidir_requires_moving_mask_before_native_import(self):
-        Path(self.case['moving']['path']).with_name('T50_lung_mask.nii.gz').unlink()
-        with patch.object(ccidir, 'native_modules') as native:
-            with self.assertRaisesRegex(ValueError, 'missing .*T50_lung_mask'):
-                ccidir.run_case(self.case, config('ccidir'), 'cuda:0')
-            native.assert_not_called()
 
     def nir_native(self, fail=False):
         class Samples:

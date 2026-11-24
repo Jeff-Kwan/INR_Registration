@@ -11,19 +11,15 @@ native-voxel default and adds under `training`:
 
 Each minibatch chooses its crop once:
 
-- With probability 0.5, use the usual crop sampler, including DIR-Lab's equal
-  endpoint lung-mask crop-center selection when masks are supplied.
 - Otherwise choose moving or fixed with equal probability, draw a voxel from
   that observed image's Gaussian-gradient magnitude distribution, and center the
   crop directly there. Round the origin and shift it to fit the image, exactly
   as for ordinary mask-centered crops. There is no learned transport to t=0.5.
 
 The structure distribution is pure gradient weighting inside this branch, rather
-than another 50/50 point mixture. It covers the full observed endpoint image;
-lung masks do not filter structure scores or draws. Constant images fall back to
+than another 50/50 point mixture. Constant images fall back to
 uniform voxel centers. The Gaussian derivative construction and physical 2 mm
-scale match the endpoint sampler described below; evaluation labels are unused.
-A dedicated seeded generator keeps routing/endpoint/structure draws independent
+scale match the endpoint sampler described below; evaluation labels are unused. A dedicated seeded generator keeps routing/endpoint/structure draws independent
 of registration particle, probe and time generators. The changed crop naturally
 changes the spatial distribution of all crop-dependent terms.
 
@@ -65,8 +61,7 @@ Orthogonal rotated/reflected axes are supported; shear is rejected. Constant
 images fall back to uniform sampling. The tensor-order (ZYX-column) affine supplied by the method adapters is required.
 
 The reusable sampler supports full-volume or indexed support. Current global
-endpoint training uses full-volume support and rejects crop-center masks.
-Draw from p(x) = 0.5/N + 0.5*s(x)/sum(s). The global endpoint option does not use lung masks. Each sampler is built once; inverse-CDF lookup avoids a full-volume
+endpoint training uses full-volume support and rejects crop-center masks. Draw from p(x) = 0.5/N + 0.5*s(x)/sum(s). Each sampler is built once; inverse-CDF lookup avoids a full-volume
 sampling scan per step. FP64 CDFs consume eight bytes per supported voxel per
 endpoint and are retained on the training device. Scores/CDFs are transient and
 are not checkpointed. Checkpoint training metadata records the sampler parameters,
@@ -108,8 +103,7 @@ It performs no optimizer steps or saved-model recovery.
 
 ## Deferred reconstruction support experiment
 
-Consider making endpoint reconstruction cover the entire volume even when endpoint
-lung masks exist, ignoring those masks for reconstruction only. This is deferred:
+This is deferred:
 the current global endpoint option rejects masked training inputs. Registration masks
 and intermediate-domain support are separate choices. Do not change this behavior
 until explicitly requested.

@@ -11,11 +11,9 @@ Actual launch was **2026-11-13 16:41:37 UTC**. Following the user's one-hour ext
 | Full-cohort objective | Stretch target | Companion evidence |
 | --- | --- | --- |
 | OASIS, 19 directed pairs | Mean official Dice ≥0.85 | HD95, SDlogJ, folding and label-level changes |
-| AbdomenCTCT, 45 directed pairs | Mean official Dice ≥0.50 | Same official metrics, absent-label handling, per-organ and worst-pair changes |
-| DIR-Lab, 10 cases | Mean rounded TRE ≤1.00 mm | Score forward and reverse separately, with the forward convention for external comparisons. Track both directions against the target, ≥10 mm motion, case-level tails and lung folding. |
 | Full registration pipeline | Mean ≤60 s per pair on one GPU | Report each dataset mean, pooled 74-pair mean, median and slowest cases. Time a dispatched case through completed recovery, scoring and output, including setup and synchronization. Record cold-start costs, warm-worker timings, peak memory and four-GPU throughput separately. |
 
-Use the frozen public cohorts, seed 42, current native DIR-Lab mask-centre policy and official Learn2Reg evaluators. Evaluation landmarks and labels are for scoring and diagnostics. Record successes over intended counts, nonfinite metrics, PCG convergence and retries. Report folding fractions with explicit units and the worst case as well as the mean. Review per-pair changes against the same reference. An improvement confined to one pair or accompanied by worse HD95, a folding spike, failed solves, or a slower dataset needs investigation before promotion. Keep the last well-rounded full-cohort recipe available as a fallback. [Protocols](DATASETS.md) · [External comparison conventions](EXTERNAL_BASELINES.md)
+Record successes over intended counts, nonfinite metrics, PCG convergence and retries. Report folding fractions with explicit units and the worst case as well as the mean. Review per-pair changes against the same reference. An improvement confined to one pair or accompanied by worse HD95, a folding spike, failed solves, or a slower dataset needs investigation before promotion. Keep the last well-rounded full-cohort recipe available as a fallback. [Protocols](DATASETS.md) · [External comparison conventions](EXTERNAL_BASELINES.md)
 
 ## How to allocate the next GPU
 
@@ -33,36 +31,27 @@ At each significant result record **observation → proposed mechanism → disti
 
 ## Long-horizon convergence comparison
 
-During the session launch a 40k-step run of the width-512 shared recipe on frozen DIR-Lab quick4, seed 42. Start it early enough to inform later decisions and budget its four fits against the final full-cohort reservation. Preserve the recipe's exact first 5k updates, including the 5k OneCycle schedule. For this diagnostic, continue the optimizer and sampling streams in the same process at the terminal LR through 40k. Record the continuation policy in the resolved run config. A OneCycle schedule stretched over 40k would change the early trajectory and answer a different question.
+Start it early enough to inform later decisions and budget its four fits against the final full-cohort reservation. Preserve the recipe's exact first 5k updates, including the 5k OneCycle schedule. For this diagnostic, continue the optimizer and sampling streams in the same process at the terminal LR through 40k. Record the continuation policy in the resolved run config. A OneCycle schedule stretched over 40k would change the early trajectory and answer a different question.
 
-Log training terms, effective LR, gradient clipping and cumulative training seconds. Save checkpoints at 1k, 2k, 3k, 4k, 5k, 10k, 20k, 30k and 40k. Replay frozen recovery at milestones to get both TRE directions, motion-bin errors, folding, endpoint NCC and transport alignment. Track actual recovery and evaluation cost separately so time-to-quality includes one deployment recovery and scoring pass. Keep diagnostic replay overhead visible in the session clock.
+Log training terms, effective LR, gradient clipping and cumulative training seconds. Save checkpoints at 1k, 2k, 3k, 4k, 5k, 10k, 20k, 30k and 40k. Track actual recovery and evaluation cost separately so time-to-quality includes one deployment recovery and scoring pass. Keep diagnostic replay overhead visible in the session clock.
 
-Overlay the existing original 40k and current 5k trajectories on matched cases. Compare time to a common TRE, improvement after 5k within the same model, and achieved quality at 40k. A recipe can reach the old target sooner and still have considerable headroom at 5k. A continuing gap at 40k motivates a matched-width optimizer or matched-optimizer width control before attributing it to capacity. Use early checkpoint gradient and phase probes to choose which comparison deserves the next GPU. [Mechanistic probes](RESEARCH_IDEAS.md)
+Overlay the existing original 40k and current 5k trajectories on matched cases. A recipe can reach the old target sooner and still have considerable headroom at 5k. A continuing gap at 40k motivates a matched-width optimizer or matched-optimizer width control before attributing it to capacity. Use early checkpoint gradient and phase probes to choose which comparison deserves the next GPU. [Mechanistic probes](RESEARCH_IDEAS.md)
 
 ## Protect the final full run
 
-Run a full reference early. Quick4 is the fast development screen. Include a previously difficult large DIR-Lab case when probing capture range or memory. Confirm promising changes on the other frozen quick4 sets before choosing a shared recipe. A speed candidate must demonstrate whole-pipeline savings and preserve numerical behavior or explicitly demonstrate acceptable method-level tradeoffs. Track paired changes against the reference on all three datasets and examine outliers before selecting the final recipe. A candidate with unresolved regressions can remain a research finding while the full run uses the strongest validated recipe.
+Run a full reference early. Quick4 is the fast development screen. Confirm promising changes on the other frozen quick4 sets before choosing a shared recipe. A speed candidate must demonstrate whole-pipeline savings and preserve numerical behavior or explicitly demonstrate acceptable method-level tradeoffs. Track paired changes against the reference on all three datasets and examine outliers before selecting the final recipe. A candidate with unresolved regressions can remain a research finding while the full run uses the strongest validated recipe.
 
-The width-512 OneCycle quick4 fit/evaluation logs gave mean seconds of 172.5 for DIR-Lab, 178.8 for OASIS and 175.3 for abdomen. Weighting those by 10/19/45 gives about **3.6 GPU-hours per pass**, or 55 minutes under ideal four-way dispatch. Larger lungs, cold compilation, uneven tails and mixed-shape worker history can extend this substantially. A 60-second target would imply 74 GPU-minutes per pass. Use observed full-reference throughput to budget the final run.
+Use observed full-reference throughput to budget the final run.
 
 At each allocation decision estimate remaining work by dataset and shape from actual case times. Simulate dispatch over the GPUs that will really be free, including the tail of the longest case. Add time for compilation, retrying a slow or failed case and writing/checking the final report. Subtract that reservation from T0+10h to obtain the **latest safe freeze time**. Allowing 90 minutes for a four-GPU pass and 30 minutes for retry/review means freezing by **T0+8h**. Move that boundary earlier if the measured cost grows. Full validation may run across the nine-hour minimum. Freeze one shared configuration and implementation before the final pass. If a late experiment succeeds after the freeze, document its evidence for the next round.
 
-Use fresh output roots and reconcile the final manifest against all 74 distinct protocol entries. Preserve checkpoints, timed stages, diagnostics and failures under ignored results. Keep recovery scratch transient. At close, publish a repo-local report linking the reference, final config, comparable external baselines, per-case scorecard, timings, folding tails, audit fixes and remaining hypotheses. Update the README recommendation only if the complete evidence supports it.
+Use fresh output roots and reconcile the final manifest with the cohort protocol. Preserve checkpoints, timed stages, diagnostics and failures under ignored results. Keep recovery scratch transient. At close, publish a repo-local report linking the reference, final config, comparable external baselines, per-case scorecard, timings, folding tails, audit fixes and remaining hypotheses. Update the README recommendation only if the complete evidence supports it.
 
 ## Launch preflight
 
-From the repository root these commands preview the shared reference on the complete cohorts. At execution, use the actual session root, frozen config and assigned GPUs. The DIR-Lab launcher executes when its preview flag is removed. Both Learn2Reg launchers execute with the explicit run flag. Launch separate, non-overlapping shards if changing GPU ownership between waves. Combine their per-case records by protocol identity.
+From the repository root these commands preview the shared reference on the complete cohorts. At execution, use the actual session root, frozen config and assigned GPUs. Both Learn2Reg launchers execute with the explicit run flag. Launch separate, non-overlapping shards if changing GPU ownership between waves. Combine their per-case records by protocol identity.
 
-```bash
-recipe=medical/configs/native_siren_onecycle_5k.json
-session=results/long_research_preflight
-/venv/main/bin/python scripts/run_dirlab_cases.py --plan-only --config "$recipe" --gpus 0 --output "$session/dirlab"
-/venv/main/bin/python -m medical.oasis_experiments --methods ours --config "$recipe" --gpus 0 --output "$session/oasis"
-/venv/main/bin/python -m medical.abdomen_experiments --methods ours --config "$recipe" --gpus 0 --output "$session/abdomenctct"
-```
-
-Preparation on 2026-11-14 verified 10/19/45 planned entries and the presence of the required images, DIR-Lab endpoint masks and landmarks, and Learn2Reg evaluation labels. Repeat the manifest and available-device check at launch.
-
+Repeat the manifest and available-device check at launch.
 
 ## User deadline extension during execution
 

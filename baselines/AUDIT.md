@@ -13,23 +13,16 @@ audit. Synthetic source-math checks and mocked adapter checks were used.
 | --- | --- | --- |
 | FireANTs-SyN | Native `SyNRegistration.optimize` and composed normalized coordinates | Constructor defaults with an explicit generic multiresolution schedule; not a dataset-tuned paper recipe or the quickstart's affine + Greedy variant |
 | ConvexAdam–MIND | Native `convex_adam_pt`; MIND-SSC, coupled convex, inverse consistency, Adam; native XYZ voxel displacement retained | API defaults, without the paper's self-configuration search; not a leaderboard-reproduction claim |
-| ccIDIR | Native paired-INR fit and native **second-order** cycle consensus | DIR-Lab reproduction instructions and paper repetition count followed; exact mask equality unestablished; Learn2Reg uses declared whole-image adaptations |
+| ccIDIR | Native paired-INR fit and native **second-order** cycle consensus | Whole-image fitting and dense cycle-consensus inference with 2500 updates and static cycle weight |
 | NIR single field | Native Gaussian/SIREN field, spatial sampler, AMP loop, objective and released output conversion | Explicit released-code adaptation, not the paper's hybrid recipe or reported brain-MRI scores |
 
 ## Corrections made
 
-**ccIDIR inference:** the general source CLI defaults to second order and the
-[paper, §III-B](https://arxiv.org/pdf/2310.01934) uses second-order Taylor
-consensus. The DIR-Lab helper silently defaults to first order. Our old adapter
-copied that helper default. All three presets now explicitly select
-`inference_order=2`; order 1 remains an explicitly selectable source variant.
-Training remains 2500 epochs, static cycle weight, native balanced Jacobian
-regularization and native optimizer settings. Both DIR-Lab directions are scored
-from the same fitted pair; the reverse direction swaps the two native networks.
-Original one-based DIR-Lab coordinates and the helper's shape/2 scaling remain.
-Dense Learn2Reg coordinates retain the native slice inference's (shape-1)/2 scale.
-The native driver's cycle `voxel_size=[1,1,1]` default is preserved; actual image
-spacing is used independently by physical TRE evaluation.
+**ccIDIR inference:** the general source CLI and paper use second-order Taylor
+consensus. Our presets select `inference_order=2`. Dense voxel coordinates use
+the native slice inference scale of (shape−1)/2, with arrays passed to the native
+networks in ZYX order. Training uses 2500 updates, static cycle weight, native
+balanced Jacobian regularization and `voxel_size=[1,1,1]` for cycle errors.
 
 **NIR output coordinates:** the released test script uses
 `util.warp_3d_volume`, which converts normalized output with
@@ -48,25 +41,6 @@ the shared runner. Saved config, metrics and each planned job record that seed.
 Python, NumPy and PyTorch RNGs are seeded. SIRENPath has no new seed override
 and remains single-seed.
 
-## External repetitions
-
-The [ccIDIR paper, §IV-B](https://arxiv.org/pdf/2310.01934) evaluates 50 independent
-fits per DIR-Lab case and both directions. The plan now schedules 500 fits for
-its ten cases, yielding 1000 directional results. Seed IDs 0–49 are our recorded
-reproducible choice; the paper does not specify its numeric IDs. Each fit has a
-unique `caseXX/seed_XXXX` output path. Directional mean rounded TRE over 2 mm is
-reported as a measured failure. Crashed/unscored fits remain visible with
-intended/scored/unscored denominators, separately from measured TRE failures.
-Per-case means and medians across seeds are retained. No best-seed selection is
-performed and no fits were launched by changing this plan.
-
-No matching repeated-initialization requirement was identified in the selected
-FireANTs/ConvexAdam source recipes or NIR's implementation/setup sections.
-Those remain one configured fit per pair. ccIDIR on the Learn2Reg OASIS/abdomen
-cohorts also remains one fit per pair: those cohorts are adaptations, not the
-paper's DIR-Lab robustness study. Baseline repetition policies are in
-`protocols.py` and are separate from our method's single-seed rule.
-
 ## Remaining recipe differences
 
 **FireANTs:** its [official SyN documentation](https://github.com/rohitrango/FireANTs/blob/f8a9cc259ab9113fc43bd99797000fa8fc34eb59/docs/docs/reference/syn.md)
@@ -75,7 +49,7 @@ numerical inversion are used. The selected [constructor](https://github.com/rohi
 defaults define the API; our values now follow its author OASIS SyN test
 branch: scales [4,2,1], iterations [200,100,50], Adam LR 0.1, CC width 5,
 gradient sigma 0.5 and warp sigma 0.25. Its OASIS cohort differs from official
-Learn2Reg validation. These settings are transferred to DIR-Lab and abdomen. No extra affine stage is silently added. The official PyTorch
+Learn2Reg validation. The same preset is used on the comparison cohorts without an extra affine stage. The official PyTorch
 fallback is used because fused operations are unavailable; published speed claims
 are not applicable to an unmeasured fallback run.
 
@@ -115,10 +89,9 @@ its separate two-phase, two-field protocol.
 - Exact upstream revisions and recorded compatibility diffs are checked on import.
 - Config keys and native API signatures/defaults are inspected without fitting.
 - Native ccIDIR nonlinear first-/second-order inference is checked on synthetic
-  CPU fields, including a nonzero higher-order correction and both directions.
+  CPU fields, including a nonzero higher-order correction.
 - NIR output conversion is compared with the actual native inference warp helper.
-- Seed overrides, 50 distinct ccIDIR paths and missing-fit denominators are tested.
-- Existing mocked all-method DIR-Lab, OASIS and abdomen checks still pass.
+- Mocked runner checks cover seed overrides, output paths and missing-fit denominators.
 
 These checks establish integration behavior and source-math parity on synthetic
 inputs. They do not establish numerical convergence, accuracy, reproducibility
@@ -136,17 +109,10 @@ infinite HD95; existing JSON serialization represents nonfinite metrics as null.
 These cases must remain visible in reporting rather than being described as
 successful finite HD95 scores.
 
-The three failed NIR AbdomenCTCT fits were rerun from their frozen original
-configs and seeds in `baselines/results/nir_abdomen_eval_retry/`. Original run
-artifacts are preserved; the retry directory records its own plan and summary,
-and combined_summary.json selects successful retries in the original 222-job
-cohort. No saved weights survived the original evaluation errors, requiring
-repeat fitting rather than evaluation-only recovery.
-
 ## Classical baseline source recipes
 
 `demons` uses the official SimpleITK DemonsRegistration1 example with 50 iterations,
-sigma 1.0 and MRI histogram matching. CT presets preserve native intensities.
+sigma 1.0 and MRI histogram matching.
 
 `niftyreg` uses the pinned v2.1.1 reg_f3d and reg_transform tools with their public
 optimization defaults. The build uses Release CPU/OpenMP. A synthetic native

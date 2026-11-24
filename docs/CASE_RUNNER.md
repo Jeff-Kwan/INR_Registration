@@ -7,15 +7,13 @@ A run requires explicit user authorization; the commands below describe interfac
 `python -m medical` accepts `--moving`, `--fixed`, `--config`, `--output`,
 `--method` and `--device`. Inputs must be matching finite 3D NIfTI grids and affines.
 Outputs must use a new directory outside Data. Use `/venv/main/bin/python` and
-`--device cuda:0`; our model trains on CUDA FP32. The moving image is model time 0,
+`--device cuda:0`; SIRENPath trains on CUDA FP32. The moving image is model time 0,
 the fixed image time 1. The plugin returns scores and a compact checkpoint;
 the runner retains checkpoint.pt, metrics.json and run.json with provenance.
 
 | Benchmark | Method plugin | Cohort launcher |
 | --- | --- | --- |
-| DIR-Lab | `medical.paired_method` | `scripts/run_dirlab_cases.py --plan-only --output <new-directory>` |
 | Learn2Reg OASIS | `medical.oasis_method` | `python -m medical.oasis_experiments` |
-| AbdomenCTCT | `medical.abdomen_method` | `python -m medical.abdomen_experiments` |
 | IXI / LPBA40 | `medical.brain_method` | `python -m medical.brain_experiments --plan-only` |
 | ACDC / Neurite-OASIS | `medical.cohort_method` | `python -m medical.cohort_experiments --plan-only` |
 
@@ -34,11 +32,10 @@ worker per explicitly selected GPU takes cases from a shared queue; every case
 gets fresh model/optimizer state and its single configured seed. Case failures
 remain in progress and summary files, with success denominators and runtime scopes.
 Learn2Reg/brain launchers plan by default and require `--run` for experiments.
-DIR-Lab executes by default, so always add `--plan-only` for inspection.
-Frozen quick4 subsets are listed in DATASETS.md. Planning launches no training.
+The frozen Learn2Reg OASIS quick4 subset is listed in DATASETS.md.
 
 Whole-volume reconstruction metrics are diagnostics; endpoint training uses the
-shared crop. Dataset labels and landmarks are evaluation-only. Recovered maps
+shared crop. Dataset labels are evaluation-only. Recovered maps
 and warped images stay in memory; solver scratch is removed on exceptions as
 well as success. Checkpoints preserve model state and the resolved configuration.
 
@@ -47,12 +44,12 @@ well as success. Checkpoints preserve model state and the resolved configuration
 The selected official cohorts are Neurite-OASIS (49), ACDC (100), LPBA40 test
 (45), and IXI test (115), for 309 fits per method. L2R-OASIS ablations use the separate [SIRENPath study](SIRENPATH_ABLATIONS.md)
 and are excluded from these launchers. The canonical configuration and seed 42
-apply to our method. External recipes retain their recorded source settings.
+apply to SIRENPath. External recipes retain their recorded source settings.
 
-Plan our method and external baselines from the repository with
+Plan SIRENPath and external baselines from the repository with
 
 ```bash
-bash scripts/launch_our_comparisons.sh --output results/official_ours --plan-only
+bash scripts/launch_sirenpath_comparisons.sh --output results/official_sirenpath --plan-only
 bash scripts/launch_external_comparisons.sh --output baselines/results/official_external --plan-only
 ```
 
@@ -63,7 +60,7 @@ must be fresh directories outside Data. `--datasets`, `--gpus` and
 and run concurrently with GPU workers. The defaults are eight GPU workers and
 four CPU workers, with four native CPU threads per baseline process.
 
-The external script includes ConvexAdam, FireANTs, NIR, Demons and NiftyReg.
+The external script includes ConvexAdam, FireANTs-SyN, NIR, Demons and NiftyReg.
 Select the requested timing-comparison subset with
 
 ```bash
@@ -86,7 +83,7 @@ The plans snapshot configurations, input preparation hashes and evaluator source
 hash. Progress and summaries are grouped by dataset and method, with per-case
 scores and failures retained. Dense maps and warped images remain temporary.
 NIR minmax-normalizes LPBA40 input for its released intensity sampler; it receives
-prepared [0,1] values for the other selected cohorts. Our model retains each
+prepared [0,1] values for the other selected cohorts. SIRENPath retains each
 cohort's protocol-prepared intensities. Runtime estimates exclude NIR and ccIDIR
 when explicitly requested.
 

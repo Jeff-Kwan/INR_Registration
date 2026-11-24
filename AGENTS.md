@@ -31,7 +31,7 @@ branches. No particle/cycle objective, Euler training, inverse-metric objective,
 physical working grids, physical-unit training, structure samplers, alternative
 endpoint objectives or experimental optimizers remain outside the explicitly
 requested [L2R-OASIS ablation study](docs/SIRENPATH_ABLATIONS.md). That study alone
-permits MSE endpoint fitting in runs 1–4 and a no-training Raw crossfade control;
+permits MSE endpoint fitting in runs 1–4 and their repeats with the endpoint parameter penalty off and a no-training Raw crossfade control;
 the canonical recipe remains NCC. Scalar ablations use
 copies of the one canonical configuration. Numerical eager helpers remain for
 validation of the same equations. Superseded documentation belongs in
@@ -57,21 +57,11 @@ own pinned protocols; their author seed policies do not change SIRENPath.
 
 **docs/DATASETS.md** is the sole authority for cohorts, preparation, directions,
 label handling and evaluation. **docs/CASE_RUNNER.md** specifies execution.
-Labels/landmarks remain evaluation-only. Preserve original evaluation grids.
+Anatomical labels remain evaluation-only. Preserve original evaluation grids.
 
-DIR-Lab: ccIDIR/IDIR native preparation,10 cases,300 landmarks each; report
-T00→T50 and reverse TRE separately. Choose T00/T50 masks equally to place the
-shared crop by sampling a mask voxel and shifting the centered box to fit.
-No occupancy rejection, loss gating or mask filtering. Every local transport cell and NCC
-particle contributes, including crop exits. Border extension and a live full-image
-boundary penalty apply. Masks may define evaluation-only lung metrics.
-
-Learn2Reg OASIS:19 official directed public-validation pairs, labels1–35.
-AbdomenCTCT:45 official directed public-validation pairs,13 labels. Both retain
-official voxel HD95 and shifted SDlogJ conventions; labels are never crop masks.
-Their launchers are plan-only by default. DIR-Lab executes by default: use
---plan-only for inspection. Frozen quick4 selections are DIR-Lab01,03,04,05;
-OASIS1,4,8,9; abdomen2,8,18,41. Never redraw them or choose using scores.
+Learn2Reg OASIS has 19 official directed public-validation pairs with labels 1–35.
+Use official voxel HD95 and shifted SDlogJ for ablations. The launcher is plan-only
+by default. The frozen quick4 uses pairs 1, 4, 8 and 9.
 
 IXI/TransMorph:115 atlas-to-subject test pairs. LPBA40/SITReg:45 frozen test
 combinations; one fit returns both maps, qualified against the author swapped

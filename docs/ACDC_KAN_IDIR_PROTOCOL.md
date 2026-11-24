@@ -69,7 +69,7 @@ evaluation. Our end-to-end timings must remain separately identified.
 
 The paper describes ten random seeds; the README recommends three to five for
 ACDC, and the runner defaults to one with a time-derived seed. These statements
-do not alter our method's single-seed policy. No multiseed run was launched.
+do not alter SIRENPath's single-seed policy. No multiseed run was launched.
 ACDC training samples all image voxels; labels do not define an anatomical mask.
 
 ## Selected protocol and current readiness

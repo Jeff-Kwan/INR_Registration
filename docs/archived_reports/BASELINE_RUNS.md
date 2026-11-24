@@ -4,9 +4,7 @@ Run from `/workspace/INR_Registration`, using `/venv/main/bin/python`.
 This launcher includes FireANTs SyN, ConvexAdam–MIND and NIR only. ccIDIR is
 excluded from its method choices. Current audited configurations are preserved.
 
-Each method has 74 fits: 10 DIR-Lab cases, 45 official AbdomenCTCT validation
-pairs and 19 official OASIS validation pairs. All three together have 222 fits.
-The configured seeds remain unchanged. Our method is not part of this launcher.
+All three together have 222 fits. The configured seeds remain unchanged. Our method is not part of this launcher.
 
 ## Preview only
 
@@ -36,10 +34,7 @@ bash scripts/run_convexadam_all.sh --gpus 0 1 2 3 --output baselines/results/con
 bash scripts/run_nir_all.sh --gpus 0 1 2 3 --output baselines/results/nir_all --run
 ```
 
-The shell scripts resolve the repository location and use `/venv/main` explicitly.
-Omit `--run` from any command for a preview. Existing output roots are refused;
-choose a fresh path for another run. `--datasets` can restrict a run to `dirlab`,
-`abdomenctct` or `oasis` if needed. Do not start multiple all-GPU launchers at the
+The shell scripts resolve the repository location and use `/venv/main` explicitly. Omit `--run` from any command for a preview. Do not start multiple all-GPU launchers at the
 same time: the combined command already shares a single four-worker pool.
 
 ## Scheduling and results

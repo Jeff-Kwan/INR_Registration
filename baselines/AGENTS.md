@@ -11,10 +11,10 @@ patches explicitly; sources.json pins exact revisions. Retained-method restricti
 in the root guide describe SIRENPath, not these authors' baseline algorithms.
 
 Do not execute registration, training, optimizer steps or saved-model recovery
-without an explicit request. setup --check imports only. run_dirlab prints a plan
-unless --run is supplied. Tests must mock all native optimizers. Never persist
-deformation fields or warped images, including inside checkpoint dictionaries.
-Native temporary logs/checkpoints must be removed on success and exceptions.
-Never commit upstream checkouts, data, masks or generated artifacts.
-
-External multiseed protocols are authorized for planning: ccIDIR DIR-Lab uses 50 recorded fits and both directions. Our method stays single-seed. Do not launch training or benchmarks without an explicit execution request. Read AUDIT.md for source/paper discrepancies; keep recipe limitations in metrics.
+without an explicit request. The comparison launchers default to planning and
+setup --check only verifies imports. Tests must mock all native optimizers.
+Never persist deformation fields or warped images, including inside checkpoint
+dictionaries. Remove native temporary logs and checkpoints on success and
+exceptions. Never commit upstream checkouts, data or generated artifacts.
+Read AUDIT.md for source and paper discrepancies and keep recipe limitations in
+metrics.

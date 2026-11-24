@@ -35,7 +35,7 @@ For a fresh preparation, with an absent output directory, run
 /venv/main/bin/python scripts/prepare_acdc.py --workers 8
 ```
 
-Inspect our model's full single-seed plan with
+Inspect SIRENPath's full single-seed plan with
 
 ```bash
 /venv/main/bin/python -m medical.cohort_experiments --datasets acdc --plan-only

@@ -8,20 +8,17 @@ physical grids. This audit changes no production code or configuration.
 
 Mean seconds per successful case from `results/full_method_suite`:
 
-| Stage | OASIS physical | OASIS native | Abdomen physical | Abdomen native |
-| --- | ---: | ---: | ---: | ---: |
-| Training | 89.63 | 89.50 | 89.15 | 89.58 |
-| Reconstruction | 7.18 | 0.19 | 10.50 | 0.21 |
-| Recovery + evaluation | 14.67 | 334.64 | 13.80 | 443.05 |
-| Mean PCG iterations/interval | 173.88 | 151.74 | 199.03 | 178.44 |
+| Stage | OASIS physical | OASIS native |
+| --- | ---: | ---: |
+| Training | 89.63 | 89.50 |
+| Reconstruction | 7.18 | 0.19 |
+| Recovery + evaluation | 14.67 | 334.64 |
+| Mean PCG iterations/interval | 173.88 | 151.74 |
 
 Physical reconstruction includes working- and original-grid measurements;
 native measures only its original grid. Native adapters did not save separate
-recovery/evaluation timing fields. Native DIR-Lab saved neither stage timing;
-the existing 1862.1 s successful-case mean cannot be decomposed retrospectively.
-Native PCG requires fewer iterations on these cohorts, so iteration counts do
-not explain the slowdown. OASIS recovery dimensions are identical across paths;
-abdomen physical recovery also uses the original grid dimensions.
+recovery/evaluation timing fields. Native PCG requires fewer iterations on these cohorts, so iteration counts do
+not explain the slowdown.
 
 ## Reproduction and cause
 
@@ -65,16 +62,13 @@ scratch. No maps or warped images were saved.
 | Native checkpoint | Suite recovery + eval | Replay recovery | Replay eval | Derivatives | PCG | Integration |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | OASIS 0395_to_0396 | 319.81 | 12.85 | 5.90 | 6.80 | 3.87 | 0.20 |
-| Abdomen 0001_to_0004 | 409.21 | 14.50 | 2.69 | 7.35 | 4.65 | 0.23 |
 
 Times include first-use setup/compilation with the existing disk cache, not a
 clean-cache cold-start benchmark. Remaining recovery time includes transfers,
 scratch I/O and setup. A matching physical OASIS replay took 13.60 s recovery
 and 6.16 s evaluation; its saved metrics and diagnostics matched exactly.
 
-Native replays converged in all 16 intervals. OASIS total iterations changed
-2270→2260 and DSC 0.819717160→0.819717233; abdomen iterations changed 2620→2610
-and DSC 0.389808185→0.389798604. These are small numerical changes, not bitwise
+Native replays converged in all 16 intervals. These are small numerical changes, not bitwise
 equivalence. Scratch was empty after every successful replay; existing cleanup
 implementation was inspected, not modified.
 
@@ -83,14 +77,11 @@ implementation was inspected, not modified.
 Canonicalize absent spacing to a tensor of unit axis weights, so native and
 physical solves use the same compiler interface. Validate this in long-lived
 workers with realistic mixed grid sizes, true residuals and map/metric
-comparisons. Explicit static specialization is another option, but needs
-compiler cache-limit handling when many DIR-Lab shapes share a worker. Do not
+comparisons. Do not
 disable the shared queue or retrain models to address this issue.
 
 Also record preprocessing, recovery and evaluation timings for native adapters;
 currently several fields are conditional on working-grid metadata.
 
-Raw summaries and operator tables: `results/native_speed_audit/` (ignored).
-Disposable drivers: `/tmp/audit_native_speed.py` and
-`/tmp/audit_native_compiler.py`. No DIR-Lab checkpoint replay or accuracy change
-was performed. No changes committed.
+Raw summaries and operator tables: `results/native_speed_audit/` (ignored). Disposable drivers: `/tmp/audit_native_speed.py` and
+`/tmp/audit_native_compiler.py`. No changes committed.

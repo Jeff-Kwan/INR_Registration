@@ -12,13 +12,13 @@ Do not run training, optimizer steps, benchmarks or saved-model recovery without
 
 Current dataset protocols are in docs/DATASETS.md; the new runner is documented in docs/CASE_RUNNER.md. Historical documents are not current instructions.
 
-DIR-Lab retains ccIDIR data preparation and separately reported forward/reverse TRE. Training uses T00/T50 masks only to sample crop centers: choose an endpoint equally, draw a mask voxel, center the box and shift it to fit the image. No mask occupancy rejection or mask-based loss gating. Endpoint reconstruction and registration share that crop; direction samples remain independent. PD-LK uses all grid cells. Every particle contributes to NCC, including trajectories leaving the crop; velocity/image interpolation uses border extension and a live full-image boundary penalty. Masks may still define evaluation-only lung metrics. Training remains single-seed; do not add or run multiseed validation unless explicitly requested.
+Endpoint reconstruction and registration share a crop and draw samples independently for each direction. PD-LK uses all grid cells. NCC uses every particle, including trajectories that leave the crop. The full-image boundary penalty remains live.
 
-AbdomenCTCT uses the unchanged official release and exactly 45 public-validation directed pairs. Use medical.abdomen_method or the baseline *_abdomenctct.json configs. Evaluation labels are never training masks. Official metric details (including voxel HD95 and shifted SDlogJ) are in docs/ABDOMENCTCT.md. The abdomen launcher is plan-only by default; single-seed only.
+Evaluation labels are never training masks.
 
 OASIS uses the unchanged official Learn2Reg release, 19 directed public-validation pairs and labels 1–35. Use medical.oasis_method or baseline *_oasis.json configs; the shared evaluator retains official conventions. See docs/OASIS.md. Labels remain evaluation-only; launcher is plan-only and single-seed.
 
-External baseline seed policies may follow their published protocols: ccIDIR DIR-Lab plans 50 seeds and evaluates both directions. This exception does not change our method’s single-seed restriction or authorize launching experiments. Baseline implementation/recipe audit: baselines/AUDIT.md.
+This exception does not change our method’s single-seed restriction or authorize launching experiments. Baseline implementation/recipe audit: baselines/AUDIT.md.
 
 The optional inverse-metric velocity-agreement training alternative is documented
 in docs/INVERSE_METRIC.md. It retains the same shared-grid velocity estimator and
@@ -29,9 +29,7 @@ For quick OASIS prototyping, reuse the frozen --subset quick4 selection (officia
 pairs 1,4,8,9; selection seed 42), documented in docs/OASIS_QUICK4.md. Do not redraw
 it or select cases based on scores. This does not authorize launching experiments.
 
-AbdomenCTCT quick prototyping likewise uses its frozen `--subset quick4` selection
-(official pairs 2,8,18,41; selection seed 42), documented in
-docs/ABDOMENCTCT_QUICK4.md. Do not redraw it. No experiment is authorized by this selection.
+Do not redraw it. No experiment is authorized by this selection.
 
 The experimental physical-working-grid branch adds optional 1 mm preprocessing;
 see docs/PHYSICAL_WORKING_GRID.md. Preserve original evaluation grids and reuse
@@ -42,13 +40,9 @@ independently selects recovery sampling (default 1 mm). Recovery uses physical
 units and spacing-weighted PCG. Returned maps use the recorded recovery geometry;
 convert through that geometry for original-grid evaluation. See the physical-grid doc.
 
-DIR-Lab quick prototyping uses frozen `--subset quick4`: cases 01,03,04,05,
-the four smallest prepared native pairs by voxel count (no random selection).
-See docs/DIRLAB_QUICK4.md. Preview the DIR-Lab launcher with `--plan-only`;
-it executes by default. Subset preparation does not authorize experiments.
+Subset preparation does not authorize experiments.
 
-Default endpoint reconstruction again samples within the current registration
-crop, including DIR-Lab. Masks only select crop centers. Training trajectories
+Masks only select crop centers. Training trajectories
 use four Euler quarter-steps, each with a field sampled uniformly within its quarter. Inference remains
 PCG with midpoint RK2.
 
@@ -89,10 +83,6 @@ in mm (overriding sigma_cells), converted per crop using ZYX cell-center spacing
 See docs/NATIVE_PHYSICAL_UNITS.md; the sigma7p5mm preset is an opt-in ablation,
 not authorization to launch. PCG regularization is separate.
 
-Earlier DIR-Lab development selection (2026-11-13; superseded by the default below): return to native voxel units
-with `medical/configs/full_suite/06_native_grid.json`, NCC endpoint fitting,
-32k separate registration particles, RK2 training trajectories, and velocity
-smoothing sigma 0.75 grid cells. Keep the lung-mask crop-center-only policy.
 Physical-unit and metric-smoothing presets remain opt-in ablations; do not select
 them for subsequent runs unless requested. This selection does not authorize runs.
 
@@ -100,9 +90,7 @@ them for subsequent runs unless requested. This selection does not authorize run
 
 The original shared 5k quick4 reference preset is
 `medical/configs/native_siren_onecycle_5k.json` (width 512, uniform omega 30,
-output initialization ×30, OneCycle peak 1e-4, AdamW decay 0.001).
-See docs/SIREN_CONVERGENCE.md for the comparison with the native reference and
-the DIR-Lab-specific recipe. Experimental ablation presets are grouped in
+output initialization ×30, OneCycle peak 1e-4, AdamW decay 0.001). Experimental ablation presets are grouped in
 `medical/configs/ablations/`.
 
 When proposing research ideas in discussion or documentation, start from a

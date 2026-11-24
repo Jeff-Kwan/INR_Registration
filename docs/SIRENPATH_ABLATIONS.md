@@ -11,15 +11,15 @@ All 19 official directed public-validation pairs, fixed 0395–0413 and moving
 0396–0414, one seed 42. This is L2R-OASIS, separate from Neurite-OASIS and the
 four official-comparison cohorts. See [DATASETS.md](DATASETS.md) and [OASIS.md](OASIS.md).
 
-| Run | Endpoint fitting | Local transport (PD-LK) | Registration (GW-NCC) | Fits |
+| Run | Endpoint fitting | Local transport loss (LT) | Trajectory-based registration loss | Fits |
 |---|---|---|---|---:|
 | 1. Reconstruction only | MSE | Off | Off | 19 |
-| 2. Transport only | MSE | On | Off | 19 |
+| 2. LT only | MSE | On | Off | 19 |
 | 3. Registration only | MSE | Off | On | 19 |
 | 4. Both losses | MSE | On | On | 19 |
 | 5. SIRENPath | NCC | On | On | 19 |
-| 6. Raw intensity crossfade optical flow recovery | No fitting | — | — | 19 no-fit recoveries |
-| 7. Canonical reconstructed-intensity crossfade | Reuse run 5 NCC fit | — | — | 19 no-fit recoveries |
+| 6. Raw crossfade | No fitting | — | — | 19 no-fit recoveries |
+| 7. Fitted crossfade | Reuse run 5 NCC fit | — | — | 19 no-fit recoveries |
 
 **133 evaluations: 95 trained fits and 38 no-training controls.**
 
@@ -27,15 +27,15 @@ Runs 1–5 copy the one canonical configuration: paired SIRENs, 512 channels,
 four sine layers, omega 30, output initialization ×30; 5,000 CUDA FP32 captured
 updates; AdamW decay 0.001; cosine LR 1e-4→2e-5 without warmup; shared half-size
 crop, unchanged reconstruction/particle counts and single-seed sampling policy.
-Run 5 is exactly the canonical configuration. Enabled PD-LK has weight 0.1,
+Run 5 is exactly the canonical configuration. Enabled LT has weight 0.1,
 c=4 and ridge 1e-6. Enabled registration keeps the 0.03→0.01 cosine schedule.
 Turning registration off zeros both its coefficient and schedule start; turning
-PD-LK loss off does not disable the velocity solves needed by registration.
+LT off does not disable the velocity solves needed by registration.
 When both are off, derivatives and trajectories are omitted from the objective.
 
-For runs 1–4, MSE is **moving MSE + fixed MSE**, with the NCC-specific Gaussian
-moment penalty disabled. All five trained runs retain the same inter-SIREN
-parameter L2 (0.01) and AdamW decay (0.001). Thus “reconstruction only” means
+For runs 1–4, MSE is **moving MSE + fixed MSE**, with the NCC-specific moment
+matching penalty disabled. All five trained runs retain the same endpoint
+parameter penalty weight (0.01) and AdamW decay (0.001). Thus “reconstruction only” means
 no transport or registration loss, while these shared regularizers remain.
 Run 5 keeps NCC's moment weight 0.005. The 4→5 contrast compares endpoint-fitting
 recipes (MSE versus NCC plus its moment anchor), not NCC alone.
@@ -68,7 +68,7 @@ whether linear image-space interpolation plus the same recovery can explain
 registration quality. A gap also includes the effects of neural reconstruction
 and derivative estimation, so it does not isolate weight interpolation alone.
 
-## Canonical reconstruction crossfade control (run 7)
+## Fitted crossfade control (run 7)
 
 Reuse the **exact corresponding run-5 canonical checkpoint**, without retraining.
 Decode moving/fixed SIREN endpoint reconstructions on the original voxel grid,
@@ -196,3 +196,20 @@ Dataset preparation remains frozen.
 Completion update: **133/133 ablation evaluations completed, zero process failures**, at **22:55 HKT on 16 November 2026**. Final results are in the linked live report and summary.
 
 Completed aggregate scores: [ABLATIONS_REPORT.md](ABLATIONS_REPORT.md).
+
+## Supplementary loss grid (completed 22 November 2026)
+
+Each of the six MSE conditions has a matched NCC condition. Within each row only the endpoint recipe changes: MSE uses moment weight 0 and NCC uses 0.005. All other configuration values match, including AdamW weight decay 0.001. The two crossfade controls remain outside the training plan.
+
+| Local transport loss (LT) | Trajectory-based registration loss | Endpoint parameter penalty | MSE run | NCC + moments run |
+|---|---|---:|---|---|
+| Off | Off | 0.01 | 1 (completed) | 8 (completed) |
+| On | Off | 0.01 | 2 (completed) | 9 (completed) |
+| Off | On | 0.01 | 3 (completed) | 10 (completed) |
+| On | On | 0.01 | 4 (completed) | 5 (completed) |
+| Off | Off | 0 | 13 (completed) | 16 (completed) |
+| On | On | 0 | 11 (completed) | 12 (completed) |
+
+Run 13 has only MSE in the training objective. The additional NCC condition, run 19, differs from run 5 only in its moment weight (0 instead of 0.005). The five original training runs and eight supplementary conditions give 13 training configurations in total. All 152 supplementary fits succeeded on the same 19 directed pairs at seed 42.
+
+Inspect the plan with `bash scripts/launch_supplementary_ablations.sh --plan-only`. The launcher defaults to planning, uses GPU IDs 0–3, and targets `results/sirenpath_l2r_oasis_supplement`. It accepts `--gpus` and `--output` overrides. Execution requires an explicit `--run` and a fresh output directory.

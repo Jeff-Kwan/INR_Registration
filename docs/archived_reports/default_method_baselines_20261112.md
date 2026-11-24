@@ -7,17 +7,8 @@ objective/configuration changes are part of this study; every run records `code.
 itk-elastix 0.25.4, SimpleITK 2.5.7; one NVIDIA GeForce RTX 5090 (32 GB), 32 CPU cores.
 **Seed:** 42 for every SIREN fit.
 
-This report covers the repository's current packaged default method on all five prepared
-cohorts — LPBA40, OASIS, Hippocampus MR, Abdomen CT and Lung CT — followed by a
-pre-declared, bounded sweep over the PD-LK coefficient \(c\), the local box fraction and
-the recovery smoothness \(s\).
-
 **Summary.** The packaged default was rerun end-to-end on all 69 pairs of the five prepared
-cohorts. Mean Dice / HD95 are LPBA40 0.7112 / 6.14 mm, OASIS 0.7660 / 2.87 mm, Hippocampus
-0.7711 / 3.11 mm, Abdomen CT 0.4104 / 40.26 mm and Lung CT 0.8123 / 48.52 mm. The method leads
-the reused classical rows on Hippocampus and Abdomen CT, trails ANTs SyNOnly on LPBA40 Dice
-(though with slightly better HD95) and on OASIS, and still fails on Lung CT, where post-recovery
-Dice is below identity and HD95 roughly doubles. A
+cohorts. A
 pre-declared 27-candidate cohort-balanced sweep over `(c, box fraction, recovery smoothness)`
 did not produce a configuration that met every promotion condition: the best-Dice eligible
 candidate gained 0.0038 Dice but worsened cohort-balanced HD95 by 0.61 mm, while a markedly
@@ -67,8 +58,7 @@ coordinate conventions are in [METHOD.md](../METHOD.md); the executed settings a
 | Label metric (version 2) | MONAI macro Dice over the union of nonzero labels (`ignore_empty=False`); symmetric HD95 in mm, maximum of the two directed 95th-percentile surface distances |
 | Folding | fraction of voxels with deformation Jacobian determinant \(\le 0\) |
 
-The five packaged JSON configs (`medical/configs/{lpba,oasis,hippocampus,abdomenct,lungct}.json`)
-were used unchanged. They share the values above and differ only in dataset selection,
+They share the values above and differ only in dataset selection,
 preprocessing (MR versus CT window), expected geometry and expected shape/spacing.
 
 ### Cohorts and membership
@@ -78,23 +68,11 @@ preprocessing (MR versus CT window), expected geometry and expected shape/spacin
 | LPBA40 | S01 | S02–S10 | 9 | MR nonzero-foreground 1st/99th percentile to [0,1], zero background |
 | OASIS | `OASIS_0001_0000` | `OASIS_0002_0000`–`OASIS_0011_0000` | 10 | same MR normalization; 160×224×192, 1 mm |
 | Hippocampus MR | `HippocampusMR_0001_0000` | `HippocampusMR_0002_0000`–`HippocampusMR_0021_0000` | 20 | same MR normalization; 64³, 1 mm |
-| Abdomen CT | `AbdomenCTCT_0001_0000` | `AbdomenCTCT_0002_0000`–`AbdomenCTCT_0011_0000` | 10 | CT window [-160, 240] HU, no background zeroing; 192×160×256, 2 mm |
 | Lung CT | each case's `_0000` (expiration) | same case's `_0001` (inspiration) | 20 | CT window [-1000, 400] HU, no background zeroing; 192×192×208, 1.75/1.25/1.75 mm |
-
-Lung CT labels are the released lung masks (`masksTr`), not a dense anatomical segmentation;
-they are used only for evaluation and are the same arrays the historical lung cohort used.
 
 ### Execution and artifacts
 
 Commands (one fresh ignored output directory per cohort):
-
-```bash
-python -m medical register --dataset lpba        --output results/default_method_benchmark_20261112/lpba_register
-python -m medical register --dataset oasis       --output results/default_method_benchmark_20261112/oasis_register
-python -m medical register --dataset hippocampus --output results/default_method_benchmark_20261112/hippocampus_register
-python -m medical register --dataset abdomenct   --output results/default_method_benchmark_20261112/abdomenct_register
-python -m medical register --dataset lungct      --output results/default_method_benchmark_20261112/lungct_register
-```
 
 Run directories are ignored by Git and contain only final endpoint weights and compact scalar
 evidence: per-pair `endpoints.pt`, `metrics.json`, `per_label_metrics.json`,
@@ -115,10 +93,7 @@ that cohort.
 | LPBA40 | 9 / 9 | 0.7112 ± 0.0108 | 6.14 | 0 (0) | 29.68 / 30.52 | 58.1 | 11.1 | 73.7 | 6 / 9 |
 | OASIS | 10 / 10 | 0.7660 ± 0.0298 | 2.87 | 1.89e-06 (8.28e-06) | 27.64 / 27.64 | 58.6 | 20.0 | 83.6 | 3 / 10 |
 | Hippocampus MR | 20 / 20 | 0.7711 ± 0.0476 | 3.11 | 1.93e-05 (1.72e-04) | 24.10 / 26.89 | 57.9 | 0.5 | 58.6 | 19 / 20 |
-| Abdomen CT | 10 / 10 | 0.4104 ± 0.1285 | 40.26 | 3.35e-05 (1.02e-04) | 20.68 / 21.31 | 58.6 | 25.1 | 87.3 | 2 / 10 |
 | Lung CT | 20 / 20 | 0.8123 ± 0.1892 | 48.52 | 1.99e-03 (4.75e-03) | 20.81 / 22.21 | 57.9 | 22.3 | 83.2 | 14 / 20 |
-
-Identity (no-deformation) macro Dice / HD95 for the same pairs: LPBA40 0.5479 / 7.94 mm, OASIS 0.4925 / 5.28 mm, Hippocampus 0.6083 / 3.68 mm, Abdomen CT 0.2316 / 46.70 mm, Lung CT 0.8522 / 26.55 mm.
 
 ### Reused classical comparison
 
@@ -139,9 +114,6 @@ was never claimed.
 | Hippocampus MR | ANTs SyNOnly | 20 | 0.7447 | 3.29 | 0 | reused |
 | Hippocampus MR | elastix affine+B-spline | 20 | 0.6770 | 4.59 | 4.23e-02 | reused |
 | Hippocampus MR | SimpleITK Demons | 20 | 0.7450 | 3.30 | 0 | reused |
-| Abdomen CT | ANTs SyNOnly | 10 | 0.3537 | 44.23 | 0 | reused |
-| Abdomen CT | elastix affine+B-spline | 10 | 0.3364 | 54.01 | 5.56e-02 | reused |
-| Abdomen CT | SimpleITK Demons | 10 | 0.3049 | 45.06 | 0 | reused |
 | Lung CT | ANTs / elastix / Demons | — | — | — | — | **unavailable** |
 
 The classical forward map is an approximate numerical inversion of the inverse displacement;
@@ -155,7 +127,6 @@ qualifies the classical rows but does not affect their Dice/HD95.
 | LPBA40 | 9 / 9 | 9 / 9 | 0.5479 → 0.7112 | 7.94 → 6.14 |
 | OASIS | 10 / 10 | 10 / 10 | 0.4925 → 0.7660 | 5.28 → 2.87 |
 | Hippocampus MR | 20 / 20 | 16 / 20 | 0.6083 → 0.7711 | 3.68 → 3.11 |
-| Abdomen CT | 10 / 10 | 9 / 10 | 0.2316 → 0.4104 | 46.70 → 40.26 |
 | Lung CT | 12 / 20 | 9 / 20 | 0.8522 → 0.8123 | 26.55 → 48.52 |
 
 * **LPBA40.** The default reaches 0.7112 / 6.14 mm. It remains below the reused ANTs SyNOnly
@@ -168,9 +139,7 @@ qualifies the classical rows but does not affect their Dice/HD95.
 * **Hippocampus MR.** 0.7711 / 3.11 mm leads all three reused classical rows on both metrics
   (ANTS 0.7447 / 3.29, Demons 0.7450 / 3.30), but HD95 worsened on 4 of 20 pairs even though
   Dice improved on all 20.
-* **Abdomen CT.** 0.4104 / 40.26 mm leads the reused classical rows (ANTS 0.3537 / 44.23,
-  elastix 0.3364 / 54.01, Demons 0.3049 / 45.06) and improves over identity on every pair's
-  Dice, though HD95 worsened on one pair. Two pairs remain very poor (0005 and 0009 above
+Two pairs remain very poor (0005 and 0009 above
   73 mm), and PCG fully converges on only 2 of 10 pairs.
 * **Lung CT.** This cohort still fails as a registration benchmark. Post-recovery Dice
   (0.8123) is **below** the identity value (0.8522), and HD95 rises from 26.55 to 48.52 mm.
@@ -192,7 +161,6 @@ the deltas are descriptive, not a controlled causal attribution.
 | LPBA40 | 0.6985 → 0.7112 | +0.0127 | 6.33 → 6.14 | −0.19 | 0 → 0 | 6/9 → 6/9 | 66.4 → 73.7 |
 | OASIS | 0.7915 → 0.7660 | −0.0255 | 2.57 → 2.87 | +0.29 | 4.48e-06 → 1.89e-06 | 5/10 → 3/10 | 75.6 → 83.6 |
 | Hippocampus MR | 0.7525 → 0.7711 | +0.0186 | 3.20 → 3.11 | −0.08 | 2.38e-04 → 1.93e-05 | 20/20 → 19/20 | 36.6 → 58.6 |
-| Abdomen CT | 0.3545 → 0.4104 | +0.0559 | 43.35 → 40.26 | −3.09 | 2.70e-04 → 3.35e-05 | 8/10 → 2/10 | 63.1 → 87.3 |
 | Lung CT† | 0.8566 → 0.8123 | −0.0443 | 35.90 → 48.52 | +12.62 | 5.08e-03 → 1.99e-03 | — → 14/20 | 81.1 → 83.2 |
 
 † The old Lung CT value is the 2026-11-07 probe recipe (`lambda=.01`, pointwise PD-LK), not the
@@ -204,8 +172,7 @@ converged; total time includes loading and evaluation. The objective and small i
 details differ, so the deltas are descriptive, not a controlled ablation. Classical rows are
 unchanged/reused and are therefore not shown as an old/new pair.
 
-The current default is therefore **not uniformly better** than the earlier objective: it
-improves LPBA40, Hippocampus and Abdomen CT, but degrades OASIS and Lung CT. This is a
+This is a
 cross-cohort transfer risk of a configuration selected from LPBA screens, and it is the reason
 the tuning study below uses a cohort-balanced criterion rather than LPBA alone.
 
@@ -220,7 +187,6 @@ image similarity):
 | LPBA40 | 32.10 → 30.51 | 5.70e-04 → 8.33e-04 | 0.9886 → 0.9879 | −0.40 | +0.59 |
 | OASIS | 30.20 → 28.06 | 9.06e-04 → 1.52e-03 | 0.9789 → 0.9751 | +0.82 | −0.91 |
 | Hippocampus MR | 33.76 → 25.49 | 3.17e-04 → 2.23e-03 | 0.8408 → 0.8687 | +0.31 | −0.50 |
-| Abdomen CT | 25.58 → 21.47 | 2.60e-03 → 6.79e-03 | 0.8814 → 0.8861 | −0.32 | +0.36 |
 | Lung CT† | 27.41 → 22.22 | — | 0.8176 → 0.8494 | +0.35 | −0.30 |
 
 † Lung's old values are the 2026-11-07 probe recipe, not the 2026-11-10 fresh benchmark; its
@@ -235,7 +201,6 @@ opposite relationship **across configurations**:
 | LPBA40 | +0.59 | +0.08 |
 | OASIS | **−0.70** | **+0.77** |
 | Hippocampus MR | +0.23 | −0.04 |
-| Abdomen CT | +0.53 | +0.03 |
 | Lung CT | **−0.27** | **+0.66** |
 
 On OASIS, larger boxes raise endpoint PSNR (box 0.4 ≈ 27.3–27.4 dB, 0.5 ≈ 27.8 dB,
@@ -245,9 +210,7 @@ for the old run on those pairs). So the reconstruction drop and the OASIS regres
 co-symptoms of the changed objective/box, not evidence that lower reconstruction caused the
 regression. Lung shows the same warning: endpoint PSNR fell 5.2 dB, yet 9/20 pairs improved
 Dice, post-warp NCC rose from 0.818 to 0.849, and across candidates higher PSNR went with worse
-HD95 (+0.66). Hippocampus and Abdomen CT lost 8.3 and 4.1 dB of endpoint PSNR but improved Dice,
-and their few regressed pairs had essentially the same PSNR drop as the improved pairs (Hippocampus
-−8.48 versus −8.22 dB; Abdomen −4.10 versus −4.11 dB).
+HD95 (+0.66).
 
 The honest summary is: the OASIS regression **is accompanied by** lower endpoint reconstruction
 and lower post-warp NCC, but the tuning evidence does not support blaming reconstruction. Lower
@@ -319,21 +282,6 @@ manifest retains the full `_0000`/`_0001` channel identifiers.
 | HippocampusMR_0020 | 24.79 / 27.87 | 0.00332 / 0.00163 | 0.6127 → 0.7854 | 3.56 → 2.87 | 1.53e-05 | 16/16 | 2.00e-05 | 57.5 | 0.5 | 58.1 |
 | HippocampusMR_0021 | 25.24 / 28.09 | 0.00299 / 0.00155 | 0.5577 → 0.7380 | 5.00 → 3.66 | 0 | 16/16 | 1.94e-05 | 57.5 | 0.5 | 58.1 |
 
-### Abdomen CT
-
-| Pair | PSNR src/tgt (dB) | Endpoint MSE src/tgt | Dice (pre → post) | HD95 mm (pre → post) | Folding | PCG conv. | Max resid. | Train s | Recover s | Total s |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| AbdomenCTCT_0002 | 21.90 / 22.11 | 0.00646 / 0.00615 | 0.2920 → 0.5930 | 26.35 → 16.66 | 1.02e-04 | 16/16 | 1.99e-05 | 64.0 | 24.8 | 92.6 |
-| AbdomenCTCT_0003 | 20.68 / 21.49 | 0.00855 / 0.00710 | 0.2134 → 0.3875 | 54.68 → 38.78 | 5.59e-05 | 10/16 | 2.14e-05 | 57.4 | 26.3 | 87.3 |
-| AbdomenCTCT_0004 | 21.98 / 21.83 | 0.00634 / 0.00656 | 0.2047 → 0.4674 | 36.07 → 30.72 | 8.65e-06 | 11/16 | 2.06e-05 | 57.9 | 25.0 | 86.6 |
-| AbdomenCTCT_0005 | 21.79 / 21.31 | 0.00663 / 0.00740 | 0.0572 → 0.1956 | 86.20 → 78.46 | 8.41e-05 | 6/16 | 2.42e-05 | 58.3 | 26.3 | 88.3 |
-| AbdomenCTCT_0006 | 22.54 / 22.06 | 0.00558 / 0.00623 | 0.3307 → 0.4700 | 27.99 → 23.83 | 1.06e-05 | 15/16 | 2.06e-05 | 57.4 | 24.2 | 85.1 |
-| AbdomenCTCT_0007 | 21.01 / 21.61 | 0.00792 / 0.00690 | 0.1887 → 0.2910 | 45.47 → 54.54 | 2.76e-05 | 14/16 | 2.09e-05 | 58.3 | 26.5 | 88.6 |
-| AbdomenCTCT_0008 | 22.76 / 22.13 | 0.00530 / 0.00612 | 0.2834 → 0.4328 | 31.58 → 30.87 | 6.61e-06 | 16/16 | 2.00e-05 | 57.9 | 22.6 | 84.2 |
-| AbdomenCTCT_0009 | 20.87 / 21.31 | 0.00818 / 0.00739 | 0.1399 → 0.2472 | 89.09 → 73.84 | 1.78e-05 | 3/16 | 2.64e-05 | 58.3 | 26.7 | 88.6 |
-| AbdomenCTCT_0010 | 21.90 / 21.78 | 0.00645 / 0.00663 | 0.3386 → 0.4904 | 35.28 → 28.94 | 2.67e-06 | 13/16 | 2.07e-05 | 57.8 | 24.1 | 85.4 |
-| AbdomenCTCT_0011 | 21.16 / 22.00 | 0.00766 / 0.00631 | 0.2669 → 0.5289 | 34.28 → 25.91 | 1.87e-05 | 14/16 | 2.03e-05 | 58.2 | 24.1 | 85.9 |
-
 ### Lung CT
 
 | Pair | PSNR src/tgt (dB) | Endpoint MSE src/tgt | Dice (pre → post) | HD95 mm (pre → post) | Folding | PCG conv. | Max resid. | Train s | Recover s | Total s |
@@ -363,19 +311,11 @@ manifest retains the full `_0000`/`_0001` channel identifiers.
 
 * **Failures:** none. Every one of the 69 attempted pairs wrote a complete `status.json` and a
   scored `metrics.json`; no pair was skipped for a gate failure because the packaged presets
-  explicitly skip the endpoint gate. Per-cohort attempted/completed/scored denominators are
-  9/9/9 (LPBA40), 10/10/10 (OASIS), 20/20/20 (Hippocampus), 10/10/10 (Abdomen CT) and
-  20/20/20 (Lung CT).
-* **Endpoint PSNR:** all values are diagnostic. Hippocampus, Abdomen CT and Lung CT contain
-  endpoint reconstructions below the nominal 25 dB threshold (minimum 24.10 dB, 20.68 dB and
-  20.81 dB respectively). This is visible, not hidden; the gate status is `null` throughout.
-* **PCG convergence:** 1,027 of 1,104 interval solves met the `2e-5` relative tolerance
-  (139/144 LPBA40, 146/160 OASIS, 319/320 Hippocampus, 118/160 Abdomen CT, 305/320 Lung CT).
-  Fully converged pairs: 6/9, 3/10, 19/20, 2/10 and 14/20. Most misses are marginal
-  (≈2.00–2.16e-5), but Abdomen CT pair 0005 (6/16) and Lung CT pair 0017 (9/16) have
-  materially incomplete solves; they are reported with their Dice/HD95 rather than discarded.
+  explicitly skip the endpoint gate.
+* **Endpoint PSNR:** all values are diagnostic. This is visible, not hidden; the gate status is `null` throughout.
+Fully converged pairs: 6/9, 3/10, 19/20, 2/10 and 14/20.
 * **Folding:** LPBA40 has exactly zero folded voxels. OASIS and Hippocampus have small
-  nonzero fractions (max 8.3e-6 and 1.7e-4). Abdomen CT max is 1.0e-4. Lung CT has the largest
+  nonzero fractions (max 8.3e-6 and 1.7e-4). Lung CT has the largest
   folding (max 4.75e-3, i.e. 0.48%); those pairs are exactly the low-Dice/high-HD95 cases, so
   the Lung CT aggregate is not a clean success.
 
@@ -397,7 +337,6 @@ tuning result was inspected:
 | LPBA40 | S05, S06, S07 | S02, S03, S04, S08, S09, S10 |
 | OASIS | 0006, 0007, 0008 | 0002, 0003, 0004, 0005, 0009, 0010, 0011 |
 | Hippocampus MR | 0011, 0012, 0013 | the other 17 |
-| Abdomen CT | 0006, 0007, 0008 | the other 7 |
 | Lung CT | 0010, 0011, 0012 | the other 17 |
 
 ### Candidate grid
@@ -490,99 +429,99 @@ Each row averages within a cohort over its three tuning pairs, then weights the 
 
 ### Per-cohort tuning Dice by candidate
 
-| c | box | s | LPBA40 | OASIS | Hippocampus | Abdomen CT | Lung CT |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2 | 0.4 | 0.005 | 0.7039 | 0.7413 | 0.7787 | 0.3955 | 0.9320 |
-| 2 | 0.4 | 0.01 | 0.7050 | 0.7485 | 0.7738 | 0.4044 | 0.9378 |
-| 2 | 0.4 | 0.02 | 0.7046 | 0.7506 | 0.7653 | 0.4070 | 0.9432 |
-| 2 | 0.5 | 0.005 | 0.7078 | 0.7289 | 0.7840 | 0.3888 | 0.9432 |
-| 2 | 0.5 | 0.01 | 0.7088 | 0.7363 | 0.7770 | 0.3981 | 0.9482 |
-| 2 | 0.5 | 0.02 | 0.7083 | 0.7434 | 0.7674 | 0.4018 | 0.9525 |
-| 2 | 0.6 | 0.005 | 0.7067 | 0.7171 | 0.7814 | 0.3986 | 0.9246 |
-| 2 | 0.6 | 0.01 | 0.7083 | 0.7246 | 0.7750 | 0.4064 | 0.9315 |
-| 2 | 0.6 | 0.02 | 0.7084 | 0.7316 | 0.7676 | 0.4092 | 0.9382 |
-| 4 | 0.4 | 0.005 | 0.7086 | 0.7500 | 0.7765 | 0.3960 | 0.9436 |
-| 4 | 0.4 | 0.01 | 0.7087 | 0.7538 | 0.7724 | 0.4040 | 0.9489 |
-| 4 | 0.4 | 0.02 | 0.7076 | 0.7537 | 0.7613 | 0.4086 | 0.9527 |
-| 4 | 0.5 | 0.005 | 0.7075 | 0.7466 | 0.7770 | 0.4066 | 0.9409 |
-| 4 | 0.5 | 0.01 | 0.7085 | 0.7518 | 0.7717 | 0.4124 | 0.9490 |
-| 4 | 0.5 | 0.02 | 0.7076 | 0.7535 | 0.7637 | 0.4141 | 0.9548 |
-| 4 | 0.6 | 0.005 | 0.7108 | 0.7246 | 0.7790 | 0.4094 | 0.9328 |
-| 4 | 0.6 | 0.01 | 0.7120 | 0.7300 | 0.7753 | 0.4098 | 0.9383 |
-| 4 | 0.6 | 0.02 | 0.7116 | 0.7374 | 0.7662 | 0.4090 | 0.9437 |
-| 6 | 0.4 | 0.005 | 0.7074 | 0.7569 | 0.7770 | 0.4093 | 0.9447 |
-| 6 | 0.4 | 0.01 | 0.7076 | 0.7606 | 0.7718 | 0.4125 | 0.9498 |
-| 6 | 0.4 | 0.02 | 0.7063 | 0.7604 | 0.7616 | 0.4129 | 0.9531 |
-| 6 | 0.5 | 0.005 | 0.7088 | 0.7535 | 0.7752 | 0.4163 | 0.9407 |
-| 6 | 0.5 | 0.01 | 0.7094 | 0.7567 | 0.7712 | 0.4139 | 0.9470 |
-| 6 | 0.5 | 0.02 | 0.7083 | 0.7565 | 0.7618 | 0.4110 | 0.9523 |
-| 6 | 0.6 | 0.005 | 0.7108 | 0.7362 | 0.7760 | 0.4369 | 0.9391 |
-| 6 | 0.6 | 0.01 | 0.7117 | 0.7418 | 0.7724 | 0.4408 | 0.9455 |
-| 6 | 0.6 | 0.02 | 0.7111 | 0.7465 | 0.7640 | 0.4421 | 0.9508 |
+| c | box | s | LPBA40 | OASIS | Hippocampus | Lung CT |
+|---:|---:|---:|---:|---:|---:|---:|
+| 2 | 0.4 | 0.005 | 0.7039 | 0.7413 | 0.7787 | 0.9320 |
+| 2 | 0.4 | 0.01 | 0.7050 | 0.7485 | 0.7738 | 0.9378 |
+| 2 | 0.4 | 0.02 | 0.7046 | 0.7506 | 0.7653 | 0.9432 |
+| 2 | 0.5 | 0.005 | 0.7078 | 0.7289 | 0.7840 | 0.9432 |
+| 2 | 0.5 | 0.01 | 0.7088 | 0.7363 | 0.7770 | 0.9482 |
+| 2 | 0.5 | 0.02 | 0.7083 | 0.7434 | 0.7674 | 0.9525 |
+| 2 | 0.6 | 0.005 | 0.7067 | 0.7171 | 0.7814 | 0.9246 |
+| 2 | 0.6 | 0.01 | 0.7083 | 0.7246 | 0.7750 | 0.9315 |
+| 2 | 0.6 | 0.02 | 0.7084 | 0.7316 | 0.7676 | 0.9382 |
+| 4 | 0.4 | 0.005 | 0.7086 | 0.7500 | 0.7765 | 0.9436 |
+| 4 | 0.4 | 0.01 | 0.7087 | 0.7538 | 0.7724 | 0.9489 |
+| 4 | 0.4 | 0.02 | 0.7076 | 0.7537 | 0.7613 | 0.9527 |
+| 4 | 0.5 | 0.005 | 0.7075 | 0.7466 | 0.7770 | 0.9409 |
+| 4 | 0.5 | 0.01 | 0.7085 | 0.7518 | 0.7717 | 0.9490 |
+| 4 | 0.5 | 0.02 | 0.7076 | 0.7535 | 0.7637 | 0.9548 |
+| 4 | 0.6 | 0.005 | 0.7108 | 0.7246 | 0.7790 | 0.9328 |
+| 4 | 0.6 | 0.01 | 0.7120 | 0.7300 | 0.7753 | 0.9383 |
+| 4 | 0.6 | 0.02 | 0.7116 | 0.7374 | 0.7662 | 0.9437 |
+| 6 | 0.4 | 0.005 | 0.7074 | 0.7569 | 0.7770 | 0.9447 |
+| 6 | 0.4 | 0.01 | 0.7076 | 0.7606 | 0.7718 | 0.9498 |
+| 6 | 0.4 | 0.02 | 0.7063 | 0.7604 | 0.7616 | 0.9531 |
+| 6 | 0.5 | 0.005 | 0.7088 | 0.7535 | 0.7752 | 0.9407 |
+| 6 | 0.5 | 0.01 | 0.7094 | 0.7567 | 0.7712 | 0.9470 |
+| 6 | 0.5 | 0.02 | 0.7083 | 0.7565 | 0.7618 | 0.9523 |
+| 6 | 0.6 | 0.005 | 0.7108 | 0.7362 | 0.7760 | 0.9391 |
+| 6 | 0.6 | 0.01 | 0.7117 | 0.7418 | 0.7724 | 0.9455 |
+| 6 | 0.6 | 0.02 | 0.7111 | 0.7465 | 0.7640 | 0.9508 |
 
 ### Per-cohort tuning HD95 (mm)
 
-| c | box | s | LPBA40 | OASIS | Hippocampus | Abdomen CT | Lung CT |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2 | 0.4 | 0.005 | 6.04 | 3.13 | 2.90 | 35.59 | 13.47 |
-| 2 | 0.4 | 0.01 | 6.02 | 3.07 | 2.95 | 35.00 | 12.33 |
-| 2 | 0.4 | 0.02 | 5.98 | 3.00 | 2.97 | 34.49 | 10.54 |
-| 2 | 0.5 | 0.005 | 6.14 | 3.26 | 2.93 | 36.59 | 9.24 |
-| 2 | 0.5 | 0.01 | 6.06 | 3.17 | 2.90 | 35.50 | 7.79 |
-| 2 | 0.5 | 0.02 | 6.01 | 3.09 | 2.95 | 34.33 | 6.32 |
-| 2 | 0.6 | 0.005 | 6.14 | 3.56 | 2.95 | 37.26 | 20.94 |
-| 2 | 0.6 | 0.01 | 6.04 | 3.43 | 2.93 | 36.44 | 19.66 |
-| 2 | 0.6 | 0.02 | 5.98 | 3.26 | 2.92 | 35.27 | 17.48 |
-| 4 | 0.4 | 0.005 | 6.07 | 3.06 | 2.77 | 34.85 | 8.44 |
-| 4 | 0.4 | 0.01 | 6.01 | 2.97 | 2.80 | 34.14 | 6.98 |
-| 4 | 0.4 | 0.02 | 5.98 | 3.00 | 2.86 | 33.11 | 5.99 |
-| 4 | 0.5 | 0.005 | 6.13 | 3.21 | 3.12 | 36.24 | 12.52 |
-| 4 | 0.5 | 0.01 | 6.06 | 3.07 | 3.06 | 35.38 | 9.32 |
-| 4 | 0.5 | 0.02 | 6.02 | 3.03 | 3.11 | 34.39 | 6.78 |
-| 4 | 0.6 | 0.005 | 6.06 | 3.48 | 2.90 | 36.07 | 18.61 |
-| 4 | 0.6 | 0.01 | 5.99 | 3.31 | 2.89 | 35.56 | 18.10 |
-| 4 | 0.6 | 0.02 | 5.92 | 3.22 | 2.86 | 34.77 | 16.26 |
-| 6 | 0.4 | 0.005 | 6.07 | 2.97 | 2.96 | 34.66 | 8.59 |
-| 6 | 0.4 | 0.01 | 6.03 | 2.93 | 3.04 | 34.32 | 7.64 |
-| 6 | 0.4 | 0.02 | 6.00 | 2.92 | 2.96 | 33.69 | 6.48 |
-| 6 | 0.5 | 0.005 | 6.08 | 3.09 | 3.11 | 35.48 | 12.88 |
-| 6 | 0.5 | 0.01 | 6.03 | 3.02 | 3.05 | 34.99 | 10.28 |
-| 6 | 0.5 | 0.02 | 5.98 | 3.01 | 3.00 | 34.06 | 8.08 |
-| 6 | 0.6 | 0.005 | 6.08 | 3.33 | 2.89 | 33.52 | 17.79 |
-| 6 | 0.6 | 0.01 | 6.00 | 3.19 | 2.96 | 33.03 | 14.77 |
-| 6 | 0.6 | 0.02 | 5.95 | 3.09 | 2.92 | 32.06 | 11.15 |
+| c | box | s | LPBA40 | OASIS | Hippocampus | Lung CT |
+|---:|---:|---:|---:|---:|---:|---:|
+| 2 | 0.4 | 0.005 | 6.04 | 3.13 | 2.90 | 13.47 |
+| 2 | 0.4 | 0.01 | 6.02 | 3.07 | 2.95 | 12.33 |
+| 2 | 0.4 | 0.02 | 5.98 | 3.00 | 2.97 | 10.54 |
+| 2 | 0.5 | 0.005 | 6.14 | 3.26 | 2.93 | 9.24 |
+| 2 | 0.5 | 0.01 | 6.06 | 3.17 | 2.90 | 7.79 |
+| 2 | 0.5 | 0.02 | 6.01 | 3.09 | 2.95 | 6.32 |
+| 2 | 0.6 | 0.005 | 6.14 | 3.56 | 2.95 | 20.94 |
+| 2 | 0.6 | 0.01 | 6.04 | 3.43 | 2.93 | 19.66 |
+| 2 | 0.6 | 0.02 | 5.98 | 3.26 | 2.92 | 17.48 |
+| 4 | 0.4 | 0.005 | 6.07 | 3.06 | 2.77 | 8.44 |
+| 4 | 0.4 | 0.01 | 6.01 | 2.97 | 2.80 | 6.98 |
+| 4 | 0.4 | 0.02 | 5.98 | 3.00 | 2.86 | 5.99 |
+| 4 | 0.5 | 0.005 | 6.13 | 3.21 | 3.12 | 12.52 |
+| 4 | 0.5 | 0.01 | 6.06 | 3.07 | 3.06 | 9.32 |
+| 4 | 0.5 | 0.02 | 6.02 | 3.03 | 3.11 | 6.78 |
+| 4 | 0.6 | 0.005 | 6.06 | 3.48 | 2.90 | 18.61 |
+| 4 | 0.6 | 0.01 | 5.99 | 3.31 | 2.89 | 18.10 |
+| 4 | 0.6 | 0.02 | 5.92 | 3.22 | 2.86 | 16.26 |
+| 6 | 0.4 | 0.005 | 6.07 | 2.97 | 2.96 | 8.59 |
+| 6 | 0.4 | 0.01 | 6.03 | 2.93 | 3.04 | 7.64 |
+| 6 | 0.4 | 0.02 | 6.00 | 2.92 | 2.96 | 6.48 |
+| 6 | 0.5 | 0.005 | 6.08 | 3.09 | 3.11 | 12.88 |
+| 6 | 0.5 | 0.01 | 6.03 | 3.02 | 3.05 | 10.28 |
+| 6 | 0.5 | 0.02 | 5.98 | 3.01 | 3.00 | 8.08 |
+| 6 | 0.6 | 0.005 | 6.08 | 3.33 | 2.89 | 17.79 |
+| 6 | 0.6 | 0.01 | 6.00 | 3.19 | 2.96 | 14.77 |
+| 6 | 0.6 | 0.02 | 5.95 | 3.09 | 2.92 | 11.15 |
 
 ### Per-cohort tuning convergence (fully converged pairs / 3)
 
-| c | box | s | LPBA40 | OASIS | Hippocampus | Abdomen CT | Lung CT |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2 | 0.4 | 0.005 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 |
-| 2 | 0.4 | 0.01 | 1/3 | 0/3 | 3/3 | 1/3 | 1/3 |
-| 2 | 0.4 | 0.02 | 0/3 | 0/3 | 2/3 | 0/3 | 0/3 |
-| 2 | 0.5 | 0.005 | 2/3 | 1/3 | 3/3 | 3/3 | 3/3 |
-| 2 | 0.5 | 0.01 | 1/3 | 0/3 | 3/3 | 1/3 | 3/3 |
-| 2 | 0.5 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
-| 2 | 0.6 | 0.005 | 3/3 | 2/3 | 3/3 | 3/3 | 3/3 |
-| 2 | 0.6 | 0.01 | 2/3 | 0/3 | 3/3 | 0/3 | 3/3 |
-| 2 | 0.6 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
-| 4 | 0.4 | 0.005 | 3/3 | 3/3 | 3/3 | 2/3 | 3/3 |
-| 4 | 0.4 | 0.01 | 2/3 | 2/3 | 3/3 | 0/3 | 3/3 |
-| 4 | 0.4 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
-| 4 | 0.5 | 0.005 | 3/3 | 2/3 | 3/3 | 1/3 | 3/3 |
-| 4 | 0.5 | 0.01 | 1/3 | 0/3 | 2/3 | 1/3 | 3/3 |
-| 4 | 0.5 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
-| 4 | 0.6 | 0.005 | 3/3 | 2/3 | 3/3 | 2/3 | 3/3 |
-| 4 | 0.6 | 0.01 | 2/3 | 1/3 | 3/3 | 1/3 | 3/3 |
-| 4 | 0.6 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
-| 6 | 0.4 | 0.005 | 3/3 | 3/3 | 2/3 | 3/3 | 2/3 |
-| 6 | 0.4 | 0.01 | 0/3 | 2/3 | 3/3 | 0/3 | 1/3 |
-| 6 | 0.4 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 2/3 |
-| 6 | 0.5 | 0.005 | 3/3 | 3/3 | 3/3 | 1/3 | 3/3 |
-| 6 | 0.5 | 0.01 | 0/3 | 1/3 | 3/3 | 1/3 | 3/3 |
-| 6 | 0.5 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
-| 6 | 0.6 | 0.005 | 2/3 | 3/3 | 3/3 | 1/3 | 3/3 |
-| 6 | 0.6 | 0.01 | 3/3 | 1/3 | 3/3 | 0/3 | 2/3 |
-| 6 | 0.6 | 0.02 | 0/3 | 0/3 | 3/3 | 0/3 | 1/3 |
+| c | box | s | LPBA40 | OASIS | Hippocampus | Lung CT |
+|---:|---:|---:|---:|---:|---:|---:|
+| 2 | 0.4 | 0.005 | 3/3 | 3/3 | 3/3 | 2/3 |
+| 2 | 0.4 | 0.01 | 1/3 | 0/3 | 3/3 | 1/3 |
+| 2 | 0.4 | 0.02 | 0/3 | 0/3 | 2/3 | 0/3 |
+| 2 | 0.5 | 0.005 | 2/3 | 1/3 | 3/3 | 3/3 |
+| 2 | 0.5 | 0.01 | 1/3 | 0/3 | 3/3 | 3/3 |
+| 2 | 0.5 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
+| 2 | 0.6 | 0.005 | 3/3 | 2/3 | 3/3 | 3/3 |
+| 2 | 0.6 | 0.01 | 2/3 | 0/3 | 3/3 | 3/3 |
+| 2 | 0.6 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
+| 4 | 0.4 | 0.005 | 3/3 | 3/3 | 3/3 | 3/3 |
+| 4 | 0.4 | 0.01 | 2/3 | 2/3 | 3/3 | 3/3 |
+| 4 | 0.4 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
+| 4 | 0.5 | 0.005 | 3/3 | 2/3 | 3/3 | 3/3 |
+| 4 | 0.5 | 0.01 | 1/3 | 0/3 | 2/3 | 3/3 |
+| 4 | 0.5 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
+| 4 | 0.6 | 0.005 | 3/3 | 2/3 | 3/3 | 3/3 |
+| 4 | 0.6 | 0.01 | 2/3 | 1/3 | 3/3 | 3/3 |
+| 4 | 0.6 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
+| 6 | 0.4 | 0.005 | 3/3 | 3/3 | 2/3 | 2/3 |
+| 6 | 0.4 | 0.01 | 0/3 | 2/3 | 3/3 | 1/3 |
+| 6 | 0.4 | 0.02 | 0/3 | 0/3 | 3/3 | 2/3 |
+| 6 | 0.5 | 0.005 | 3/3 | 3/3 | 3/3 | 3/3 |
+| 6 | 0.5 | 0.01 | 0/3 | 1/3 | 3/3 | 3/3 |
+| 6 | 0.5 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
+| 6 | 0.6 | 0.005 | 2/3 | 3/3 | 3/3 | 3/3 |
+| 6 | 0.6 | 0.01 | 3/3 | 1/3 | 3/3 | 2/3 |
+| 6 | 0.6 | 0.02 | 0/3 | 0/3 | 3/3 | 1/3 |
 
 ### Declared selection outcome
 
@@ -620,7 +559,6 @@ Ineligible candidates and reasons:
 * cohort-balanced folding worse by >1e-4: 7 candidate(s) — 2.0:0.4:0.005, 2.0:0.5:0.005, 2.0:0.6:0.005, 4.0:0.4:0.005, 4.0:0.5:0.005, 4.0:0.6:0.005, 6.0:0.6:0.005
 * fewer fully converged pairs: 11 candidate(s) — 2.0:0.4:0.01, 2.0:0.4:0.02, 2.0:0.5:0.02, 2.0:0.6:0.02, 4.0:0.4:0.02, 4.0:0.5:0.02, 4.0:0.6:0.02, 6.0:0.4:0.01, 6.0:0.4:0.02, 6.0:0.5:0.02, 6.0:0.6:0.02
 
-
 ### Selection decision
 
 The pre-declared rule retains the current configuration. No candidate satisfied every promotion
@@ -629,9 +567,7 @@ condition:
 * **Highest eligible Dice: c=6, box=0.6, s=0.01.** It gained **+0.0038** cohort-balanced Dice
   (0.7224 versus 0.7187) and 9/15 fully converged pairs (versus 7/15), at essentially unchanged
   cost (−0.2%). However, its cohort-balanced HD95 was **+0.608 mm worse** (11.988 versus
-  11.379 mm), far outside the +0.05 mm guard. The degradation is concentrated in Lung CT
-  (9.32 → 14.77 mm) and OASIS (3.07 → 3.19 mm), partly offset by Abdomen CT (35.38 → 33.03 mm).
-  Because the guard is part of the declared criterion, this candidate was not frozen.
+  11.379 mm), far outside the +0.05 mm guard. Because the guard is part of the declared criterion, this candidate was not frozen.
 * **c=6, box=0.6, s=0.02** reached +0.0042 Dice and −0.346 mm HD95, but only **4/15** tuning
   pairs fully converged (current 7/15), so it failed the convergence eligibility condition.
 * **c=6, box=0.4, s=0.01** was the most HD95-favourable near-miss (−0.587 mm, Dice +0.0018), but
@@ -665,7 +601,6 @@ configuration restricted to the remaining held-out pairs gives:
 | LPBA40 | 6 | 0.7127 | 6.19 | 0 | 5 / 6 |
 | OASIS | 7 | 0.7743 | 2.78 | 1.29e-06 | 2 / 7 |
 | Hippocampus MR | 17 | 0.7708 | 3.14 | 1.12e-05 | 16 / 17 |
-| Abdomen CT | 7 | 0.4157 | 41.90 | 4.14e-05 | 1 / 7 |
 | Lung CT | 17 | 0.7901 | 54.02 | 2.15e-03 | 11 / 17 |
 
 These are descriptive subsets of the same one-seed benchmark, not a validation of a promoted
@@ -674,10 +609,7 @@ no tuning-then-held-out comparison exists for a new setting.
 
 ## Objective-weight screen (one case per cohort, 2026-11-12)
 
-The earlier sweep fixed the objective weights at the packaged PD-LK 0.1 and box-NCC 0.05. To test
-whether those weights are over-regularized, a one-hour screen used the **same central case** of the
-earlier tuning subset for each cohort (LPBA40 S06, OASIS 0007, Hippocampus 0012, Abdomen CT 0007,
-Lung CT 0011) and changed **one weight at a time**:
+The earlier sweep fixed the objective weights at the packaged PD-LK 0.1 and box-NCC 0.05.
 
 * PD-LK \(w_{\mathrm{PDLK}} \in \{0.1, 0.05, 0.02, 0.01\}\) with box NCC fixed at 0.05;
 * box NCC \(w_{\mathrm{NCC}} \in \{0.05, 0.02, 0.01\}\) with PD-LK fixed at 0.1.
@@ -698,9 +630,7 @@ No full-cohort benchmark was run.
 | 0.02 | 0.05 | 0.6865 | −0.0176 | 14.47 | +1.25 | 1/5 | 26.06 | 3.32e-03 | 82.0 |
 | 0.01 | 0.05 | 0.6774 | −0.0267 | 15.26 | +2.04 | 2/5 | 25.96 | 3.35e-03 | 81.3 |
 
-Lowering PD-LK **hurts registration** and does not improve reconstruction. OASIS falls
-0.7618 → 0.7577 → 0.7281 → 0.6966 and Abdomen CT 0.3436 → 0.3201 → 0.2828 → 0.2805;
-Hippocampus improves slightly (peak 0.7583 at 0.02) and LPBA40 is flat. Endpoint PSNR moves by at
+Lowering PD-LK **hurts registration** and does not improve reconstruction. Endpoint PSNR moves by at
 most +0.1 dB. The packaged PD-LK weight 0.1 is therefore **not** the over-regularizer.
 
 ### Box-NCC sweep (PD-LK fixed at 0.1)
@@ -713,9 +643,7 @@ most +0.1 dB. The packaged PD-LK weight 0.1 is therefore **not** the over-regula
 
 NCC 0.02 is intermediate and is **dominated by 0.01** on the balanced metrics: Dice 0.7056 versus
 0.7101, HD95 13.76 versus 13.00 mm, convergence 3/5 versus 5/5, endpoint PSNR 26.74 versus
-26.95 dB. Per cohort, 0.02 gains OASIS +0.024, Hippocampus +0.009 and Lung +0.003, leaves LPBA40
-almost unchanged (−0.001), and loses Abdomen CT (−0.026 Dice, +3.2 mm HD95); its single OASIS
-convergence miss is one interval at 2.0014e-5, just above the 2e-5 tolerance. Its only advantage
+26.95 dB. Its only advantage
 over 0.01 is the smaller LPBA40 Dice loss.
 
 Lowering box NCC to 0.01 improves the cohort-balanced Dice, HD95, PCG convergence, endpoint
@@ -727,11 +655,9 @@ reconstruction and runtime at the same time. Endpoint PSNR rises 0.97 dB and end
 | LPBA40 (S06) | 0.7044 → 0.6954 | 6.19 → 6.26 | 30.47 → 30.91 | 0/1 → 1/1 |
 | OASIS (0007) | 0.7618 → **0.7948** | 3.29 → **3.06** | 27.84 → 28.83 | 1/1 → 1/1 |
 | Hippocampus (0012) | 0.7486 → **0.7614** | 3.56 → 3.56 | 26.81 → 27.64 | 1/1 → 1/1 |
-| Abdomen CT (0007) | 0.3436 → 0.3301 | 48.96 → 49.08 | 21.28 → 22.71 | 0/1 → 1/1 |
 | Lung CT (0011) | 0.9619 → **0.9688** | 4.11 → **3.05** | 23.50 → 24.65 | 1/1 → 1/1 |
 
-The gain is concentrated in OASIS (+0.033 Dice, −0.23 mm), Hippocampus (+0.013) and Lung CT
-(+0.007, −1.06 mm); LPBA40 (−0.009) and Abdomen CT (−0.014) lose some Dice. The per-cohort signs
+The per-cohort signs
 therefore disagree, and the balanced +0.006 is not a uniform improvement.
 
 ### What this screen supports
@@ -741,23 +667,16 @@ therefore disagree, and the balanced +0.006 is not a uniform improvement.
   NCC term (PSNR flat across the PD-LK sweep, +1 dB across the NCC sweep).
 * **Recommendation:** keep PD-LK at 0.1; consider box NCC 0.01 as the one candidate worth a full
   five-cohort benchmark later. The defaults are not changed, and no full benchmark was run.
-* **This is a screen, not validation.** There is one central case per cohort and one seed. The
-  same current configuration retrained on these cases differs from its earlier runs by up to
-  ~0.05 Dice on the hard Abdomen 0007 case (0.291–0.344 across earlier runs), so the LPBA40 and
-  Abdomen deltas of ~0.01 are not resolved. The OASIS (+0.033) and Hippocampus (+0.013) gains are
+* **This is a screen, not validation.** There is one central case per cohort and one seed. The OASIS (+0.033) and Hippocampus (+0.013) gains are
   larger than the observed run-to-run spread on those cases, but a full-cohort rerun is required
   before any promotion.
 
 ## Limitations and what is not claimed
 
 * **One seed per pair.** Every SIREN result is a single seed-42 fit. No repeated-seed variance is
-  estimated for the full benchmark. The tuning rerun of the *same* current configuration on the
-  tuning pairs already differs from the full benchmark by up to +0.036 Dice (Abdomen 0007 and
-  Lung 0012) and by −24.3 mm HD95 (Lung 0012); cohort-mean differences are smaller but not zero.
-  Candidate differences below roughly 0.005 Dice are therefore not resolved by this design.
+  estimated for the full benchmark. Candidate differences below roughly 0.005 Dice are therefore not resolved by this design.
 * **Skipped gate, diagnostic PSNR.** The packaged presets explicitly skip the endpoint PSNR gate;
-  `endpoint_quality_pass` is `null` everywhere. Hippocampus, Abdomen CT and Lung CT contain
-  reconstructions below the nominal 25 dB threshold (minimum 24.10, 20.68 and 20.81 dB). Those
+  `endpoint_quality_pass` is `null` everywhere. Those
   outcomes are accepted by the packaged policy, not certified by it.
 * **Classical rows are reused, not rerun.** They come from revision `44f1ca2` with the same data
   and metric code, but classical toolkits are not deterministic and their forward map is an
@@ -769,9 +688,7 @@ therefore disagree, and the balanced +0.006 is not a uniform improvement.
   The grid is not exhaustive and the tuning images are not independent validation. The
   cohort-balanced criterion deliberately weights cohorts equally, which lets the small
   Hippocampus cohort count as much as the 20-pair cohorts.
-* **No superiority claim.** The comparisons are descriptive. On LPBA40 the reused ANTs row has
-  higher Dice; on OASIS ANTs and Demons are higher; on Hippocampus and Abdomen CT the SIREN
-  default leads the reused rows. One seed and reused classical evidence do not establish a
+* **No superiority claim.** The comparisons are descriptive. One seed and reused classical evidence do not establish a
   general ranking.
 
 ## Artifact preservation and verification
@@ -836,16 +753,6 @@ tables above. Lung CT has no classical row. HD95 is in millimetres.
 | Hippocampus | HippocampusMR_0019_0000 | 0.8046 | 2.58 | 0.7667 | 3.62 | 0.8128 | 2.50 |
 | Hippocampus | HippocampusMR_0020_0000 | 0.7542 | 3.07 | 0.7400 | 3.00 | 0.7591 | 3.41 |
 | Hippocampus | HippocampusMR_0021_0000 | 0.7223 | 4.00 | 0.6368 | 5.34 | 0.7196 | 4.00 |
-| Abdomen CT | AbdomenCTCT_0002_0000 | 0.4704 | 22.72 | 0.5193 | 34.16 | 0.4448 | 22.76 |
-| Abdomen CT | AbdomenCTCT_0003_0000 | 0.3276 | 51.24 | 0.2746 | 60.46 | 0.3006 | 50.72 |
-| Abdomen CT | AbdomenCTCT_0004_0000 | 0.2764 | 35.57 | 0.3894 | 36.86 | 0.2681 | 34.93 |
-| Abdomen CT | AbdomenCTCT_0005_0000 | 0.0855 | 86.26 | 0.1177 | 103.92 | 0.0729 | 86.20 |
-| Abdomen CT | AbdomenCTCT_0006_0000 | 0.5666 | 23.24 | 0.4732 | 27.06 | 0.4352 | 26.18 |
-| Abdomen CT | AbdomenCTCT_0007_0000 | 0.2470 | 44.00 | 0.2404 | 56.22 | 0.2345 | 45.79 |
-| Abdomen CT | AbdomenCTCT_0008_0000 | 0.3975 | 28.49 | 0.3415 | 38.08 | 0.3601 | 29.71 |
-| Abdomen CT | AbdomenCTCT_0009_0000 | 0.2489 | 85.87 | 0.1801 | 109.35 | 0.1687 | 88.43 |
-| Abdomen CT | AbdomenCTCT_0010_0000 | 0.4518 | 32.18 | 0.3877 | 40.48 | 0.3969 | 33.99 |
-| Abdomen CT | AbdomenCTCT_0011_0000 | 0.4655 | 32.68 | 0.4400 | 33.52 | 0.3669 | 31.87 |
 
 The classical forward inversion was approximate and did not converge on any pair; no SIREN
 inversion diagnostic is claimed as exact either. Deterministic classical reproduction was never

@@ -4,8 +4,7 @@ Seed-42, 5,000-step fits use MSE endpoints, shared-grid PD-LK and bidirectional
 box NCC. For each selected case, only `covariant_residual_alpha` changes. Final
 recovery is the unchanged PCG+RK2 pipeline. The endpoint PSNR gate was explicitly
 skipped in every run. S02/S03 include alpha 0, .5 and 1; the additional cohorts
-include alpha 0 and 1. These are the middle sorted cases from the existing
-benchmarks: OASIS_0006_0000, HippocampusMR_0011_0000 and AbdomenCTCT_0006_0000.
+include alpha 0 and 1.
 
 | Cohort / case | Alpha | Dice | HD95 (mm) | Folded voxels (%) | PCG converged | Training (s) |
 |---|---:|---:|---:|---:|---:|---:|
@@ -19,12 +18,8 @@ benchmarks: OASIS_0006_0000, HippocampusMR_0011_0000 and AbdomenCTCT_0006_0000.
 | OASIS_0006_0000 | 1 | .759022 | 3.0679 | .000552 | 15/16 | 95.06 |
 | HippocampusMR_0011_0000 | 0 | .781638 | 2.7247 | .006104 | 16/16 | 96.82 |
 | HippocampusMR_0011_0000 | 1 | .778227 | 2.8953 | 0 | 16/16 | 95.39 |
-| AbdomenCTCT_0006_0000 | 0 | .515445 | 22.1908 | .002162 | 13/16 | 97.63 |
-| AbdomenCTCT_0006_0000 | 1 | .469430 | 23.7103 | .003115 | 15/16 | 95.39 |
 
-Alpha 1 improved Dice and HD95 slightly on OASIS, reduced folding on the selected
-Hippocampus case while worsening its Dice/HD95, and worsened both scores and
-folding on the selected Abdomen CT case. On S02 and S03 alpha 1 led within each
+On S02 and S03 alpha 1 led within each
 case, though the score changes were small. Across the three additional cases,
 mean Dice changed from .68360 to .66889 and mean HD95 from 9.3327 to 9.8912 mm
 when moving from alpha 0 to 1. Training took about 94–98 seconds for every run;

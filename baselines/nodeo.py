@@ -2,7 +2,7 @@
 import time
 from types import SimpleNamespace
 import numpy as np
-from .common import execution, finish, preflight, predict_for_case, sample_xyz_field
+from .common import execution, finish, preflight, sample_xyz_field
 from .sources import native_modules, upstream_imports
 
 
@@ -16,7 +16,8 @@ def run_case(case, config, device):
         displacement, normalized, _ = native.registration(settings, dev, case['moving']['data'], case['fixed']['data'])
         grid = normalized[0].detach().cpu().numpy()[..., ::-1]
         mapping = (grid + 1) * (np.asarray(case['fixed']['data'].shape) - 1) / 2
-        predicted = predict_for_case(case, config, lambda points: sample_xyz_field(mapping, points))
+        def predicted(points):
+            return sample_xyz_field(mapping, points)
         checkpoint = dict(kind='provenance_only', parameter_checkpoint=False,
                           reason='Native function returns selected dense maps; field persistence is disabled')
         return finish('nodeo', case, config, predicted, checkpoint, started,

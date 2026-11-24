@@ -8,12 +8,12 @@ time1 means ES. Display is native array axis2, middle slice16 of32 (zero-based).
 
 All27 exported files under `docs/media/acdc_trajectory/` are separate PNGs:
 fixed/moving images, pure coloured labels, label overlays, a colour legend, and
-SIREN/reconstruction-crossfade/cine-linear/cine-nearest images at five times.
+SIRENPath/Fitted crossfade/cine-linear/cine-nearest images at five times.
 No volumes, reports or metadata are placed in media.
 
-The SIREN images use linear **parameter interpolation** of the saved endpoint
-networks, without training or flow recovery. Crossfade is linear interpolation
-of those decoded endpoint reconstructions, not raw-image crossfade. Both share
+The SIRENPath images use linear **parameter interpolation** of the saved endpoint
+networks, without training or flow recovery. Fitted crossfade is linear interpolation
+of those decoded endpoint reconstructions, as distinct from Raw crossfade. Both share
 one fixed display window from their endpoint reconstructions; each intermediate
 is not independently contrast-normalized. Reported NCC uses raw predictions.
 

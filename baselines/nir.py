@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from .common import predict_for_case, cpu_state, execution, finish, landmark_inputs, preflight
+from .common import cpu_state, execution, finish, preflight
 from .sources import native_modules, upstream_imports
 from .precision import ieee_fp32
 
@@ -113,7 +113,7 @@ def run_case(case, config, device):
                 # Match util.warp_3d_volume used by the released test script.
                 # Its scale is maxlen, unlike dataio.unnormalize_coords (maxlen-1).
                 return native_output_voxels(normalized.numpy(), dataset.shape, sampled.maxlen)
-            predicted=predict_for_case(case,config,predict)
+            predicted=predict
             checkpoint = {'kind': 'network_weights', 'state': cpu_state(model)}
         return finish('nir', case, config, predicted, checkpoint, started, variant=native['model_type'],
                       sampler=native['sample_mtd'], preprocessing=preprocessing,

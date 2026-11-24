@@ -38,32 +38,37 @@ class TestCapturedTraining(unittest.TestCase):
     @unittest.skipUnless(torch.cuda.is_available(),'CUDA native-generator replay check')
     def test_native_sampling_matches_reference_inside_graphs(self):
         device=torch.device('cuda:0');image=torch.arange(17*19*23,device=device,dtype=torch.float32).reshape(17,19,23)
-        for masked, geometry, integrator in ((masked, geometry, integrator)
-                for masked in (False,True) for geometry in ('orthogonal',)
-                for integrator in ('rk2',)):
-            branch=SymmetricPairRegistration(image,image.flip(0),torch.eye(4),grid_size=4,particles=31,
-                pairs_per_cell=2,crop_fraction=.5,random_timesteps=True,query_geometry=geometry,
-                compile_derivatives=False,compile_velocity=False,gaussian_kernel='three_tap',
-                training_integrator=integrator)
-            branch.crop_center_sites=([((image%2==0).nonzero().float()),((image%3==0).nonzero().float())] if masked else [])
-            generator=torch.Generator(device=device).manual_seed(42);expected=[]
-            for step in range(12):
-                indices=sample_crop_indices(branch,47,generator);positions=branch.sample_positions();branch.resample_queries();times=branch._sample_times()
-                x=coordinates_from_indices(indices,image.shape)
-                expected.append({k:v.clone() for k,v in dict(coordinates=x,source_truth=image.flatten()[indices],
-                    target_truth=branch.fixed.flatten()[indices],forward_positions=positions[0],reverse_positions=positions[1],
-                    queries=branch.coordinates,origin=branch.origin).items()})
-                expected[-1]['times']=tuple(t.clone() for t in times)
-            sampler=NativeGraphInputs(branch,47,42,12);graphs={};outputs={}
-            for step in range(1,13):
-                tag=sampler.choices[step-1];sampler.reset_offsets(tag,step)
-                if tag not in graphs:
-                    graph=torch.cuda.CUDAGraph()
-                    with torch.cuda.graph(graph):outputs[tag]=sampler.draw(tag)
-                    graphs[tag]=graph;sampler.reset_offsets(tag,step)
-                graphs[tag].replay()
-                for name,value in expected[step-1].items():
-                    torch.testing.assert_close(outputs[tag][name],value,rtol=0,atol=0)
+        branch = SymmetricPairRegistration(
+            image, image.flip(0), torch.eye(4), grid_size=4, particles=31,
+            pairs_per_cell=2, crop_fraction=.5, random_timesteps=True, query_geometry='orthogonal',
+            compile_derivatives=False, compile_velocity=False, gaussian_kernel='three_tap',
+            training_integrator='rk2')
+        generator = torch.Generator(device=device).manual_seed(42)
+        expected = []
+        for _ in range(12):
+            indices = sample_crop_indices(branch, 47, generator)
+            positions = branch.sample_positions()
+            branch.resample_queries()
+            times = branch._sample_times()
+            expected.append({
+                'coordinates': coordinates_from_indices(indices, image.shape),
+                'source_truth': image.flatten()[indices],
+                'target_truth': branch.fixed.flatten()[indices],
+                'forward_positions': positions[0].clone(),
+                'reverse_positions': positions[1].clone(),
+                'queries': branch.coordinates.clone(),
+                'origin': branch.origin.clone(),
+                'times': tuple(time.clone() for time in times),
+            })
+        sampler = NativeGraphInputs(branch, 47, 42)
+        graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(graph):
+            output = sampler.draw()
+        for step, samples in enumerate(expected, 1):
+            sampler.reset_offsets(step)
+            graph.replay()
+            for name, value in samples.items():
+                torch.testing.assert_close(output[name], value, rtol=0, atol=0)
 
     def test_complete_losses_and_all_parameter_gradients(self):
         torch.manual_seed(42);image=torch.rand(17,19,23,dtype=torch.float64)
@@ -104,24 +109,23 @@ class TestCapturedTraining(unittest.TestCase):
             pairs_per_cell=2,crop_fraction=.5,random_timesteps=True,query_geometry='orthogonal',
             compile_derivatives=False,compile_velocity=False,gaussian_kernel='three_tap',
             training_integrator=integrator)
-        branch.crop_center_sites=[(image%2==0).nonzero().float(),(image%3==0).nonzero().float()]
-        native=NativeGraphInputs(branch,47,42,12);sobol=SobolTimeInputs(branch,47,42,12)
-        self.assertEqual(native.choices,sobol.choices)
-        count=branch.time_strata
-        times=torch.quasirandom.SobolEngine(count,scramble=True,seed=42+4000057).draw(12).to(device)
-        graphs={};outputs={}
-        for step in range(1,13):
-            tag=sobol.choices[step-1];native.reset_offsets(tag,step);expected=native.draw(tag)
-            sobol.reset_offsets(tag,step)
-            if tag not in graphs:
-                graph=torch.cuda.CUDAGraph()
-                with torch.cuda.graph(graph):outputs[tag]=sobol.draw(tag)
-                graphs[tag]=graph;sobol.reset_offsets(tag,step)
-            graphs[tag].replay()
-            for key,value in expected.items():
-                if key!='times':torch.testing.assert_close(outputs[tag][key],value,rtol=0,atol=0)
-            expected_times=tuple(i/count+(1/count)*times[step-1,i] for i in range(count))
-            torch.testing.assert_close(outputs[tag]['times'],expected_times,rtol=0,atol=0)
+        native = NativeGraphInputs(branch, 47, 42)
+        sobol = SobolTimeInputs(branch, 47, 42, 12)
+        count = branch.time_strata
+        times = torch.quasirandom.SobolEngine(count, scramble=True, seed=42 + 4000057).draw(12).to(device)
+        graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(graph):
+            output = sobol.draw()
+        for step in range(1, 13):
+            native.reset_offsets(step)
+            expected = native.draw()
+            sobol.reset_offsets(step)
+            graph.replay()
+            for key, value in expected.items():
+                if key != 'times':
+                    torch.testing.assert_close(output[key], value, rtol=0, atol=0)
+            expected_times = tuple(i / count + times[step - 1, i] / count for i in range(count))
+            torch.testing.assert_close(output['times'], expected_times, rtol=0, atol=0)
 
     def test_explicit_preset_and_invalid_runtime_options(self):
         config=load_config()

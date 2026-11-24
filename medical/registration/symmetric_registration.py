@@ -34,28 +34,10 @@ def sample_crop_indices(branch, count, generator, *, crop_shape=None, center_xyz
     else:
         ranges = torch.tensor([n - b + 1 for n, b in zip(shape, crop)], device=device)
         half = branch.moving.new_tensor([n - 1 for n in crop]) / 2
-    sites = getattr(branch, 'crop_center_sites', ())
     if center_xyz is not None:
         if center_xyz.shape != (3,) or not torch.isfinite(center_xyz).all():
             raise ValueError('Crop center must be a finite XYZ point')
         center = center_xyz.flip(0)
-        origin = (center - half).round().long().clamp_min(0)
-        origin = torch.minimum(origin, ranges - 1)
-    elif sites:
-        if generator is not None and device.type == 'cuda' and len(sites) == 2 and max(map(len, sites)) < (1 << 28):
-            # The two scalar randint calls have equal Philox increments at these
-            # bounds. Draw both candidate indices at the same counter and choose
-            # on-device; the next draw starts at the original stream position.
-            endpoint = torch.randint(2, (1,), device=device, generator=generator)
-            offset = generator.get_offset()
-            i = torch.randint(len(sites[0]), (1,), device=device, generator=generator)
-            generator.set_offset(offset)
-            j = torch.randint(len(sites[1]), (1,), device=device, generator=generator)
-            center = torch.where(endpoint == 0, sites[0][i], sites[1][j]).squeeze(0)
-        else:
-            endpoint = int(torch.randint(len(sites), (), device=device, generator=generator))
-            active = sites[endpoint]
-            center = active[torch.randint(len(active), (), device=device, generator=generator)]
         origin = (center - half).round().long().clamp_min(0)
         origin = torch.minimum(origin, ranges - 1)
     else:

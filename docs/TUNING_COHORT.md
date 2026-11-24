@@ -107,33 +107,33 @@ All candidates use the complete128-pair cohort. Constants and time-varying weigh
 are grouped together as schedules. Each candidate changes only its listed schedule
 or scalar from candidate1. The user authorized all20 sweeps plus one combined-candidate run, with128 fits
 each (2688 fits total). All20 configurations are generated in the search output,
-and captured training supports the requested PD-LK cosine weight schedule.
+and captured training supports the requested cosine weight schedule for the local transport loss (LT).
 
 | ID | Group | Setting |
 |---:|---|---|
 | 1 | Reference | Current default |
-| 2 | PD-LK weight schedule | Cosine0.3→0.1 |
-| 18 | PD-LK weight schedule | Constant0.05 |
-| 19 | PD-LK weight schedule | Constant0.2 |
+| 2 | LT weight schedule | Cosine0.3→0.1 |
+| 18 | LT weight schedule | Constant0.05 |
+| 19 | LT weight schedule | Constant0.2 |
 | 3 | Registration weight schedule | Cosine increase0.01→0.03 |
 | 4 | Registration weight schedule | Cosine0.05→0.01 |
 | 16 | Registration weight schedule | Constant0.01 |
 | 17 | Registration weight schedule | Constant0.03 |
 | 20 | Registration weight schedule | Constant0.02 |
-| 5 | Inter-SIREN parameter L2 | 0 |
-| 6 | Inter-SIREN parameter L2 | 0.1 |
-| 7 | Inter-SIREN parameter L2 | 1.0 |
-| 8 | PD-LK c | 2 |
-| 9 | PD-LK c | 6 |
-| 10 | PD-LK c | 8 |
+| 5 | Endpoint parameter penalty weight | 0 |
+| 6 | Endpoint parameter penalty weight | 0.1 |
+| 7 | Endpoint parameter penalty weight | 1.0 |
+| 8 | LT c | 2 |
+| 9 | LT c | 6 |
+| 10 | LT c | 8 |
 | 11 | Moment weight | 0.001 |
 | 12 | Moment weight | 0.002 |
 | 13 | Moment weight | 0.01 |
 | 14 | LR schedule | Cosine1e-4→1e-5 |
 | 15 | LR schedule | Historical LR-only OneCycle2.5e-5→1e-4→2.5e-5 |
 
-PD-LK c=4 is already candidate1. Default PD-LK schedule is constant0.1;
-registration is cosine0.03→0.01; parameterL2 is0.01; moment is0.005;
+LT c=4 is already candidate1. Default LT schedule is constant0.1;
+registration is cosine0.03→0.01; the endpoint parameter penalty weight is 0.01; moment is0.005;
 LR is cosine1e-4→2e-5. Constants are schedules, not separate factor groups.
 
 ### Restored OneCycle candidate

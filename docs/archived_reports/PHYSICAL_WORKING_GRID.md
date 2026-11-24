@@ -28,14 +28,11 @@ Images use trilinear interpolation with nearest-edge extension. Fine source axes
 are antialiased using Gaussian sigma 0.5*sqrt((1/source_spacing)^2-1) in source
 voxels, with nearest-edge filtering. Upsampling adds no filter. Already aligned
 1 mm images bypass interpolation. Independent min/max normalization follows
-resampling. DIR-Lab masks use nearest interpolation with zero outside support;
-empty results fail. Labels and landmarks remain evaluation-only on native grids.
+resampling.
 
 Training runs on the working grid. PCG+RK2 recovery uses an independently configured grid (1 mm by default). Map conversion samples
 displacement, adds it to the working query coordinate, and transforms the point
-back through the affines. Evaluation and Jacobians use the original dataset grid,
-and DIR-Lab reports both landmark directions with original lung-mask support.
-No images or maps are persisted. Existing recovery scratch cleanup is retained.
+back through the affines. No images or maps are persisted. Existing recovery scratch cleanup is retained.
 
 Experimental metrics report `reconstruction.working_grid` and
 `reconstruction.original_grid` separately. Original-grid PSNR samples the endpoint
@@ -55,18 +52,8 @@ shape, not the original shape. Metadata is part of the checkpoint contract.
 
 ## Plan-only quick4 commands
 
-```bash
-/venv/main/bin/python -m medical.oasis_experiments --methods ours --subset quick4 \
-  --config medical/configs/physical_working_grid.json --gpus 0 1 2 3 \
-  --output results/oasis_quick4_physical
-/venv/main/bin/python -m medical.abdomen_experiments --methods ours --subset quick4 \
-  --config medical/configs/physical_working_grid.json --gpus 0 1 2 3 \
-  --output results/abdomenctct_quick4_physical
-```
-
 These commands launch no workers. Execution requires a separately requested run
-and `--run`. At 1 mm, abdomen has approximately eight times as many recovery
-voxels as at 2 mm; recovery strategy changes and experiments are deferred.
+and `--run`.
 
 ## Numerical limits and checks
 
@@ -149,9 +136,7 @@ checks (61 passed, eight optional CUDA checks skipped) and 22 baseline checks.
 ## Historical global reconstruction sampling experiment
 
 In that experiment, endpoint reconstruction drew uniformly from the entire working volume,
-independently of the registration crop. Unmasked endpoints share global voxel
-indices as before; DIR-Lab endpoints retain independent full-mask sampling.
-Registration crop placement has a separate generator (seed + 4000051), so crop
+independently of the registration crop. Registration crop placement has a separate generator (seed + 4000051), so crop
 and reconstruction draws cannot perturb each other's random streams. NCC particle
 sampling, 80 mm crop, velocity estimation, two Euler updates and recovery are
 unchanged. This corrects the previous unintended crop restriction, rather than
@@ -163,13 +148,11 @@ matching against those runs.
 
 The user restored crop-coupled endpoint reconstruction after the global-sampling
 experiments. Default sampling and its seed-42 RNG sequence match the original
-80 mm cropped run again. Independent DIR-Lab endpoint masks are retained.
-Training now uses one midpoint RK2 step of length 0.5 per existing velocity field
+80 mm cropped run again. Training now uses one midpoint RK2 step of length 0.5 per existing velocity field
 (reverse uses -0.5 and reversed field order). Midpoint and endpoint support are
 checked; gradients through both velocity queries remain live. Fields retain their
 random half-interval times: this improves spatial integration but does not imply
-second-order accuracy in time for the continuously varying SIREN trajectory.
-Inference PCG+RK2 is unchanged. Structure sampling remains an optional preset.
+second-order accuracy in time for the continuously varying SIREN trajectory. Inference PCG+RK2 is unchanged. Structure sampling remains an optional preset.
 
 ### Cropped reconstruction + training RK2 quick4 result
 
@@ -265,12 +248,9 @@ development results and do not establish a cohort-wide improvement.
 
 ## Tied 32k points: NCC + RK2 quick4 (2026-11-13)
 
-Preset: `medical/configs/physical_working_grid_endpoint_ncc_32k_tied.json`.
-Source: `results/oasis_quick4_cropped_rk2_endpoint_ncc_32k_tied_20261113/summary.json`.
-All four cases completed seed 42, 5000 steps. The only added configuration is
+Preset: `medical/configs/physical_working_grid_endpoint_ncc_32k_tied.json`. Source: `results/oasis_quick4_cropped_rk2_endpoint_ncc_32k_tied_20261113/summary.json`. All four cases completed seed 42, 5000 steps. The only added configuration is
 `training.tie_registration_points: true`, default false. It requires equal endpoint
 batch size and registration count, no structure sampler and no endpoint masks.
-This option currently rejects masked inputs rather than changing DIR-Lab support.
 
 One shared set of 32768 continuous starts supplies both endpoint reconstructions
 and both directional registration trajectories. Targets use trilinear interpolation.
@@ -396,66 +376,6 @@ Target-range-rescaled whole-volume PSNR moving/fixed 15.764/15.312 dB.
 This underperformed global endpoint NCC (DSC 0.818590) and GW-NCC4
 (0.815001) on every case. Source: `results/oasis_quick4_cropped_rk2_endpoint_lncc_32k_20261113/summary.json`.
 
-## Abdomen NCC quick4: checkpoint-only 2 mm recovery (2026-11-13)
-
-Same fitted weights from `abdomenctct_quick4_physical_endpoint_ncc_32k_20261113`;
-only recovery spacing changed. Physical bounds, derivative units, PCG settings
-and original official evaluation grid are retained. No training or PSNR recomputation.
-
-| Recovery | Mean DSC | HD95 (voxels) | SDlogJ | Folding (%) | Recovery seconds |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 1mm | 0.343003 | 20.249838 | 0.491463 | 0.314177 | 109.11 |
-| 2mm | 0.342967 | 20.254281 | 0.488872 | 0.315939 | 14.67 |
-
-All 64/64 2 mm PCG intervals converged. All temporary directories cleaned.
-2 mm timings include fresh-process compilation; 1 mm followed training.
-No maps, warped images or duplicate checkpoints saved. Detailed scalar comparison:
-`results/abdomenctct_quick4_endpoint_ncc_32k_recovery2mm_20261113/comparison.json`.
-
-Recovery now defaults to original reference spacing in all physical-grid presets.
-OASIS remains 1 mm; AbdomenCTCT uses 2 mm; DIR-Lab retains its original
-anisotropic spacing. Full working-domain bounds are preserved, so actual steps
-may be slightly smaller after rounding. Saved checkpoint metadata stays authoritative;
-existing checkpoints retain their recorded recovery geometry unless explicitly overridden.
-Native configurations without working_grid already recover on their input grids.
-
-## Abdomen Jacobian tails and physical derivative scales (2026-11-13)
-
-Checkpoint-only diagnostics on all frozen quick4 NCC/MSE fits, 2 mm recovery;
-no retraining, scalar outputs only. Determinants use the unchanged official
-original-grid stencil and border exclusion. Tail variance shares are contributions
-to the full shifted-log variance, centered at its full mean. Positive-only SD
-is descriptive, not a replacement official metric.
-
-| Fit | Pair | SDlogJ | detJ <= -3 (%) | Share of log variance (%) | Positive-det-only SD |
-| --- | --- | ---: | ---: | ---: | ---: |
-| mse | 0001_to_0007 | 0.08629 | 0.00000 | 0.00 | 0.08629 |
-| mse | 0001_to_0025 | 0.08858 | 0.00000 | 0.00 | 0.08858 |
-| mse | 0007_to_0010 | 0.12375 | 0.00000 | 0.00 | 0.12375 |
-| mse | 0019_to_0025 | 0.08295 | 0.00000 | 0.00 | 0.08295 |
-| ncc | 0001_to_0007 | 0.30260 | 0.01291 | 68.85 | 0.16781 |
-| ncc | 0001_to_0025 | 0.28123 | 0.01022 | 63.11 | 0.17020 |
-| ncc | 0007_to_0010 | 0.77852 | 0.11293 | 90.73 | 0.23058 |
-| ncc | 0019_to_0025 | 0.59314 | 0.06438 | 89.31 | 0.19021 |
-
-Mean interval gradient-norm RMS: MSE 0.008437, NCC 0.040859 per mm. Temporal RMS: MSE 0.207183, NCC 0.915298. Means equally weight cases and the 16 interval midpoints.
-NCC increases brightness-trace/smoothness-diagonal ratio substantially. This supports changed effective regularization but does not isolate causality from different learned trajectories. All 128 PCG intervals converged and all scratch directories cleaned. Detailed quantiles, per-interval scales and script: `results/abdomen_quick4_jacobian_derivative_diagnostic_20261113`.
-
-## NCC abdomen checkpoint recovery smoothing sweep (2026-11-13)
-
-Frozen quick4 fits, same 2 mm recovery; only recovery smoothness changed.
-Baseline 0.01: DSC 0.342967, HD95 20.254281, SDlogJ 0.488872, folding 0.315939%.
-
-| Smoothness | DSC | HD95 (voxels) | SDlogJ | Folding (%) | Converged intervals |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 0.05 | 0.320206 | 20.196013 | 0.150033 | 0.007584 | 64/64 |
-| 0.1 | 0.306673 | 20.361450 | 0.108680 | 0.000145 | 64/64 |
-| 0.25 | 0.290536 | 20.702410 | 0.078071 | 0.000000 | 16/64 |
-
-Stronger smoothing reduces folding but also lowers mean DSC. No defaults changed.
-All scratch directories cleaned; no maps/checkpoints written. Scalar summaries:
-`results/abdomen_quick4_ncc_recovery_smoothing_20261113/summary.json`.
-
 ## Historical brightness-plus-gradient PCG experiment (2026-11-13)
 
 The removed experimental solver added pointwise gradient constancy to brightness flow on the physical grid. The measurements below describe that historical implementation. Current frozen recovery uses brightness flow, a spatial smoothness penalty, true-residual PCG stopping and midpoint RK2. [Current method](METHOD.md)
@@ -472,9 +392,6 @@ convergence regressions. Ten tests passed, two optional CUDA tests skipped.
 An additional executed FP32 CUDA comparison at identical iteration counts gave
 eager/compiled relative L2 error 1.626e-5 (threshold 1e-3).
 
-First frozen abdomen quick4 case 0001→0007, existing NCC checkpoint, 2 mm,
-smoothness 0.01, ridge 1e-6, 16 intervals and unchanged PCG/RK2 settings:
-
 | Recovery | DSC | HD95 (voxels) | SDlogJ | Folding (%) | Recovery seconds |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Brightness | 0.247819 | 23.173177 | 0.302600 | 0.060414 | 13.02 |
@@ -483,45 +400,13 @@ smoothness 0.01, ridge 1e-6, 16 intervals and unchanged PCG/RK2 settings:
 Both recoveries converged in 16/16 intervals. Timing includes fresh-process
 compilation, so the 2.62x ratio is not a warm-kernel benchmark. No retraining,
 parameter tuning or additional cases were run. Temporary scratch cleaned;
-no maps/warped images saved. Source scalar diagnostics and replay script:
-`results/abdomen_gradient_recovery_20261113/`. Default remains brightness-only.
-
-## DIR-Lab quick4 NCC with standard recovery (2026-11-13)
-
-Cases 01/03/04/05, best global endpoint NCC separate-32k preset, 1 mm training,
-original anisotropic recovery, brightness-only PCG+RK2 and smoothing 0.01.
-Initial attempt failed on crops without independent mask support. The sampler used for this historical run
-rejected invalid regions (bounded at 1024 draws), requiring both endpoint
-masks in the central particle region; unmasked sampling remains unchanged.
-Six focused synthetic checks passed. Successful restarted run:
-`results/dirlab_quick4_physical_endpoint_ncc_32k_maskedcrop_20261113`.
-
-| Case | Forward continuous TRE (mm) | Reverse continuous TRE (mm) |
-| --- | ---: | ---: |
-| 01 | 1.4053 | 1.4543 |
-| 03 | 2.7903 | 2.8809 |
-| 04 | 3.7647 | 3.8431 |
-| 05 | 3.7175 | 3.8739 |
-
-Mean forward/reverse continuous TRE 2.9195/3.0131 mm, initial 7.0356 mm. All 64/64 PCG intervals converged; zero measured forward lung folding in each case. Mean recovery 9.83 s.
-
-## DIR-Lab matched MSE quick4 (2026-11-13)
-
-Same mask-valid crops, separate 32k samples, RK2 training and original-spacing
-brightness recovery as the NCC run; only endpoint NCC/moment prior changed to MSE.
-Mean forward rounded TRE 3.983972 mm (NCC 2.883260); continuous forward/reverse
-3.915287/3.993237 mm. All four completed, but 0/64 PCG intervals converged
-at 500 iterations, versus NCC 64/64. Thus the registration comparison includes
-nonconverged MSE recovery. Zero measured whole-grid and lung folding. Mean
-original-grid PSNR moving/fixed 21.504/21.188 dB. Source:
-`results/dirlab_quick4_physical_endpoint_mse_32k_maskedcrop_20261113`. No additional recovery was launched.
+no maps/warped images saved. Default remains brightness-only.
 
 ## Current crop and gradient policy (supersedes earlier masked sampling)
 
-DIR-Lab masks now select crop centers only. Endpoint reconstruction and both
+Endpoint reconstruction and both
 registration directions share the selected crop, using separate samples by
-default. All PD-LK grid cells and all registration particles contribute.
-Trajectories leaving the crop use border-extended velocity interpolation rather
+default. All PD-LK grid cells and all registration particles contribute. Trajectories leaving the crop use border-extended velocity interpolation rather
 than being removed from NCC. A full-image boundary penalty applies in cropped
 and uncropped execution. See METHOD.md for current details. Earlier experiments
 in this document used the earlier masking/trajectory rejection policy.

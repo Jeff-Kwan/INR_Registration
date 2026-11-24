@@ -96,8 +96,7 @@ preset remains NCC 0.05; this comparison used a separate frozen run config.
 
 ## Reconstruction-only MSE and regional NCC (2026-11-13)
 
-The user requested a reconstruction baseline comparable to the DIR-Lab pure-MSE
-test. All four frozen pairs completed seed 42 and 5000 steps with width 256,
+All four frozen pairs completed seed 42 and 5000 steps with width 256,
 four-layer, omega 30 endpoint SIRENs, batch 32768, learning rate 0.0002 and final
 factor 0.25. Both auxiliary weights are zero. Every logged total equals the sum
 of the moving and fixed MSE terms. Native OASIS independent min/max scaling and
@@ -129,15 +128,11 @@ The lowest within-label patch means are label 6 (0.9233), 34 (0.9262), 25 (0.930
 24 (0.9329) and 5 (0.9353). Full-region NCC is lower on tiny labels 18 (0.8191)
 and 34 (0.7300), whose median sizes are 66 and 54.5 voxels respectively.
 
-DIR-Lab pure-MSE landmark patches averaged 0.7593. Those centers are vessel
-landmarks, whereas OASIS centers are random voxels stratified by segmentation
-region. The OASIS endpoint fits retain high local correlation even when patch
+The OASIS endpoint fits retain high local correlation even when patch
 evaluation is restricted to individual labels.
 
 All checkpoints, logs, resolved configuration, per-endpoint regional details and
-`per_region.csv` are in `results/oasis_quick4_reconstruction_mse_20261113/`.
-The adapter uses the same pure-MSE config as the DIR-Lab reconstruction test.
-Evaluation streams predictions and retains scalar metrics.
+`per_region.csv` are in `results/oasis_quick4_reconstruction_mse_20261113/`. Evaluation streams predictions and retains scalar metrics.
 
 ## Six-layer regular registration (2026-11-13)
 

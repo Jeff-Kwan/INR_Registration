@@ -1,6 +1,6 @@
 """Fitted crossfade of the uncalibrated endpoint reconstructions from run 5."""
 from pathlib import Path
-from medical.abdomen_evaluation import PROTOCOLS
+from medical.learn2reg_evaluation import PROTOCOLS
 from medical.sirenpath_ablation_method import run_case as run_shared
 
 

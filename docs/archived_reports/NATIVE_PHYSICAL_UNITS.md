@@ -10,10 +10,7 @@ its moment prior, PD-LK 0.1, registration NCC 0.01, 32k separate registration
 particles, two spatial RK2 half-steps and standard 16-interval PCG+RK2 recovery.
 No coefficients have been tuned for this mode.
 
-No images, masks, labels or evaluation grids are resampled. Native normalization,
-lung-centered crop sampling, reconstruction targets, SIRENs and sampling budgets
-are retained. Masks only choose crop centers; all training cells/particles
-contribute with live gradients.
+The experiment retains native image and evaluation grids, reconstruction targets, SIRENs and sampling budgets.
 
 For native spacing h in sampler-component order XYZ, the SIREN derivative scale
 is `2 / ((N_xyz - 1) * h)`. Consequently g is per mm, H per mm squared and m
@@ -28,9 +25,7 @@ smoothing and trajectories. Endpoint NCC/MSE intensities are unchanged.
 Recovery evaluates derivatives at the original native grid sites, converts g to
 per mm, and supplies native ZYX spacing to the existing spacing-weighted PCG
 Laplacian. Warm starts are velocities in mm/time. Divide recovered velocities by
-XYZ spacing before RK2. Returned maps remain absolute native voxel coordinates;
-existing landmark, label and Jacobian evaluation needs no map conversion change.
-The optional gradient-aware recovery path also uses physical H/m and spacing.
+XYZ spacing before RK2. The optional gradient-aware recovery path also uses physical H/m and spacing.
 
 Axes may be rotated or reflected, but must be orthogonal and nondegenerate. Vector
 components are distances along the native oriented image axes, not world RAS
@@ -73,15 +68,7 @@ on success and exceptions. Optional CUDA coverage compares eager and compiled
 physical fields and parameter gradients. No optimizer updates or real-case
 recovery are needed for these checks.
 
-Preview DIR-Lab quick4 without launching:
-
-```bash
-/venv/main/bin/python scripts/run_dirlab_cases.py --subset quick4 --plan-only \
-  --config medical/configs/native_physical_units_endpoint_ncc_32k.json \
-  --output results/dirlab_quick4_native_physical_units --gpus 0 1 2 3
-```
-
-The same preset works with the OASIS/AbdomenCTCT adapters. Completed quick4 experiments are summarized below. No deformation or warped-image writer is added.
+Completed quick4 experiments are summarized below. No deformation or warped-image writer is added.
 
 ## Optional metric velocity smoothing
 
@@ -109,20 +96,6 @@ grid resolutions. No new experiment was launched when adding this option.
 
 ## Quick4 outcome and current selection (2026-11-13)
 
-DIR-Lab cases 01,03,04,05, single seed 42. Mean forward IDIR rounded TRE:
-
-| Configuration | TRE (mm) |
-| --- | ---: |
-| Native voxel units, sigma 0.75 cells | 2.606249 |
-| Native physical units, sigma 0.75 cells | 2.801912 |
-| Native physical units, sigma 7.5 mm | 2.965265 |
-
-Return subsequent DIR-Lab development to `medical/configs/full_suite/06_native_grid.json`.
-It retains the corrected mask-centered shared crops and full-gradient losses.
-The physical-unit options remain available for explicit ablations. Their fixed
+It retains the corrected mask-centered shared crops and full-gradient losses. The physical-unit options remain available for explicit ablations. Their fixed
 coefficients were not retuned; these results do not establish that physical
 units are intrinsically worse. Metric sigma also changed smoothing strength.
-
-Results: `results/dirlab_quick4_native_cropcenter_20261113`,
-`results/dirlab_quick4_native_physical_units_20261113`, and
-`results/dirlab_quick4_native_physical_units_sigma7p5mm_20261113`.

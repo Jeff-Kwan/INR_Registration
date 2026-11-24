@@ -15,7 +15,6 @@ Cells show Dice / HD95 mm. Folding is fraction of voxels with nonpositive Jacobi
 | LPBA / S02 | 0.7067 / 6.40 | 0.7117 / 6.37 | 0.7069 / 6.40 | 0.7068 / 6.40 |
 | OASIS / OASIS_0002_0000 | 0.7729 / 3.20 | 0.7704 / 3.09 | 0.7727 / 3.20 | 0.7726 / 3.20 |
 | Hippocampus / HippocampusMR_0002_0000 | 0.8145 / 2.21 | 0.8187 / 2.21 | 0.8172 / 2.21 | 0.8170 / 2.21 |
-| AbdomenCT / AbdomenCTCT_0002_0000 | 0.5205 / 22.14 | 0.5088 / 22.77 | 0.5134 / 22.36 | 0.5140 / 22.35 |
 
 | Cohort | Solver | Folding fraction | Recovery s | Mean effective c | Max relative residual | All intervals converged |
 |---|---|---:|---:|---:|---:|:---:|
@@ -31,14 +30,10 @@ Cells show Dice / HD95 mm. Folding is fraction of voxels with nonpositive Jacobi
 | hippocampus | Enhanced | 0.000233 | 5.8 | — | 1.8e-05 | yes |
 | hippocampus | Gate | 0.000206 | 3.2 | 2.03 | 1.98e-05 | yes |
 | hippocampus | Gate + H confidence | 0.000122 | 2.1 | 0.92 | 1.71e-05 | yes |
-| abdomenct | Original | 0.000222 | 22.1 | — | 2e-05 | no |
-| abdomenct | Enhanced | 0.000441 | 72.9 | — | 2e-05 | yes |
-| abdomenct | Gate | 0.000238 | 56.3 | 2.19 | 1.93e-05 | yes |
-| abdomenct | Gate + H confidence | 0.000232 | 76.8 | 0.96 | 2e-05 | yes |
 
 ## Findings
 
-Gradient gating stayed close to original PCG across the four cases: it slightly raised LPBA and Hippocampus Dice, left OASIS essentially unchanged, and reduced AbdomenCT Dice. It did not consistently improve HD95 or folding. Gate-only PCG took 47–65 seconds on the three large volumes and 3.2 seconds on Hippocampus; recorded timings include diagnostics and should be treated as approximate.
+It did not consistently improve HD95 or folding. Gate-only PCG took 47–65 seconds on the three large volumes and 3.2 seconds on Hippocampus; recorded timings include diagnostics and should be treated as approximate.
 
 Hessian confidence barely changed Dice/HD95 on three cases. On Hippocampus it reduced folding from `2.06e-4` with gating alone (and `2.33e-4` with constant c=4) to `1.22e-4`, with Dice changing from `0.8172` to `0.8170`. That is a useful local signal, but one case does not establish a general folding benefit. Confidence also reduced the mean effective c from roughly 2.0–2.2 to 0.73–0.96 and tended to require more PCG iterations on the large grids.
 

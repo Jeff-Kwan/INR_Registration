@@ -12,27 +12,22 @@ Official comparisons use Neurite-OASIS, ACDC, LPBA40 and IXI, with the frozen
 cohorts and pair directions below. All reruns use the shared standardized_v1
 Dice, physical HD95, NPJ percentage and SDlogJ evaluator specified in
 [Case runner](CASE_RUNNER.md#standardized-official-comparisons). The original
-author metric definitions below serve as protocol reference. L2R-OASIS is
-reserved for the seven-run [SIRENPath internal ablations](SIRENPATH_ABLATIONS.md). The current comparison
-launchers exclude it, DIR-Lab and AbdomenCTCT. Prepared data are preserved.
+author metric definitions below serve as protocol reference. Learn2Reg OASIS is
+reserved for the [SIRENPath internal ablations](SIRENPATH_ABLATIONS.md).
 
 ## Selected benchmarks
 
 | Benchmark | Selected protocol | Full evaluation fits | Prepared input | Status |
 | --- | --- | ---: | --- | --- |
-| DIR-Lab | ccIDIR/IDIR native T00–T50 | 10 | `Data/DIRLab4DCT_IDIR` | Prepared; runner connected |
 | OASIS / Learn2Reg | Official directed public validation | 19 | `Data/OASIS` | Prepared; runner connected |
-| AbdomenCTCT | Official Learn2Reg directed public validation | 45 | `Data/AbdomenCTCT` | Prepared; runner connected |
 | IXI | TransMorph author atlas-to-subject test split | 115 | `Data/IXI_TransMorph/prepared` | Prepared; runner connected |
 | LPBA40 | SITReg frozen test combinations | 45 | `Data/LPBA40/prepared` | Prepared; runner connected |
 | ACDC | KAN-IDIR test patients 101–150, both phase directions | 100 | `Data/ACDC/prepared` | Prepared; runner connected |
 | Neurite-OASIS | Jena et al. last-50/consecutive-49 cohort | 49 | `Data/NeuriteOASIS/prepared` | Prepared; runner connected |
 
-These are seven distinct benchmarks. In particular, Neurite-OASIS does not replace
-or extend the official 19-pair Learn2Reg OASIS protocol. The five established
-non-ACDC/non-Neurite cohorts total 234 fits. Adding both new cohorts gives 383
-fits with all seven runners connected. A recovered inverse map is an additional
-score, not automatically an additional optimization or reverse input pair.
+These are five distinct benchmarks. The four comparison cohorts total 309
+fits per method. Learn2Reg OASIS has 19 directed pairs for ablations. Scoring
+a recovered inverse map requires no additional fit.
 
 ## Development-data availability and overlap
 
@@ -49,60 +44,21 @@ remain reserved.
 
 Preserve original releases, archives, access terms, required citations and prepared
 inputs. Record source revisions, ordered pairs, geometry and SHA-256 checksums.
-Labels and landmarks are evaluation-only: never optimize, select crops, stop or
-tune individual cases using them. DIR-Lab's independently generated lung masks
-have the crop-center-only role described below. LPBA40's author preparation mask
-is an explicit intensity-preprocessing step, not an anatomical supervision loss.
+Anatomical labels are used only for evaluation. LPBA40 uses a separate tissue
+mask during intensity preparation.
 
-Our method fits independently per pair with a single seed (42 unless explicitly
-specified). Author multiseed protocols do not authorize multiseed runs of our method.
+SIRENPath fits independently per pair with a single seed (42 unless explicitly
+specified). Author multiseed protocols do not authorize multiseed runs of SIRENPath.
 Preparation and plan inspection never authorize training or checkpoint recovery.
 Keep validation and test results separate; if public-validation scores guide recipe
 selection, report them as development evidence. Report all intended cases and
-failures, per-case metrics, dataset aggregation and runtime scope. Do not pool
-Dice and TRE. Save checkpoints, configurations and metrics; do not persist dense
+failures, per-case metrics, dataset aggregation and runtime scope. Save
+checkpoints, configurations and metrics; do not persist dense
 registration maps or warped volumes. Recovery scratch must be cleaned on exceptions.
 
-Intensity handling is dataset-specific: our DIR-Lab, Learn2Reg OASIS and abdomen
-adapters independently min–max normalize images; IXI and LPBA40 preserve their
-protocol-prepared values. Neurite preparation preserves released intensities
-byte-for-byte. ACDC normalizes at the exact author stage specified below.
-
-## DIR-Lab — ccIDIR / IDIR
-
-**Cohort and directions.** All ten official 4DCT cases, T00 inspiration fixed and
-T50 expiration moving, 300 corresponding landmarks per case. The primary point
-map is T00 coordinates → T50 coordinates, which samples the moving T50 image
-onto the fixed T00 grid. Report reverse TRE separately.
-
-**Preparation.** Native voxel grids and subject-specific spacings; official raw
-index/axis conversion to NIfTI and zero-based XYZ landmarks, without spatial
-resampling. Prepared affines use a local arbitrary-origin frame. Source/landmark
-checksums are in the local preparation manifest. R231 masks exist for both phases;
-lungmask 0.2.22 weights SHA-256
-`d5d2fc3df432115933491f115b283e94d1f5c841c0e82f6e7bd2d65d3ccde69f`.
-Exact equivalence to the authors' original masks is not claimed.
-
-**Training mask policy.** Choose an endpoint equally, sample a mask voxel and
-center the shared crop there, shifting it to fit the image. Reconstruction and
-registration use that crop; direction samples remain independent. No occupancy
-rejection or mask-based loss gating. PD-LK uses every cell; NCC includes every
-particle, including crop exits. Border interpolation and a live full-image boundary
-penalty apply.
-
-**Evaluation.** IDIR-compatible rounded physical TRE in mm is primary;
-continuous-coordinate TRE is supplemental. Retain all 300 landmarks and report
-outside-domain counts. Report whole-grid and T00-lung folding separately:
-DIR-Lab's `folding_fraction` alias is the lung-ROI value, not whole-grid folding.
-`medical.dirlab_evaluation.evaluate_case` accepts in-memory 300×3 T50 XYZ positions
-in T00 landmark order. External ccIDIR baselines may use their published 50-seed
-plan; our method remains single-seed.
-
-[IDIR paper](https://proceedings.mlr.press/v172/wolterink22a.html),
-[IDIR pinned metric source](https://github.com/MIAGroupUT/IDIR/blob/9ab3ccfbbf09dc8fc65fa848332e7d9a0b3b81b3/utils/general.py).
-Frozen optional quick4: cases **01,03,04,05**, the four smallest prepared pairs;
-[selection and launcher](DIRLAB_QUICK4.md). Preview with `--plan-only` because
-this launcher executes by default.
+The Learn2Reg OASIS adapter independently min–max normalizes images. IXI,
+LPBA40, Neurite-OASIS and ACDC use their prepared values directly. See the
+[preparation report](DATA_PREPARATION.md) for the preprocessing details.
 
 ## OASIS — official Learn2Reg public validation
 
@@ -125,24 +81,6 @@ The evaluator/configuration revision is
 Implementation: `medical.oasis_method`; [runner and details](OASIS.md).
 Plan-only by default. Frozen optional quick4: official pair indices **1,4,8,9**,
 selection seed 42; [quick4](OASIS_QUICK4.md).
-
-## AbdomenCTCT — official Learn2Reg public validation
-
-**Cohort.** Exactly 45 directed pairs from the official list, using subjects
-0001,0004,0007,0010,0013,0016,0019,0022,0025,0028. Copy that ordered list;
-do not generate 90 bidirectional combinations or choose an atlas.
-
-**Preparation.** Unchanged official affine-aligned CT release, 192×160×256,
-2 mm isotropic. Our adapter independently min–max normalizes each image.
-
-**Evaluation.** All 13 released organ labels are evaluation-only, never training
-masks. Same pinned Learn2Reg Dice, voxel HD95, shifted SDlogJ and separately
-reported true folding conventions as OASIS. These are public-validation results.
-
-[Official pair/metric configuration](https://github.com/MDL-UzL/L2R/blob/88475095e35442087a24439ff34ec09f54bc7dac/evaluation/evaluation_configs/AbdomenCTCT_VAL_evaluation_config.json).
-Implementation: `medical.abdomen_method`; [details and plan-only runner](ABDOMENCTCT.md).
-Frozen optional quick4: official pair indices **2,8,18,41**, selection seed 42;
-[quick4](ABDOMENCTCT_QUICK4.md).
 
 ## IXI — TransMorph author protocol
 
@@ -171,7 +109,7 @@ Pinned TransMorph revision `6357a1d7fc44c36db9b1d1ccaa372409253142cf`.
 
 **Cohort.** All 40 official subjects, frozen 25 training / 5 validation / 10 test
 split. Ten validation combinations and **45 test unordered combinations**, in
-author order. Our method makes one fit per pair and scores both recovered maps;
+author order. SIRENPath makes one fit per pair and scores both recovered maps;
 the author's additional swapped-input model call is not reproduced by a second
 fit. Qualify this distinction when comparing bidirectional scores.
 
@@ -241,7 +179,7 @@ a manifest of 100 ordered directed fits. `scripts/prepare_acdc.py` records
 source hashes, ES spacings, crop offsets and dependency versions. Integral
 evaluation labels are stored after the author's scoring cast, which commutes
 with nearest-neighbor sampling. `medical.cohort_method` and the plan-only
-`medical.cohort_experiments --datasets acdc` connect our model. Preparation was
+`medical.cohort_experiments --datasets acdc` connect SIRENPath. Preparation was
 checked against the retained author functions for every phase. Model execution
 requires separate authorization.
 [Acquisition and status](ACDC.md), [pinned source audit and caveats](ACDC_KAN_IDIR_PROTOCOL.md).

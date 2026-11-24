@@ -28,8 +28,8 @@ chain-rule conversion so derivatives and velocities use **native voxel units**.
 
 Intensity handling follows the frozen dataset adapters:
 
-- DIR-Lab and Learn2Reg OASIS/AbdomenCTCT: independent in-memory min–max scaling
-  to [0,1], without percentile clipping.
+- Learn2Reg OASIS: independent in-memory min–max scaling to [0,1], without
+  percentile clipping.
 - IXI and LPBA40: preserve protocol-prepared intensities.
 - Neurite-OASIS: preserve released prepared intensities.
 - ACDC: preserve its prepared arrays, which already include the protocol's
@@ -38,9 +38,8 @@ Intensity handling follows the frozen dataset adapters:
 ## Endpoint fitting
 
 Each update samples one shared crop with half the image length along each axis.
-For DIR-Lab, choose T00 or T50 equally, sample one voxel from that endpoint's
-R231 mask, center the crop there and shift it to fit. For the other connected
-datasets, sample a fitting crop origin uniformly. Masks do not gate any loss.
+The crop origin is sampled uniformly from those that keep the crop inside the
+image.
 
 Draw **32,768 voxel indices with replacement** inside the crop and use the same
 indices for the two endpoint reconstruction losses. Endpoint NCC is the sum of
@@ -48,16 +47,16 @@ indices for the two endpoint reconstruction losses. Endpoint NCC is the sum of
 these sampled voxels. It is not a dense whole-volume training loss. Correlations
 use epsilon **1e-8**.
 
-A Gaussian-moment penalty, weighted **0.005**, anchors each predicted sample
+The moment matching penalty ($L_{\mathrm{mom}}$), weighted **0.005**, anchors each predicted sample
 mean and variance toward 0 and 1:
 
-`moment_loss = 0.5 * sum_endpoints[mean² + (variance+epsilon) - log(variance+epsilon) - 1]`.
+`L_mom = 0.5 * sum_endpoints[mean² + (variance+epsilon) - log(variance+epsilon) - 1]`.
 
-Variances are population variances. Inter-SIREN parameter agreement is the mean
+Variances are population variances. The endpoint parameter penalty ($L_\theta$) is the mean
 squared difference over all corresponding weights and biases, weighted **0.01**.
 This objective term is separate from AdamW weight decay **0.001**.
 
-## Local transport and registration
+## Local transport and trajectory-based registration
 
 Draw one scrambled **2D Sobol** point per update. Its coordinates give field
 times in `[0,0.5)` and `[0.5,1)`. Crop/reconstruction, particle and query-direction
@@ -76,7 +75,7 @@ Pool the four sites equally and solve one velocity per cell by minimizing
 `mean_sites[b (q + g·v)² + c ||m + Hv||²] + eta ||v||²`,
 
 with **b=1**, **c=4**, **eta=1e-6**. Average the minimized energies over cells and
-both sampled times to obtain the PD-LK transport loss, weighted **0.1**. The ridge
+both sampled times to obtain the local transport loss (LT, $L_{\mathrm{LT}}$), weighted **0.1**. The ridge
 is applied once per pooled cell solve. Smooth each resulting velocity field with
 a separable, reflected three-tap Gaussian, **sigma 0.5 grid cells** per axis.
 
@@ -88,14 +87,14 @@ fields in reverse order with half-step size **−0.5**. The two fixed half-step 
 do not depend on the gap between sampled temporal quadrature points.
 
 Compare observed image intensities at trajectory starts and transported positions.
-GW-NCC is a **50/50 mixture of global and local Pearson NCC losses**. The local
+Gaussian-weighted NCC (GW-NCC) is a **50/50 mixture of global and local Pearson NCC losses**. The local
 term bins six particle sufficient statistics into **8³ bins** over the particle
 sampling region, applies a three-tap Gaussian with **sigma 0.75 cells**, and
 weights local losses by smoothed particle mass. This is separate from the
 sigma-0.5 velocity smoothing.
 
-Average the two directional similarity losses and their live full-image boundary
-penalties. Every sampled particle contributes, including crop exits. Image and
+The trajectory-based registration loss ($L_{\mathrm{reg}}$) averages the two directional
+similarity losses and their live full-image boundary penalties. Every sampled particle contributes, including crop exits. Image and
 velocity interpolation use border extension. The boundary penalty is the mean
 squared distance outside the full image in extent-normalized coordinates; crop
 exits do not reject particles or gate their losses.
@@ -112,9 +111,11 @@ the constant0.02 trial is retained only as a historical experiment.
 
 The objective is
 
-`endpoint_weight * endpoint_NCC + moment_weight * moment_loss`
-`+ PD_LK_weight * PD_LK + registration_weight(step) * registration`
-`+ parameter_l2 * mean_parameter_difference_squared`.
+`endpoint_weight * L_NCC + moment_weight * L_mom`
+`+ LT_weight * L_LT + registration_weight(step) * L_reg`
+`+ parameter_l2 * L_theta`.
+
+Training logs use `local_transport_loss` for $L_{\mathrm{LT}}$ and `registration_loss` for $L_{\mathrm{reg}}$.
 
 All gradients through network derivatives, pooled solves, smoothing and
 trajectories remain live. Only logging values detach during training.
@@ -153,7 +154,7 @@ where `L` is the native-voxel grid Laplacian, with sampling-spacing corrections
 when recovery is capped. Use **lambda=0.01**, **ridge=1e-6**,
 maximum **500 PCG iterations** and tolerance **2e-5**. Warm-start each interval's
 solve from the preceding velocity. This global brightness-flow solve is separate
-from the local training PD-LK solve.
+from the local velocity solve used in training.
 
 Integrate the forward map with **8 midpoint-RK2 substeps per interval**. Integrate
 the inverse using the stored interval velocities in reverse order and negative
@@ -167,9 +168,7 @@ comparison cohorts. Derivative inference chunks contain **65,536 queries**.
 Reject checkpoints requiring unsupported physical/working-grid geometry.
 
 Map names follow model time: forward is moving→fixed; inverse is fixed→moving.
-Pulling the moving image onto the fixed grid uses the inverse map. DIR-Lab's
-primary T00→T50 landmark map is therefore the inverse map; score the reverse
-landmark direction separately.
+Pulling the moving image onto the fixed grid uses the inverse map.
 
 Recover and evaluate in memory. Retain network checkpoints, resolved settings,
 provenance, metrics and timings. Dense maps and warped/reconstructed image volumes
@@ -181,21 +180,21 @@ These coefficients may be zero in a copied configuration:
 
 | Component | Configuration key | Canonical value |
 |---|---|---:|
-| Endpoint NCC | `objective.endpoint_weight` | 1 |
-| Gaussian moments | `objective.ncc.moment_weight` | 0.005 |
-| PD-LK transport loss | `objective.weight` | 0.1 |
-| Brightness residual in the local solve/PD-LK | `objective.brightness_weight` | 1 |
-| Differential residual in the local solve/PD-LK | `objective.c` | 4 |
-| Registration loss | `objective.registration.weight` | 0.01 final |
-| Inter-SIREN parameter L2 | `objective.parameter_l2` | 0.01 |
+| Endpoint reconstruction (NCC) | `objective.endpoint_weight` | 1 |
+| Moment matching | `objective.ncc.moment_weight` | 0.005 |
+| Local transport loss (LT) | `objective.weight` | 0.1 |
+| Brightness constancy residual in the local transport energy | `objective.brightness_weight` | 1 |
+| Spatial-gradient constancy residual in the local transport energy | `objective.c` | 4 |
+| Trajectory-based registration loss | `objective.registration.weight` | 0.01 final |
+| Endpoint parameter penalty | `objective.parameter_l2` | 0.01 |
 | AdamW weight decay | `training.optimizer.weight_decay` | 0.001 |
 | Recovery PCG smoothness | `recovery.smoothness` | 0.01 |
 
-Zero registration weight disables the entire registration schedule. Zero PD-LK
-loss weight still allows the velocity solves required by registration. If both
+Zero registration weight disables the entire registration schedule. Zero LT
+weight still allows the velocity solves required by registration. If both
 losses are off, training omits their derivatives and trajectories. Brightness and
 differential residual weights may independently be zero; with both zero, the
-ridge solve gives zero local velocity. Endpoint NCC, moments and parameter L2 are
+ridge solve gives zero local velocity. Endpoint NCC, moment matching and the endpoint parameter penalty are
 independent terms. Positive numerical ridges and NCC epsilon remain required.
 
 ## Evaluation and internal ablations
@@ -210,8 +209,8 @@ geometry, label sets and valid-score denominators are specified in
 The separate [seven-run L2R-OASIS study](SIRENPATH_ABLATIONS.md) uses the same
 training/recovery implementation. Runs 1–4 explicitly permit MSE endpoints with
 the NCC-specific moment term disabled, varying transport/registration weights.
-Run 5 matches the restored canonical recipe (registration cosine0.03→0.01). Run 6 crossfades raw normalized intensities;
-run 7 reuses run-5 checkpoints and crossfades their decoded endpoint intensities
+Run 5 matches the restored canonical recipe (registration cosine0.03→0.01). Run 6 (Raw crossfade) crossfades raw normalized intensities;
+run 7 (Fitted crossfade) reuses run-5 checkpoints and crossfades their decoded endpoint intensities
 without clipping, renormalizing or retraining. Both controls supply finite-difference
 image gradients and exact crossfade temporal derivatives to the same stage-3
 PCG/RK2 recovery; trained weight-path SIRENs use analytical derivatives.
@@ -219,6 +218,6 @@ PCG/RK2 recovery; trained weight-path SIRENs use analytical derivatives.
 The ablation report includes endpoint PSNR/Patch NCC, DSC, HD95, NPJ, SDlogJ and
 runtime. Endpoint PSNR uses peak 1 without fitted intensity calibration; NCC-trained
 outputs need not match the input scale/offset. Raw-identity endpoints have infinite
-PSNR and Patch NCC 1 by construction. The reconstructed crossfade shares run 5's
+PSNR and Patch NCC 1 by construction. The Fitted crossfade shares run 5's
 endpoint diagnostics. Its incremental runtime excludes the reused training cost,
 which is also recorded separately. [Aggregate ablation results](ABLATIONS_REPORT.md).

@@ -1,6 +1,6 @@
 # Development
 
-Use /venv/main on Vast; read /workspace/AGENTS.md first. The dataset-independent case runner is described in CASE_RUNNER.md. It currently accepts a method plugin; the default adapter supports DIR-Lab landmarks.
+Use /venv/main on Vast; read /workspace/AGENTS.md first. The dataset-independent case runner is described in CASE_RUNNER.md.
 
 The training entry point is `medical.registration.training.fit_pair`. It dispatches to ordinary training or the captured CUDA path using the resolved configuration. Endpoint and registration similarity are separate choices. The default and the explicit full-cohort accuracy preset are specified side by side in the [method](METHOD.md). Captured execution has narrower supported combinations. [Captured training](CAPTURED_TRAINING.md)
 
@@ -19,7 +19,7 @@ CUDA parity checks remain separately opt-in.
 
 Retired dataset orchestration, pointwise losses, experimental branches, old presets and their dedicated tests have been removed. Historical specifications and reports live in archived_reports and must not be treated as supported commands. Audit synthetic checks before running them; do not run optimizer steps or real-image smoke tests without explicit research authorization.
 
-DIR-Lab uses one randomly selected phase mask to place the shared crop. All cells contribute to PD-LK and both directions use all their particles. Report T00→T50 and T50→T00 TRE separately. Use the single configured seed. [Dataset protocols](DATASETS.md)
+All cells contribute to PD-LK and both directions use all their particles. Use the single configured seed. [Dataset protocols](DATASETS.md)
 
 Recovery uses true-residual-verified PCG and compiled CUDA iterations by default
 for all datasets. CPU stays eager; recover(..., compile_solver=False) selects the

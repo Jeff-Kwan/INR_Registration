@@ -7,6 +7,7 @@ recover the maps used for evaluation.
 
 **[Current method and canonical recipe](docs/METHOD.md)** ·
 **[Dataset protocols](docs/DATASETS.md)** ·
+**[Data preparation](docs/DATA_PREPARATION.md)** ·
 **[Case runner](docs/CASE_RUNNER.md)** ·
 **[Development](docs/DEVELOPMENT.md)**
 
@@ -20,11 +21,9 @@ smoothing, 32,768 reconstruction samples and 65,536 independent particles per
 direction. Frozen recovery uses 8 intervals ×8 RK2 substeps with an axis cap 256.
 Each loss component can be disabled by setting its documented weight to zero.
 
-The dataset reference distinguishes DIR-Lab, official Learn2Reg OASIS,
-AbdomenCTCT, IXI/TransMorph, LPBA40/SITReg, ACDC/KAN-IDIR and the49-pair
-Neurite-OASIS cohort following Jena et al. (*Magic or Mirage?*). It records preparation and runner readiness;
-data preparation does not authorize an experiment. Frozen quick4 subsets are
-unchanged.
+The dataset reference covers the official Learn2Reg OASIS ablation cohort and
+the four comparison cohorts, Neurite-OASIS, IXI, LPBA40 and ACDC. It records
+preparation, runner readiness and the frozen Learn2Reg OASIS quick4 subset.
 
 On this Vast instance, read `/workspace/AGENTS.md` and use `/venv/main/bin/python`.
 Training, optimizer steps, benchmarks and checkpoint recovery require explicit

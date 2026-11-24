@@ -4,7 +4,7 @@ import time
 import numpy as np
 import torch
 
-from .common import predict_for_case, execution, finish, landmark_inputs, preflight, sample_xyz_field
+from .common import execution, finish, preflight, sample_xyz_field
 from .sources import native_modules, upstream_imports
 
 
@@ -22,7 +22,8 @@ def run_case(case, config, device):
         expected = (*case['fixed']['data'].shape, 3)
         if displacement.shape != expected or not np.isfinite(displacement).all():
             raise ValueError(f'Invalid native displacement: expected {expected}')
-        predicted=predict_for_case(case,config,lambda points: points+sample_xyz_field(displacement,points))
+        def predicted(points):
+            return points + sample_xyz_field(displacement, points)
         checkpoint = {'kind': 'provenance_only', 'parameter_checkpoint': False,
                       'reason': 'Native result is a dense displacement field; map persistence is disabled'}
         return finish('convexadam', case, config, predicted, checkpoint, started,

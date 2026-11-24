@@ -1,8 +1,6 @@
 # Six full-dataset method trials
 
-The master launcher is `scripts/run_method_suite.py`. One invocation schedules
-all six trials on the unchanged official cohorts: 10 DIR-Lab cases, 19 OASIS
-pairs and 45 AbdomenCTCT pairs, totaling **444 jobs**. No baseline jobs or
+The master launcher is `scripts/run_method_suite.py`. No baseline jobs or
 additional seeds are included. Seed is 42 for every case.
 
 | Trial | Change from reference |
@@ -22,10 +20,6 @@ at 1 mm and recover at original reference spacing. Trial 6 uses original input
 spacing for both training and recovery; crop and smoothing scales therefore
 vary with geometry. Full decoder compilation is explicitly false in all six;
 compiled derivatives, smoothing and NCC reductions remain enabled.
-The historical suite used DIR-Lab mask-union support and recorded failures on
-empty crops. Running the presets with current code uses the mask only to select
-the crop center and includes every cell and particle. [Recorded suite results](FULL_METHOD_SUITE_RESULTS.md) Native DIR-Lab currently has no endpoint PSNR report; missing
-metrics are not imputed or treated as zero in suite summaries.
 
 For trial 02, the penalty per endpoint is KL(N(mu_prediction, var_prediction +
 epsilon) || N(mu_observed, var_observed + epsilon)), summed over endpoints:
@@ -65,16 +59,13 @@ resume or overwrite an existing run. Example native-grid-only preview:
 ```
 
 One persistent process per GPU consumes the **same shared queue**, across trial
-and dataset boundaries. Jobs are queued in listed trial order, with OASIS,
-DIR-Lab then abdomen within each trial. The next available GPU takes the next
-job; trial tails can overlap. Native-mask crop rejection remains active.
-Case exceptions are recorded and the queue continues; unusable worker processes
+and dataset boundaries. The next available GPU takes the next
+job; trial tails can overlap. Native-mask crop rejection remains active. Case exceptions are recorded and the queue continues; unusable worker processes
 are replaced by the existing GPUWorker mechanism. The master exits nonzero if
 any job failed. There are no automatic training retries or multiseed runs.
 
 Config snapshots/hashes and all job commands are recorded in plan.json before
-workers start. Per-case metrics/checkpoints/logs live under
-TRIAL/DATASET/ours/PAIR (Learn2Reg) or TRIAL/dirlab/caseNN. Atomic progress.json
+workers start. Atomic progress.json
 includes running aggregate summaries after each case; final summary.json groups
 metrics by trial and dataset with scored/intended counts, failures and PCG
 convergence. No deformation maps or warped images are saved.

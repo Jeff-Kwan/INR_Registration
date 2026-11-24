@@ -7,12 +7,10 @@ agreement from the first update**, per the requested initial experiment. There i
 no warm-up or step-500 calibration; calibration is deferred.
 
 For each probe, Q = ggᵀ + 4HᵀH and b = gq + 4Hᵀm. The original equal-weight
-four-probe cell estimator remains A = mean(Q) + 1e-6 I, v = -solve(A,mean(b)).
-Probe forces s = Qv+b are centered within each cell: z = s-mean(s). The penalty
+four-probe cell estimator remains A = mean(Q) + 1e-6 I, v = -solve(A,mean(b)). Probe forces s = Qv+b are centered within each cell: z = s-mean(s). The penalty
 is mean(zᵀ solve(A,z)) over probes, cells and the two sampled times. The code uses
 a multi-right-hand-side solve, never an explicit matrix inverse. Ridge belongs
-to A; no extra ridge term is inserted into individual probe forces or the penalty.
-All crop cells contribute. In DIR-Lab the mask selects the crop center.
+to A; no extra ridge term is inserted into individual probe forces or the penalty. All crop cells contribute.
 
 The PD-LK residual penalty is not evaluated in inverse-metric mode. Both modes
 use exactly the same analytical derivatives, equal-weight velocity solve,
@@ -37,9 +35,7 @@ Plan an OASIS run without launching it:
   --output results/oasis_inverse_metric
 ```
 
-Execution still requires explicit experiment authorization and `--run`. The same
---config option is supported by the abdomen launcher; DIR-Lab already accepts
---config. All use the existing persistent workers and shared queues.
+Execution still requires explicit experiment authorization and `--run`. All use the existing persistent workers and shared queues.
 
 Synthetic tests check an independent literal formula and gradients, gradcheck,
 zero penalty for identical probe evidence, probe-order invariance, unchanged

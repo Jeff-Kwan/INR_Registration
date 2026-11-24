@@ -11,8 +11,8 @@ On17 November2026 the user explicitly promoted sweep configuration20 despite its
 failure to meet the earlier automated3/4 criterion. Selection used development
 results and the user's judgment. This is a manual override, not an automated win.
 
-Only registration changes: cosine0.03→0.01 becomes constant0.02. PD-LK remains
-constant0.1,c=4,moment0.005,parameterL2=0.01,and cosine LR1e-4→2e-5 without warmup.
+Only registration changes: cosine0.03→0.01 becomes constant0.02. The local transport loss (LT) weight remains
+constant0.1,c=4,moment0.005,endpoint parameter penalty weight 0.01,and cosine LR1e-4→2e-5 without warmup.
 All other method, preparation, recovery and metric settings remain unchanged.
 
 The prior default is retained at `.local/manual_reg002_20261117/previous_default.json`.

@@ -15,7 +15,7 @@ The [machine-readable protocol](../medical/protocols/brain_benchmarks.json)
 pins source revisions, exact subjects/pairs, label tables, metric conventions
 and reference-helper hashes. See [training setup](BRAIN_TRAINING.md) for the
 plan-only launcher and validation evidence. The published cohort and scoring
-protocols are retained while fitting our method independently to each pair.
+protocols are retained while fitting SIRENPath independently to each pair.
 
 ## 1. IXI: TransMorph release
 
@@ -103,7 +103,7 @@ byte-for-byte identical to these CSV aggregates; retain the pinned reference.
 
 ### If reproducing the TransMorph model itself
 
-The benchmark can evaluate our method without retraining TransMorph. For an
+The benchmark can evaluate SIRENPath without retraining TransMorph. For an
 author-model reproduction, start with the released weights and
 `IXI/TransMorph/infer_TransMorph.py`. Explicitly freeze the checkpoint filename
 and SHA-256 instead of relying on its last naturally sorted directory entry.
@@ -217,7 +217,7 @@ python -m scripts.inference --training-root TRAINING_ROOT --data-root DATA_ROOT 
   --evaluate --do-not-save-outputs --epoch SELECTED_EPOCH
 ```
 
-This command is documentation, not an executed experiment. Our method can use
+This command is documentation, not an executed experiment. SIRENPath can use
 the cohort/preparation/evaluator while retaining its own fitting recipe; that
 would reproduce the benchmark protocol, not the SITReg algorithm.
 
@@ -230,7 +230,7 @@ records SHA-256 provenance. It refuses existing dataset destinations. No
 preprocessing, affine fitting, optimization or model recovery is invoked.
 
 See each dataset's ignored `acquisition.json` for archive hashes and unchanged
-member inventories. Protocol-specific preparation and our method adapters are now complete.
+member inventories. Protocol-specific preparation and SIRENPath adapters are now complete.
 The separate [training guide](BRAIN_TRAINING.md) describes inputs, checks and
 launch guards.
 
@@ -262,7 +262,7 @@ matched our preparation exactly. The affine preserves the author's negative
 first two axes and applies the crop-origin shift. No source was rewritten.
 Validation records are kept in each ignored `prepared/validation.json`.
 
-Our method uses these prepared intensity values directly, with evaluation
+SIRENPath uses these prepared intensity values directly, with evaluation
 labels excluded from fitting and sampling. `medical.brain_evaluation` implements
 the IXI streamed 46-channel warp and 17-group score, and uses pinned SITReg
 reference method bodies for LPBA40 scoring. The reference files are attributed

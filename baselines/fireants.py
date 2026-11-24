@@ -1,9 +1,10 @@
 """Native FireANTs SyN; no affine pre-registration or image writers."""
 import time
 
+import numpy as np
 import torch
 
-from .common import predict_for_case, execution, finish, landmark_inputs, normalized_grid_predictions, preflight
+from .common import execution, finish, preflight, sample_xyz_field
 from .sources import native_modules, upstream_imports
 
 
@@ -21,9 +22,9 @@ def run_case(case, config, device):
             # Native composition includes numerical inversion of the reverse warp.
             grid = reg.get_warped_coordinates(fixed, moving)
             field=grid[0].detach().cpu().float().numpy().transpose(2,1,0,3)
-            from .common import sample_xyz_field
-            import numpy as np
-            predicted=predict_for_case(case,config,lambda points: (sample_xyz_field(field,points)+1)*(np.asarray(case['moving']['data'].shape)-1)/2)
+            factor = (np.asarray(case['moving']['data'].shape) - 1) / 2
+            def predicted(points):
+                return (sample_xyz_field(field, points) + 1) * factor
         # For this dense method the optimized parameters ARE map artifacts.
         # Preserve compact provenance only; do not serialize those fields.
         checkpoint = {'kind': 'provenance_only', 'parameter_checkpoint': False,

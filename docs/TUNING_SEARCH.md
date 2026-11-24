@@ -26,8 +26,8 @@ separate from the tuning cohort; test metrics never select a configuration.
 
 ## Independent ranking and assembly
 
-Categories: PD-LK weight schedule, registration weight schedule, inter-SIREN L2,
-PD-LK c, moment weight and LR schedule. Constants belong to schedule categories.
+Categories: local transport loss (LT) weight schedule, registration weight schedule, endpoint parameter penalty weight,
+LT c, moment weight and LR schedule. Constants belong to schedule categories.
 Rank within each category by equal-weight mean of the four dataset mean Dice
 scores. The reference provides the already-tested default value for each category,
 including c=4; exact ties prefer that value. There is no per-dataset improvement

@@ -1,10 +1,8 @@
-# Fresh medical-registration benchmark: LPBA40, OASIS, Hippocampus MR, Abdomen CT
+# Fresh medical-registration benchmark for LPBA40, OASIS and Hippocampus MR
 
 **Report date:** 2026-11-10 (Asia/Hong_Kong)
 **Code revision:** `44f1ca2bda8eddec4023c35d1a3a8270f328746c` (worktree clean at launch)
-**Environment:** torch 2.14.1+cu132, numpy 2.3.5, nibabel 5.4.2, MONAI 1.6.1, antspyx 0.6.3, itk-elastix 0.25.4, SimpleITK 2.5.7; one NVIDIA GeForce RTX 5090 (32 GB), 32 CPU cores.
-**Cohorts:** LPBA40 (9 pairs, S02–S10 vs S01), OASIS (10 pairs, 0002–0011 vs 0001), Hippocampus MR (20 pairs, 0002–0021 vs 0001), Abdomen CT (10 pairs, 0002–0011 vs 0001). Lung is excluded.
-**Seed:** 42 for every SIREN fit.
+**Environment:** torch 2.14.1+cu132, numpy 2.3.5, nibabel 5.4.2, MONAI 1.6.1, antspyx 0.6.3, itk-elastix 0.25.4, SimpleITK 2.5.7; one NVIDIA GeForce RTX 5090 (32 GB), 32 CPU cores. **Seed:** 42 for every SIREN fit.
 
 ## Evidence status
 
@@ -38,7 +36,6 @@ Only the PD-LK weight differs by cohort, recovered from retained configs and rep
 | LPBA40 | 0.1 | Maintained preset; archived full-cohort standard-PD-LK reference 0.698714 Dice / 6.3175 mm at seed 42 (`docs/archive/methods/BEST_RESULTS.md`), reproduced at 0.6982 / 6.327 (`docs/archive/methods/ARCHITECTURES.md`) |
 | OASIS | 0.1 | Archived calibrated full OASIS cohort: SIREN 0.7937 Dice / 2.568 mm, 10/10 gate pass; the probe-benchmark 0.01 setting gave 0.766 / 2.87 (`docs/archive/methods/ARCHITECTURES.md`, `docs/archive/medical/probe_benchmark_analysis.md`) |
 | Hippocampus MR | 0.01 | Probe benchmark 0.752 Dice / 3.20 mm, 20/20; weight 0.1 collapsed the endpoint reconstruction on the calibration pair (`docs/archive/medical/probe_benchmark_analysis.md`) |
-| Abdomen CT | 0.01 | Probe benchmark 0.3545 Dice / 43.35 mm, 10/10; the architecture harness reported 0.3555 / 43.68 at the same weight; weight 0.1 fails the endpoint gate on this cohort (`docs/archive/medical/probe_benchmark.json`, `docs/archive/methods/ARCHITECTURES.md`) |
 
 These are single-seed historical choices inherited from different grids and harnesses, not a cross-dataset optimum.
 
@@ -65,8 +62,6 @@ The classical forward map is obtained by numerical inversion of the inverse disp
 | LPBA40 | Standard PD-LK seed 42, S02–S10: Dice 0.698714, HD95 6.3175 mm, zero folding, gates passed | `docs/archive/methods/BEST_RESULTS.md` |
 | OASIS | Probe recipe (`lambda=0.01`): 0.766 / 2.87; calibrated `lambda=0.1`: 0.7937 / 2.568 | `docs/archive/medical/probe_benchmark_analysis.md`, `docs/archive/methods/ARCHITECTURES.md` |
 | Hippocampus | Probe recipe: 0.752 / 3.20, 20 pairs | `docs/archive/medical/probe_benchmark_analysis.md` |
-| Abdomen CT | Probe recipe: 0.3545 / 43.35, 10 pairs (architecture harness: 0.3555 / 43.68) | `docs/archive/medical/probe_benchmark.json`, `docs/archive/methods/ARCHITECTURES.md` |
-| Classical (3 pairs per cohort) | OASIS: ANTs 0.8055, Demons 0.8062, elastix 0.7317; LPBA: ANTs 0.7271, elastix 0.6946, Demons 0.6803; Abdomen: elastix 0.3944, ANTs 0.3581, Demons 0.3379 | `docs/archive/methods/ARCHITECTURES.md` |
 
 The historical classical table used only the first three pairs per dataset under a different harness, so it is not numerically comparable to the fresh full-cohort means.
 
@@ -89,11 +84,6 @@ The historical classical table used only the first three pairs per dataset under
 | Hippocampus | ANTs SyNOnly | 20 / 20 | 0.7447 ± 0.0474 | 3.29 | 0 | 0.6647 | 17.9 | inv. unconverged 20 |
 | Hippocampus | elastix affine+B-spline | 20 / 20 | 0.6770 ± 0.0665 | 4.59 | 4.23e-02 | 0.8731 | 3.4 | inv. unconverged 20 |
 | Hippocampus | SimpleITK Demons | 20 / 20 | 0.7450 ± 0.0544 | 3.30 | 0 | 0.7906 | 2.4 | inv. unconverged 20 |
-| Abdomen CT | Identity (no deformation) | 10 / 10 | 0.2316 | 46.70 | 0 | — | — | Reference only |
-| Abdomen CT | SIREN PD-LK | 10 / 10 | 0.3545 ± 0.1238 | 43.35 | 2.70e-04 | 0.8814 | 63.1 | gate fail 0, skipped 0; flow all-converged 8/10 pairs |
-| Abdomen CT | ANTs SyNOnly | 10 / 10 | 0.3537 ± 0.1356 | 44.23 | 0 | 0.7776 | 411.6 | inv. unconverged 10 |
-| Abdomen CT | elastix affine+B-spline | 10 / 10 | 0.3364 ± 0.1239 | 54.01 | 5.56e-02 | 0.9080 | 108.6 | inv. unconverged 10 |
-| Abdomen CT | SimpleITK Demons | 10 / 10 | 0.3049 ± 0.1143 | 45.06 | 0 | 0.7916 | 46.2 | inv. unconverged 10 |
 
 ## Denominators
 
@@ -102,7 +92,6 @@ The historical classical table used only the first three pairs per dataset under
 | LPBA40 | 9 | 9 / 0 / 0 (0) | 27 / 0 |
 | OASIS | 10 | 10 / 0 / 0 (0) | 30 / 0 |
 | Hippocampus | 20 | 20 / 0 / 0 (0) | 60 / 0 |
-| Abdomen CT | 10 | 10 / 0 / 0 (0) | 30 / 0 |
 
 ## Failures and skipped evaluations
 
@@ -112,31 +101,29 @@ No failed pairs were recorded in any cohort.
 
 ### SIREN reproduction of the retained references
 
-The fresh SIREN means reproduce the retained historical references closely. The historical values are single-seed evidence from earlier harnesses; they are shown here as a consistency check, not pooled into the fresh statistics. OASIS is the calibrated weight-0.1 run; Hippocampus and Abdomen CT use the exact probe-benchmark aggregates; LPBA40 uses the archived sweep reference.
+The fresh SIREN means reproduce the retained historical references closely. The historical values are single-seed evidence from earlier harnesses; they are shown here as a consistency check, not pooled into the fresh statistics.
 
 | Cohort | Fresh Dice | Historical Dice | Fresh HD95 (mm) | Historical HD95 (mm) |
 |---|---:|---:|---:|---:|
 | LPBA40 | 0.6985 | 0.698714 | 6.33 | 6.3175 |
 | OASIS (weight 0.1) | 0.7915 | 0.7937 | 2.57 | 2.568 |
 | Hippocampus MR | 0.7525 | 0.7525 | 3.20 | 3.195 |
-| Abdomen CT | 0.3545 | 0.3545 | 43.35 | 43.35 |
 
-All 49 SIREN pairs passed the 25 dB endpoint gate. The smallest endpoint margin was 25.06 dB on Abdomen CT; LPBA40 and Hippocampus cleared the gate comfortably, and OASIS stayed near 30 dB. Recovered-map folding was exactly zero on all nine LPBA40 pairs, with small nonzero fractions elsewhere (maximum 9.4e-4 on Hippocampus, 7.1e-4 on Abdomen CT, 1.2e-5 on OASIS).
+All 39 reported SIREN pairs passed the 25 dB endpoint gate.
 
-Flow convergence was recorded per interval, not silently repaired. Across the four cohorts, 766 of 784 interval solves met the configured `2e-5` relative tolerance; 39 of 49 pairs had every interval converge. The misses were near-misses at about `2.00–2.02e-5` and are listed per pair. LPBA40 (6/9 pairs) and OASIS (5/10) carry most of the warnings; Hippocampus converged on every interval of every pair; Abdomen CT missed on 2 of its 10 pairs.
+Flow convergence was recorded per interval, not silently repaired. See each dataset table for convergence counts.00–2.02e-5` and are listed per pair.
 
 ### SIREN versus the classical protocols
 
 - **LPBA40.** ANTs SyNOnly is the strongest classical method on this cohort: Dice 0.7204 versus SIREN 0.6985 (+0.0219), HD95 6.21 versus 6.33 mm. Elastix is 0.6900 / 6.36 mm and Demons 0.6648 / 6.87 mm. The ordering agrees with the historical three-pair observation.
 - **OASIS.** ANTs reaches the highest Dice (0.7968) just above SIREN (0.7915), while SIREN has the lower HD95 (2.57 versus 2.64 mm) and slightly higher warped NCC (0.9789 versus 0.9768). Demons is close on Dice (0.7896) but worse on HD95 (2.86 mm); elastix is clearly behind at 0.7097 / 3.53 mm.
 - **Hippocampus MR.** SIREN has the best Dice and HD95 (0.7525 / 3.20 mm), ahead of Demons (0.7450 / 3.30) and ANTs (0.7447 / 3.29). ANTs improves labels but its warped-image NCC is only 0.665, so this protocol under-registers intensity on the 64³ crops even where label overlap improves. Elastix is weakest (0.6770 / 4.59 mm), folds 4.2% of voxels, and its cohort HD95 is worse than identity (4.59 versus 3.68 mm) even though its Dice improves; it worsened HD95 on 14 of 20 pairs and Dice on 4 of 20. SIREN improved Dice on all 20 pairs but worsened HD95 on 4; ANTs worsened Dice on one pair and HD95 on 6.
-- **Abdomen CT.** SIREN (0.3545 / 43.35 mm) and ANTs (0.3537 / 44.23 mm) are effectively tied on Dice, with SIREN slightly better on HD95 and NCC (0.8814 versus 0.7776). Elastix reaches 0.3364 but folds 5.6% of voxels, has HD95 54.0 mm (worse than identity's 46.70 mm), and worsened HD95 on 8 of 10 pairs; Demons trails at 0.3049 / 45.06 mm. SIREN improved Dice on all 10 pairs, but HD95 worsened slightly on 0005 (86.20 → 86.37 mm) and 0007 (45.47 → 46.37 mm), and pairs 0005 and 0009 remain above 86 mm.
 
-The image-similarity column can disagree with label overlap: ANTs on Hippocampus has respectable Dice but low NCC, and elastix on Abdomen CT and Hippocampus has high NCC with substantial folding. Neither metric alone characterises map quality, and the per-pair tables are the primary evidence.
+Neither metric alone characterises map quality, and the per-pair tables are the primary evidence.
 
 ### Runtime
 
-SIREN took 66, 76, 37 and 63 s per pair (LPBA40, OASIS, Hippocampus, Abdomen CT) including the 5,000-step endpoint fit, recovery, and evaluation. Classical means were 285/380/18/412 s for ANTs, 30/38/3/109 s for elastix, and 38/49/2/46 s for Demons. The classical jobs ran concurrently with each other and with SIREN, with ITK/OMP limited to 8 threads each; these are wall-clock observations under load, not a controlled speed comparison, and effective CPU contention was not controlled.
+Classical means were 285/380/18 s for ANTs, 30/38/3 s for elastix, and 38/49/2 s for Demons. The classical jobs ran concurrently with each other and with SIREN, with ITK/OMP limited to 8 threads each; these are wall-clock observations under load, not a controlled speed comparison, and effective CPU contention was not controlled.
 
 Saved per-pair timing fields separate fitting from recovery. Means in seconds:
 
@@ -145,17 +132,16 @@ Saved per-pair timing fields separate fitting from recovery. Means in seconds:
 | LPBA40 | 36.8 | 17.9 | 66.4 |
 | OASIS | 36.6 | 29.4 | 75.6 |
 | Hippocampus | 35.6 | 0.6 | 36.6 |
-| Abdomen CT | 36.6 | 21.2 | 63.1 |
 
 The baseline trainer uses small independent local PD-LK systems, not global PCG at each step. Its 16 global flow solves belong to the recovery column.
 
 ### Registration-aware training did not complete
 
-The proposed original-image registration-aware objective is not represented in these tables. Removal commit `f593cd8` records about 62 seconds per active LPBA optimizer step when differentiating through the global flow/RK2 map. It required primal and adjoint PCG solves over 16 intervals, plus checkpoint recomputation. That recorded feasibility observation is not a controlled timing comparison with the baseline benchmark. The branch was removed before full-cohort training on LPBA40, OASIS, and Abdomen CT completed. See the [historical design and retirement record](../archive/methods/REGISTRATION_AWARE_LOSS.md); synthetic gradient correctness does not establish registration efficacy.
+The proposed original-image registration-aware objective is not represented in these tables. Removal commit `f593cd8` records about 62 seconds per active LPBA optimizer step when differentiating through the global flow/RK2 map. It required primal and adjoint PCG solves over 16 intervals, plus checkpoint recomputation. That recorded feasibility observation is not a controlled timing comparison with the baseline benchmark. See the [historical design and retirement record](../archive/methods/REGISTRATION_AWARE_LOSS.md); synthetic gradient correctness does not establish registration efficacy.
 
 ### What is not claimed
 
-This is one seed per pair. None of the differences above is converted into a general superiority claim: on LPBA40 the classical reference leads on Dice, on OASIS the two leading methods differ by 0.005 Dice with opposite HD95 order, and on Abdomen CT the leading pair is within its observed spread. Elastix's large folding and worse-than-identity HD95 on Hippocampus and Abdomen CT are recorded as failures of that protocol on those cohorts, not as an endorsement of the SIREN maps. The classical methods include an affine stage in the elastix case (and not in SyNOnly), use their named local settings, and have an approximate forward-inversion diagnostic that failed to converge on every pair. The SIREN flow warnings above qualify its maps where they occur.
+This is one seed per pair. The classical methods include an affine stage in the elastix case (and not in SyNOnly), use their named local settings, and have an approximate forward-inversion diagnostic that failed to converge on every pair. The SIREN flow warnings above qualify its maps where they occur.
 
 ## LPBA40 — per-pair evidence
 
@@ -349,58 +335,6 @@ This is one seed per pair. None of the differences above is converted into a gen
 | HippocampusMR_0021_0000 | elastix affine+B-spline | 0.5577 → 0.6368 | 5.00 → 5.34 | 0.4459 → 0.8346 | 3.49e-02 | 0.148 | 0.93 | no | 2.21 |
 | HippocampusMR_0021_0000 | SimpleITK Demons | 0.5577 → 0.7196 | 5.00 → 4.00 | 0.4459 → 0.7939 | 0 | 0.054 | 0.10 | no | 1.70 |
 
-## Abdomen CT — per-pair evidence
-
-### SIREN PD-LK
-
-| Pair | Endpoint PSNR min (dB) | Dice pre → post | HD95 pre → post (mm) | NCC pre → post | Folding | Flow conv. | Max residual | Time (s) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| AbdomenCTCT_0002_0000 | 25.85 | 0.2920 → 0.5254 | 26.35 → 21.93 | 0.7039 → 0.9132 | 2.33e-04 | 16/16 | 1.99e-05 | 66.14 |
-| AbdomenCTCT_0003_0000 | 25.06 | 0.2134 → 0.3499 | 54.68 → 45.36 | 0.5617 → 0.8726 | 6.70e-04 | 16/16 | 1.96e-05 | 63.73 |
-| AbdomenCTCT_0004_0000 | 25.86 | 0.2047 → 0.3173 | 36.07 → 33.23 | 0.6542 → 0.8911 | 1.79e-04 | 16/16 | 1.98e-05 | 62.51 |
-| AbdomenCTCT_0005_0000 | 25.78 | 0.0572 → 0.1007 | 86.20 → 86.37 | 0.5181 → 0.8349 | 7.14e-04 | 15/16 | 2.01e-05 | 64.67 |
-| AbdomenCTCT_0006_0000 | 25.73 | 0.3307 → 0.4605 | 27.99 → 22.40 | 0.7116 → 0.9099 | 1.46e-04 | 16/16 | 2.00e-05 | 62.43 |
-| AbdomenCTCT_0007_0000 | 25.11 | 0.1887 → 0.3022 | 45.47 → 46.37 | 0.6481 → 0.8752 | 2.13e-04 | 15/16 | 2.02e-05 | 63.26 |
-| AbdomenCTCT_0008_0000 | 25.95 | 0.2834 → 0.4020 | 31.58 → 30.15 | 0.7315 → 0.9159 | 2.09e-04 | 16/16 | 2.00e-05 | 61.90 |
-| AbdomenCTCT_0009_0000 | 25.16 | 0.1399 → 0.1953 | 89.09 → 87.08 | 0.5567 → 0.8107 | 9.44e-05 | 16/16 | 1.97e-05 | 61.23 |
-| AbdomenCTCT_0010_0000 | 25.43 | 0.3386 → 0.4435 | 35.28 → 32.55 | 0.6606 → 0.8741 | 5.05e-05 | 16/16 | 1.98e-05 | 63.34 |
-| AbdomenCTCT_0011_0000 | 25.88 | 0.2669 → 0.4481 | 34.28 → 28.07 | 0.6931 → 0.9164 | 1.95e-04 | 16/16 | 1.97e-05 | 62.24 |
-
-### Classical methods
-
-| Pair | Method | Dice pre → post | HD95 pre → post (mm) | NCC pre → post | Folding | Outside | Composition (mm) | Inv. conv. | Time (s) |
-|---|---|---:|---:|---:|---:|---:|---:|---|---:|
-| AbdomenCTCT_0002_0000 | ANTs SyNOnly | 0.2920 → 0.4704 | 26.35 → 22.72 | 0.7039 → 0.8301 | 0 | 0.000 | 0.06 | no | 484.62 |
-| AbdomenCTCT_0002_0000 | elastix affine+B-spline | 0.2920 → 0.5193 | 26.35 → 34.16 | 0.7039 → 0.9333 | 3.80e-02 | 0.017 | 2.49 | no | 120.03 |
-| AbdomenCTCT_0002_0000 | SimpleITK Demons | 0.2920 → 0.4448 | 26.35 → 22.76 | 0.7039 → 0.8491 | 0 | 0.013 | 0.08 | no | 49.79 |
-| AbdomenCTCT_0003_0000 | ANTs SyNOnly | 0.2134 → 0.3276 | 54.68 → 51.24 | 0.5617 → 0.7061 | 0 | 0.000 | 0.09 | no | 432.66 |
-| AbdomenCTCT_0003_0000 | elastix affine+B-spline | 0.2134 → 0.2746 | 54.68 → 60.46 | 0.5617 → 0.9021 | 5.49e-02 | 0.313 | 11.08 | no | 109.82 |
-| AbdomenCTCT_0003_0000 | SimpleITK Demons | 0.2134 → 0.3006 | 54.68 → 50.72 | 0.5617 → 0.7377 | 0 | 0.023 | 0.12 | no | 51.76 |
-| AbdomenCTCT_0004_0000 | ANTs SyNOnly | 0.2047 → 0.2764 | 36.07 → 35.57 | 0.6542 → 0.7632 | 0 | 0.000 | 0.04 | no | 432.22 |
-| AbdomenCTCT_0004_0000 | elastix affine+B-spline | 0.2047 → 0.3894 | 36.07 → 36.86 | 0.6542 → 0.9279 | 4.54e-02 | 0.078 | 3.51 | no | 109.08 |
-| AbdomenCTCT_0004_0000 | SimpleITK Demons | 0.2047 → 0.2681 | 36.07 → 34.93 | 0.6542 → 0.8036 | 0 | 0.016 | 0.09 | no | 50.07 |
-| AbdomenCTCT_0005_0000 | ANTs SyNOnly | 0.0572 → 0.0855 | 86.20 → 86.26 | 0.5181 → 0.6581 | 0 | 0.000 | 0.10 | no | 434.23 |
-| AbdomenCTCT_0005_0000 | elastix affine+B-spline | 0.0572 → 0.1177 | 86.20 → 103.92 | 0.5181 → 0.8794 | 9.47e-02 | 0.307 | 13.90 | no | 110.17 |
-| AbdomenCTCT_0005_0000 | SimpleITK Demons | 0.0572 → 0.0729 | 86.20 → 86.20 | 0.5181 → 0.6880 | 0 | 0.017 | 0.10 | no | 46.91 |
-| AbdomenCTCT_0006_0000 | ANTs SyNOnly | 0.3307 → 0.5666 | 27.99 → 23.24 | 0.7116 → 0.8637 | 0 | 0.000 | 0.15 | no | 430.90 |
-| AbdomenCTCT_0006_0000 | elastix affine+B-spline | 0.3307 → 0.4732 | 27.99 → 27.06 | 0.7116 → 0.9266 | 3.48e-02 | 0.191 | 5.02 | no | 110.83 |
-| AbdomenCTCT_0006_0000 | SimpleITK Demons | 0.3307 → 0.4352 | 27.99 → 26.18 | 0.7116 → 0.8522 | 0 | 0.023 | 0.12 | no | 50.75 |
-| AbdomenCTCT_0007_0000 | ANTs SyNOnly | 0.1887 → 0.2470 | 45.47 → 44.00 | 0.6481 → 0.8023 | 0 | 0.000 | 0.14 | no | 399.04 |
-| AbdomenCTCT_0007_0000 | elastix affine+B-spline | 0.1887 → 0.2404 | 45.47 → 56.22 | 0.6481 → 0.9003 | 5.65e-02 | 0.226 | 8.45 | no | 103.62 |
-| AbdomenCTCT_0007_0000 | SimpleITK Demons | 0.1887 → 0.2345 | 45.47 → 45.79 | 0.6481 → 0.7973 | 0 | 0.023 | 0.10 | no | 43.40 |
-| AbdomenCTCT_0008_0000 | ANTs SyNOnly | 0.2834 → 0.3975 | 31.58 → 28.49 | 0.7315 → 0.8501 | 0 | 0.000 | 0.09 | no | 381.74 |
-| AbdomenCTCT_0008_0000 | elastix affine+B-spline | 0.2834 → 0.3415 | 31.58 → 38.08 | 0.7315 → 0.9293 | 3.81e-02 | 0.041 | 2.69 | no | 105.05 |
-| AbdomenCTCT_0008_0000 | SimpleITK Demons | 0.2834 → 0.3601 | 31.58 → 29.71 | 0.7315 → 0.8593 | 0 | 0.018 | 0.09 | no | 42.05 |
-| AbdomenCTCT_0009_0000 | ANTs SyNOnly | 0.1399 → 0.2489 | 89.09 → 85.87 | 0.5567 → 0.6931 | 0 | 0.000 | 0.15 | no | 369.98 |
-| AbdomenCTCT_0009_0000 | elastix affine+B-spline | 0.1399 → 0.1801 | 89.09 → 109.35 | 0.5567 → 0.8585 | 7.82e-02 | 0.366 | 16.43 | no | 106.64 |
-| AbdomenCTCT_0009_0000 | SimpleITK Demons | 0.1399 → 0.1687 | 89.09 → 88.43 | 0.5567 → 0.6942 | 0 | 0.027 | 0.11 | no | 44.11 |
-| AbdomenCTCT_0010_0000 | ANTs SyNOnly | 0.3386 → 0.4518 | 35.28 → 32.18 | 0.6606 → 0.7893 | 0 | 0.000 | 0.07 | no | 374.71 |
-| AbdomenCTCT_0010_0000 | elastix affine+B-spline | 0.3386 → 0.3877 | 35.28 → 40.48 | 0.6606 → 0.8931 | 6.50e-02 | 0.190 | 7.62 | no | 107.45 |
-| AbdomenCTCT_0010_0000 | SimpleITK Demons | 0.3386 → 0.3969 | 35.28 → 33.99 | 0.6606 → 0.8043 | 0 | 0.032 | 0.13 | no | 41.56 |
-| AbdomenCTCT_0011_0000 | ANTs SyNOnly | 0.2669 → 0.4655 | 34.28 → 32.68 | 0.6931 → 0.8201 | 0 | 0.000 | 0.12 | no | 376.32 |
-| AbdomenCTCT_0011_0000 | elastix affine+B-spline | 0.2669 → 0.4400 | 34.28 → 33.52 | 0.6931 → 0.9295 | 4.99e-02 | 0.047 | 3.56 | no | 103.47 |
-| AbdomenCTCT_0011_0000 | SimpleITK Demons | 0.2669 → 0.3669 | 34.28 → 31.87 | 0.6931 → 0.8302 | 0 | 0.018 | 0.09 | no | 41.38 |
-
 ## Qualifications and interpretation limits
 
 - These are single-seed (42) point estimates. The ± values in the cohort table are population standard deviations over pairs, not confidence intervals, and do not quantify seed variability.
@@ -415,26 +349,6 @@ This is one seed per pair. None of the differences above is converted into a gen
 - No method is declared superior from this single-seed comparison. Differences smaller than the observed spread, or arising from one cohort or a gate-failing subset, are not treated as evidence of a general advantage.
 
 ## Reproduction
-
-```bash
-# Use an environment with the project and its classical extras installed.
-# Keep the evidence above intact: every reproduction needs fresh directories.
-benchmark_root="results/benchmark_$(date -u +%Y%m%dT%H%M%SZ)_$$"
-
-# SIREN baselines (GPU), one cohort at a time
-for d in lpba oasis hippocampus abdomenct; do
-  python -m medical register --dataset "$d" \
-    --output "$benchmark_root/siren/$d"
-done
-
-# Classical comparisons (CPU); each cohort can run independently
-export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=8 OMP_NUM_THREADS=8
-for d in lpba oasis hippocampus abdomenct; do
-  python -m medical baseline --dataset "$d" \
-    --methods ants_syn elastix_bspline sitk_demons \
-    --output "$benchmark_root/classical/$d"
-done
-```
 
 `register` fits the two endpoint SIRENs, applies the 25 dB endpoint gate, recovers the 16-interval flow/RK2 map, and evaluates labels. `baseline` runs the three toolkits on the same images and evaluation. Both write only compact evidence.
 

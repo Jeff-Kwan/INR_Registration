@@ -4,7 +4,7 @@
 
 Fit a fresh pair of coordinate SIRENs to each moving/fixed image pair. Their interpolated parameters define the intensity path used for shared-grid PD-LK and bidirectional registration. Frozen recovery solves global brightness flow and integrates the velocity into dense maps. The step-by-step specification includes crop sampling, loss weights, map directions and evaluation. [Canonical method](docs/METHOD.md)
 
-The repository default uses the width-512 OneCycle recipe with output initialization ×30, AdamW decay 0.001, box NCC and four Euler training steps with one stochastic field time per quarter. The leading full-cohort accuracy candidate uses width 512, Gaussian-window registration NCC, orthogonal query pairs, Sobol time sampling, two RK2 training half-steps and captured training. Across 74 pairs it reached 2.861 / 2.970 mm DIR-Lab TRE, 0.81349 OASIS Dice and 0.43685 abdomen Dice in 93.9 seconds per pair on average. Some individual pairs had more folding. The separate 55.0-second prototype trades away some OASIS accuracy. [Default preset](medical/configs/default.json) · [Accuracy preset](medical/configs/native_siren_gw_orthogonal_sobol_5k.json) · [Full comparison](docs/archived_reports/LONG_RESEARCH_REPORT.md)
+The repository default uses the width-512 OneCycle recipe with output initialization ×30, AdamW decay 0.001, box NCC and four Euler training steps with one stochastic field time per quarter. The leading full-cohort accuracy candidate uses width 512, Gaussian-window registration NCC, orthogonal query pairs, Sobol time sampling, two RK2 training half-steps and captured training. Some individual pairs had more folding. The separate 55.0-second prototype trades away some OASIS accuracy. [Default preset](medical/configs/default.json) · [Accuracy preset](medical/configs/native_siren_gw_orthogonal_sobol_5k.json) · [Full comparison](docs/archived_reports/LONG_RESEARCH_REPORT.md)
 
 The [ten-hour research guide](docs/archived_reports/LONG_RESEARCH.md) records the earlier GPU allocation, full-cohort validation and final report.
 
@@ -26,7 +26,7 @@ An opt-in [captured native path](docs/CAPTURED_TRAINING.md) includes sampling,
 backward and AdamW in a complete CUDA graph. It also documents orthogonal query
 geometry and fixed recovery sampling; the default execution remains ordinary.
 
-`python -m medical --help` exposes the dataset-independent case-runner scaffold. It expects an importable method plugin; the default adapter connects training and recovery for DIR-Lab. Inputs are prepared beforehand. See [case runner](docs/CASE_RUNNER.md) and [datasets](docs/DATASETS.md).
+`python -m medical --help` exposes the dataset-independent case-runner scaffold. Inputs are prepared beforehand. See [case runner](docs/CASE_RUNNER.md) and [datasets](docs/DATASETS.md).
 
 Historical reports are under `docs/archived_reports/`; their commands and configurations are unsupported. Data and generated artifacts are ignored and must not be committed. Training and recovery experiments require explicit authorization.
 
@@ -36,17 +36,12 @@ ConvexAdam–MIND, ccIDIR and NIR. The baseline launcher prints a plan by defaul
 it requires `--run` to execute experiments. Source imports and mocked adapter
 checks are available without launching registration.
 
-Learn2Reg AbdomenCTCT public-validation preparation and all five method adapters are connected. See [AbdomenCTCT](docs/ABDOMENCTCT.md) for the official 45-pair protocol, evaluation conventions and plan-only launcher.
-
 Learn2Reg OASIS public-validation preparation and all five adapters are also connected: [OASIS](docs/OASIS.md). Preview its 19 directed pairs with `/venv/main/bin/python -m medical.oasis_experiments`; the launcher is single-seed and plan-only by default.
 
 The three-method all-dataset baseline launcher is ready; see [baseline run commands](docs/BASELINE_RUNS.md). It uses four GPU workers, saves under `baselines/results/`, and requires `--run` to execute.
 
 Completed comparison scores and failure accounting: [external baseline results](docs/EXTERNAL_BASELINES.md).
 
-Our cropped/uncropped DIR-Lab scores and runtimes: [DIR-Lab results](docs/OUR_DIRLAB_RESULTS.md).
-The current ten-case gap analysis and mechanism-led experiment plan are in
-[DIR-Lab gap investigation](docs/DIRLAB_GAP_INVESTIGATION.md).
 The completed 5k-versus-40k experiments, checkpoint probes and cross-dataset controls
 are recorded in [SIREN convergence](docs/SIREN_CONVERGENCE.md).
 

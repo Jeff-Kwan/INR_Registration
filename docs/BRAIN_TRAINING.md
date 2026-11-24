@@ -27,7 +27,7 @@ labels are unmasked. The prepared affine includes the crop-origin shift and
 negative first two axes. Its frozen 25/5/10 subject split defines 45 test and
 10 validation combinations in author order.
 
-Our method optimizes a fresh paired model for each registration pair. The
+SIRENPath optimizes a fresh paired model for each registration pair. The
 author training cohorts are preserved for provenance; this launcher does not
 fit a shared network on those subjects. Validation pairs remain separate from
 test pairs for any later recipe selection.
@@ -38,8 +38,9 @@ test pairs for any later recipe selection.
 the same finalized recipe as the other connected datasets. The complete settings,
 objective and zero-weight controls are in [METHOD.md](METHOD.md). It uses width 512,
 5,000 captured RK2/Sobol updates,32k reconstruction/64k registration particles,
-PD-LK c=4/weight 0.1, endpoint moment0.005, GW-NCC cosine0.03→0.01,
-velocity sigma 0.5 cells and parameter L2 weight 0.01.
+local transport loss (LT) c=4/weight 0.1, moment matching weight 0.005,
+trajectory-based registration weight cosine0.03→0.01,
+velocity sigma 0.5 cells and endpoint parameter penalty weight 0.01.
 
 Protocol-prepared image values enter fitting directly. Evaluation labels never
 enter fitting, crop selection or particle sampling. All training derivatives,

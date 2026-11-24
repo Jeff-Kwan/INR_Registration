@@ -19,7 +19,6 @@
     "revision": "b229e52e44b114e2040a503334c92269750c16b2",
     "paths": [
       "src",
-      "self_configuring",
       "README.md",
       "LICENSE",
       "pyproject.toml",
@@ -39,10 +38,31 @@
       "utils",
       "README.md",
       "requirements.txt",
-      "run_dirlab_cycle_consistent.py",
       "cycle_inference_script.py"
     ],
-    "entry": "models.models.ImplicitRegistrator"
+    "entry": "models.models.ImplicitRegistrator",
+    "omit_lines": {
+      "README.md": [
+        [
+          22,
+          23
+        ]
+      ],
+      "utils/general.py": [
+        [
+          2,
+          2
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          140,
+          228
+        ]
+      ]
+    }
   },
   "nir": {
     "url": "https://github.com/uci-cbcl/NIR.git",
@@ -101,6 +121,34 @@
       "run_diff.sh",
       "README.md"
     ],
-    "entry": "opt_nf_diff.main"
+    "entry": "opt_nf_diff.main",
+    "omit_lines": {
+      "data/datasets.py": [
+        [
+          19,
+          26
+        ],
+        [
+          199,
+          234
+        ]
+      ],
+      "opt_nf_diff.py": [
+        [
+          152,
+          154
+        ]
+      ],
+      "utils/utils.py": [
+        [
+          199,
+          224
+        ],
+        [
+          237,
+          246
+        ]
+      ]
+    }
   }
 }

@@ -55,7 +55,6 @@
         "utils",
         "README.md",
         "requirements.txt",
-        "run_dirlab_cycle_consistent.py",
         "cycle_inference_script.py"
       ],
       "entry": "models.models.ImplicitRegistrator"
